@@ -1,0 +1,38 @@
+table {
+    border: 1px solid #BEC0C2;
+    margin: 15px auto;
+}
+
+tr {
+    text-align: left;
+    width: 100%;
+}
+
+tr:nth-child(even) {
+    background: #DAEBEC;
+}
+
+th {
+    border-bottom: 1px solid #BEC0C2;
+    text-align: center;
+}
+
+tbody {
+    height: 300px;
+    overflow-y: scroll;
+    display: block;
+}
+
+td {
+    border-left: 1px solid #BEC0C2;
+    border-right: 1px solid #BEC0C2;
+    width: 100%;
+}
+
+table, th, td {
+    border-collapse: collapse;
+}
+
+.ui-datepicker {
+    font-size: 12px;
+}

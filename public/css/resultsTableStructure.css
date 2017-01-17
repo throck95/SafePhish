@@ -1,0 +1,51 @@
+.WBS_Ip {
+    width: 75px;
+}
+
+.WBS_Host {
+    width: 175px;
+}
+
+.WBS_ReqPath {
+    width: 200px;
+}
+
+.WBS_ProjectName {
+    width: 100px;
+}
+
+.WBS_Access {
+    width: 150px;
+}
+
+
+
+.EML_Ip {
+    width: 100px;
+}
+
+.EML_Host {
+    width: 350px;
+}
+
+.EML_Access {
+    width: 175px;
+}
+
+
+
+.RPT_EmailSubject {
+    width: 150px;
+}
+
+.RPT_UserEmail {
+    width: 250px;
+}
+
+.RPT_OriginalFrom {
+    width: 250px;
+}
+
+.RPT_ReportDate {
+    width: 100px;
+}

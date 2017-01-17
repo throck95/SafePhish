@@ -1,0 +1,104 @@
+html,body {
+    width: 980px;
+    margin: 0 auto auto;
+}
+
+html {
+    background-color: #d3d3d3;
+    background-image: linear-gradient(0deg,rgba(255,255,255,.07) 50%, transparent 50%),
+    linear-gradient(0deg, rgba(255,255,255,.13) 50%, transparent 50%),
+    linear-gradient(0deg, transparent 50%, rgba(255,255,255,.17) 50%),
+    linear-gradient(0deg, transparent 50%, rgba(255,255,255,.19) 50%);
+    background-size: 13px, 29px, 37px, 53px;
+}
+
+#spHeadLogo {
+    width: 400px;
+    height: auto;
+}
+
+body * {
+    padding: 3px;
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
+
+.rootContainer {
+    background: #FFFFFF;
+    -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.2);
+    -moz-box-shadow: 0 1px 2px rgba(0,0,0,.2);
+    box-shadow: 0 5px 20px rgba(0,0,0,.4);
+    -webkit-border-bottom-left-radius: 6px;
+    border-bottom-left-radius: 6px;
+    -webkit-border-bottom-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+    margin: 0;
+    padding: 0;
+}
+
+p {
+    display: table-row;
+}
+
+a {
+    color: #3964b2;
+}
+
+a:visited {
+    color: #6A94Bf;
+}
+
+#headerBar {
+    background: #BD0000;
+    height: 25px;
+    margin: 0;
+}
+
+#logoBar {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    margin-left: 23px;
+    width: 545px;
+    height: 78px;
+}
+
+footer {
+    font-family: Arial, sans-serif;
+    font-size: 10px;
+    color: #333333;
+    margin-top: 25px;
+}
+
+header {
+    margin: 0;
+    padding: 0;
+}
+
+label {
+    display: table-cell;
+    width: 200px;
+    font-family: Arial,sans-serif;
+    font-size: 12px;
+    color: #465254;
+    margin-bottom: 8px;
+}
+
+select {
+    font-family: Arial,sans-serif;
+    font-size: 12px;
+    color: #465254;
+    margin-bottom: 8px;
+}
+
+#templateContentDiv {
+    float: right;
+    width: 43%;
+    height: 225px;
+    border: 1px solid black;
+    overflow: auto;
+    font-family: Arial,sans-serif;
+    font-size: 12px;
+    color: #465254;
+    margin-bottom: 8px;
+    margin-right: 8px;
+}

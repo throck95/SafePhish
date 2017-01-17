@@ -1,0 +1,138 @@
+.scalable {
+    height: 20px;
+    width: 20px;
+}
+
+#navInfoDiv {
+    position: relative;
+}
+
+#navInfoDiv div {
+    width: 20%;
+    height: 100%;
+    padding-right: 10px;
+    display: inline-block;
+    position: absolute;
+    margin-left: 15px;
+}
+
+#navInfoDiv div:after {
+    content: '';
+    position: absolute;
+    right: 0;
+    border-right: 1px solid #cfc7c0;
+    top: 10%;
+    bottom: 20%;
+}
+
+#navInfoDiv div > h2 {
+    position: relative;
+    left: 40px;
+    top: -30px;
+}
+
+h2 > a {
+    text-decoration: none;
+    color: #3964b2;
+    font-size: 16px;
+    font-family: "Proxima Bold",sans-serif;
+}
+
+#navBar {
+    margin: 12px 12px 0;
+    position: relative;
+}
+
+.navButton {
+    height: 26px;
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-bottom: 0;
+    -webkit-border-top-left-radius: .5em;
+    border-top-left-radius: .5em;
+    -webkit-border-top-right-radius: .5em;
+    border-top-right-radius: .5em;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    border: 0;
+    text-decoration: none;
+    text-align: center;
+    outline: none;
+    display: inline-block;
+    background: #DFDFDF;
+    color: #666666;
+    font-family: "Condensed Bold", sans-serif;
+    font-size: 16px;
+    position: relative;
+    top: 4px;
+}
+
+.navButton:hover {
+    text-decoration: none;
+    background: #d3d7d5;
+}
+
+.navButton:active {
+    height: 29px;
+    top: 1px;
+    background: #d3d3d3;
+}
+
+#navButtonsDiv {
+    margin: 0;
+    padding: 0;
+}
+
+#navInfoDiv {
+    height: 125px;
+    background: #EAEAEA;
+    margin-top: 0;
+    -webkit-border-bottom-left-radius: .5em;
+    border-bottom-left-radius: .5em;
+    -webkit-border-bottom-right-radius: .5em;
+    border-bottom-right-radius: .5em;
+    -webkit-border-top-right-radius: .5em;
+    border-top-right-radius: .5em;
+}
+
+.activeNavButton, h4 {
+    color: #000000;
+    font-family: "Condensed Bold",sans-serif;
+    height: 31px;
+    font-weight: bold;
+    top: 0;
+}
+
+h4 {
+    text-align: center;
+}
+
+.activeNavButton {
+    background: #EAEAEA;
+}
+
+.activeNavButton:hover {
+    background: #EAEAEA;
+}
+
+.activeNavButton:active {
+    height: 31px;
+    top: 0;
+    background: #EAEAEA;
+}
+
+a:visited {
+    color: #3964b2;
+}
+
+.authenticationLink {
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    color: #666666;
+    text-transform: uppercase;
+    margin: 10px 20px 10px 10px;
+    position: absolute;
+    top: 0;
+    text-decoration: none;
+}
