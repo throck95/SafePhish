@@ -8,24 +8,14 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
-use App\TemplateConfiguration;
-use App\EmailConfiguration;
-use App\Email;
-use App\Http\Controllers\AuthController as Auth;
-
-use App\Models\Project;
-use App\Models\Sent_Mail;
-use App\Models\Mailing_List_User;
-
-use App\Exceptions\ConfigurationException;
-use App\Exceptions\EmailException;
-use Illuminate\Support\Facades\DB;
 
 class ErrorController extends Controller
 {
     public static function e401() {
         return view("errors.401");
+    }
+
+    public static function e404() {
+        return view("errors.404");
     }
 }

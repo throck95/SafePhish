@@ -21,6 +21,7 @@ Route::get('/','GUIController@displayResults')->name('authHome');
 
 //Errors
 Route::get('/unauthorized','ErrorController@e401')->name('e401');
+Route::get('/404','ErrorController@e404')->name('e404');
 
 //Projects
 

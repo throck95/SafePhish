@@ -12,7 +12,7 @@
         <button class="navButton @yield('resultsClassDefault')" id="resultsNavButton">Results</button>
         <button class="navButton @yield('projectsClassDefault')" id="projectsNavButton">Projects</button>
         <button class="navButton @yield('templatesClassDefault')" id="templatesNavButton">Templates</button>
-        <button class="navButton @yield('emailClassDefault')" id="emailNavButton">Send Email</button>
+        <button class="navButton @yield('emailClassDefault')" id="emailNavButton">Email</button>
     </div>
     @if(\Session::get('authUser'))
         <a class="authenticationLink" target="_blank" href="#">MY ACCOUNT</a> <!-- create a my account page -->
@@ -44,6 +44,10 @@
         <div class="emailInfo">
             <img class='scalable' src="/images/thumbnails/emailSettings.png" /><h2><a href="/email/settings">Settings</a></h2>
             <p>Set default settings for your email environment.</p>
+        </div>
+        <div class="emailInfo">
+            <img class='scalable' src="/images/thumbnails/newUser.png" /><h2><a href="/mailinglist/create/user">Create Mailing List User</a></h2>
+            <p>Create a New Mailing List User to include in new campaigns.</p>
         </div>
         <div class="authInfo">
             <p>Please login to access information on this site.</p>
