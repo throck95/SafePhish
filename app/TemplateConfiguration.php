@@ -12,17 +12,18 @@ use League\Flysystem\Exception;
 use Doctrine\Instantiator\Exception\InvalidArgumentException;
 use App\Exceptions\ConfigurationException;
 use OutOfBoundsException;
+use App\Models\Template;
 
 class TemplateConfiguration
 {
     private $template;
     private $companyName;
-    private $projectName;
-    private $projectId;
+    private $campaignName;
+    private $campaignId;
 
     /**
      * TemplateConfiguration constructor
-     * @param   array           $templateSettings       Template Name, Template Path Prefix, Company Name, Project Name, Project ID
+     * @param   array           $templateSettings       Template Name, Template Path Prefix, Company Name, Campaign Name, Campaign ID
      * @throws  ConfigurationException                  Custom Exception for any exception thrown in this class
      */
     public function __construct($templateSettings) {
@@ -37,7 +38,7 @@ class TemplateConfiguration
      * areSettingsValid
      * Checks to be sure that the settings are valid inputs for their respective objects.
      *
-     * @param   array           $templateSettings       Template Name, Template Path Prefix, Company Name, Project Name, Project ID
+     * @param   array           $templateSettings       Template Name, Template Path Prefix, Company Name, Campaign Name, Campaign ID
      * @throws  OutOfBoundsException
      */
     private function areSettingsValid($templateSettings) {
@@ -53,7 +54,7 @@ class TemplateConfiguration
      * validateSettingsValues
      * Checks the values of valid keys to make sure their values are valid.
      *
-     * @param   array           $templateSettings       Template Name, Template Path Prefix, Company Name, Project Name, Project ID
+     * @param   array           $templateSettings       Template Name, Template Path Prefix, Company Name, Campaign Name, Campaign ID
      * @throws  InvalidArgumentException
      */
     private function validateSettingsValues($templateSettings) {
@@ -64,11 +65,11 @@ class TemplateConfiguration
         if($this->validateRegex($templateSettings['companyName']) || $templateSettings['companyName'] == '') {
             $message .= 'Company Name is not a valid input. Value provided: ' . var_export($templateSettings['companyName'],true) . PHP_EOL;
         }
-        if($this->validateRegex($templateSettings['projectName']) || $templateSettings['projectName'] == '') {
-            $message .= 'Project Name is not a valid input. Value provided: ' . var_export($templateSettings['projectName'],true) . PHP_EOL;
+        if($this->validateRegex($templateSettings['campaignName']) || $templateSettings['campaignName'] == '') {
+            $message .= 'Campaign Name is not a valid input. Value provided: ' . var_export($templateSettings['campaignName'],true) . PHP_EOL;
         }
-        if($this->validateRegex($templateSettings['projectId'])) {
-            $message .= 'Project ID is not a valid input. Value provided: ' . var_export($templateSettings['projectId'],true) . PHP_EOL;
+        if($this->validateRegex($templateSettings['campaignId'])) {
+            $message .= 'Campaign ID is not a valid input. Value provided: ' . var_export($templateSettings['campaignId'],true) . PHP_EOL;
         }
         if(!empty($message)) {
             throw new InvalidArgumentException($message);
@@ -79,7 +80,7 @@ class TemplateConfiguration
      * validateSettingsKeys
      * Checks the keys of the template settings to make sure that they have been set.
      *
-     * @param   array           $templateSettings       Template Name, Template Path Prefix, Company Name, Project Name, Project ID
+     * @param   array           $templateSettings       Template Name, Template Path Prefix, Company Name, Campaign Name, Campaign ID
      * @throws  InvalidArgumentException
      */
     private function validateSettingsKeys($templateSettings) {
@@ -90,11 +91,11 @@ class TemplateConfiguration
         if(is_null($templateSettings['companyName'])) {
             $message .= 'Company Name value cannot be null.' . PHP_EOL;
         }
-        if(is_null($templateSettings['projectName'])) {
-            $message .= 'Project Name value cannot be null.' . PHP_EOL;
+        if(is_null($templateSettings['campaignName'])) {
+            $message .= 'Campaign Name value cannot be null.' . PHP_EOL;
         }
-        if(is_null($templateSettings['projectId'])) {
-            $message .= 'Project ID value cannot be null.' . PHP_EOL;
+        if(is_null($templateSettings['campaignId'])) {
+            $message .= 'Campaign ID value cannot be null.' . PHP_EOL;
         }
         if(!empty($message)) {
             throw new OutOfBoundsException($message);
@@ -117,13 +118,13 @@ class TemplateConfiguration
      * setSettings
      * Helper function to set all the settings
      *
-     * @param   array           $templateSettings       Template Name, Template Path Prefix, Company Name, Project Name, Project ID
+     * @param   array           $templateSettings       Template Name, Template Path Prefix, Company Name, Campaign Name, Campaign ID
      */
     private function setSettings($templateSettings) {
         $this->template = new Template($templateSettings['templateName']);
         $this->companyName = $templateSettings['companyName'];
-        $this->projectName = $templateSettings['projectName'];
-        $this->projectId = $templateSettings['projectId'];
+        $this->campaignName = $templateSettings['campaignName'];
+        $this->campaignId = $templateSettings['campaignId'];
     }
 
     public function getTemplate() {
@@ -134,41 +135,11 @@ class TemplateConfiguration
         return $this->companyName;
     }
 
-    public function getProjectName() {
-        return $this->projectName;
+    public function getCampaignName() {
+        return $this->campaignName;
     }
 
-    public function getProjectId() {
-        return $this->projectId;
-    }
-
-    /**
-     * getTemplateTargetType
-     * Returns whether the template is a Targeted or Generic phishing scam.
-     *
-     * @return string
-     */
-    public function getTemplateTargetType() {
-        $db = new DBManager();
-        $sql = "SELECT PRJ_TargetType FROM gaig_users.projects WHERE PRJ_ProjectId = ?;";
-        $bindings = array($this->projectId);
-        $data = $db->query($sql,$bindings);
-        $result = $data->fetch();
-        return $result['PRJ_TargetType'];
-    }
-
-    /**
-     * getTemplateComplexityType
-     * Returns whether the template is an Advanced or Basic phishing scam.
-     *
-     * @return string
-     */
-    public function getTemplateComplexityType() {
-        $db = new DBManager();
-        $sql = "SELECT PRJ_ComplexityType FROM gaig_users.projects WHERE PRJ_ProjectId = ?;";
-        $bindings = array($this->projectId);
-        $data = $db->query($sql,$bindings);
-        $result = $data->fetch();
-        return $result['PRJ_ComplexityType'];
+    public function getCampaignId() {
+        return $this->campaignId;
     }
 }

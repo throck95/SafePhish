@@ -6,7 +6,7 @@ use App\Libraries\RandomObjectGeneration;
 use App\Models\Default_Settings;
 use App\Models\Mailing_List_User;
 use App\Models\MLU_Departments;
-use App\Models\Project;
+use App\Models\Campaign;
 use App\Template;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AuthController as Auth;
@@ -57,8 +57,8 @@ class GUIController extends Controller
     public static function generatePhishingEmailForm() {
         if(Auth::check()) {
             $user = \Session::get('authUser');
-            $settings = Default_Settings::where('DFT_UserId',$user->USR_Id)->first();
-            $projects = Project::all();
+            $settings = Default_Settings::where('UserId',$user->USR_Id)->first();
+            $campaigns = Campaign::all();
             $templates = self::returnAllTemplatesByDirectory('phishing');
             if(count($settings)) {
                 $dft_host = $settings->DFT_MailServer;
@@ -72,7 +72,7 @@ class GUIController extends Controller
                 $dft_user = '';
             }
             $variables = array('dft_host'=>$dft_host,'dft_port'=>$dft_port,'dft_user'=>$dft_user,
-                'dft_company'=>$dft_company,'projects'=>$projects,'templates'=>$templates);
+                'dft_company'=>$dft_company,'campaigns'=>$campaigns,'templates'=>$templates);
             return view('forms.phishingEmail')->with($variables);
         }
         return self::authRequired();
@@ -85,12 +85,12 @@ class GUIController extends Controller
      * @param   Request         $request            Settings sent from form
      */
     public static function updateDefaultEmailSettings(Request $request) {
-        $user = User::where('USR_Username',$request->input('usernameText'))->first();
+        $user = User::where('Username',$request->input('usernameText'))->first();
         $company = $request->input('companyText');
         $host = $request->input('mailServerText');
         $port = $request->input('mailPortText');
 
-        $settings = Default_Settings::firstOrNew(['DFT_UserId'=>$user->USR_Id]);
+        $settings = Default_Settings::firstOrNew(['UserId'=>$user->USR_Id]);
         $settings->DFT_MailServer = $host;
         $settings->DFT_MailPort = $port;
         $settings->DFT_CompanyName = $company;
@@ -107,12 +107,12 @@ class GUIController extends Controller
     public static function generateDefaultEmailSettingsForm() {
         if(Auth::check()) {
             $user = \Session::get('authUser');
-            $settings = Default_Settings::where('DFT_UserId',$user->USR_Id)->first();
+            $settings = Default_Settings::where('UserId',$user->USR_Id)->first();
             if(count($settings)) {
-                $dft_host = $settings->DFT_MailServer;
-                $dft_port = $settings->DFT_MailPort;
-                $dft_user = $settings->DFT_Username;
-                $dft_company = $settings->DFT_CompanyName;
+                $dft_host = $settings->MailServer;
+                $dft_port = $settings->MailPort;
+                $dft_user = $settings->Username;
+                $dft_company = $settings->CompanyName;
             } else {
                 $dft_host = '';
                 $dft_port = '';
@@ -152,20 +152,18 @@ class GUIController extends Controller
     }
 
     /**
-     * createNewProject
-     * Creates new project and inserts into database.
+     * createNewCampaign
+     * Creates new campaign and inserts into database.
      *
-     * @param   Request         $request        Data sent by user to instantiate new project
+     * @param   Request         $request        Data sent by user to instantiate new campaign
      */
-    public static function createNewProject(Request $request) {
+    public static function createNewCampaign(Request $request) {
         $user = \Session::get('authUser');
-        Project::create(
-            ['PRJ_Name'=>$request->input('projectName'),
-            'PRJ_Description'=>$request->input('projectDescription'),
-            'PRJ_ComplexityType'=>$request->input('projectComplexityType'),
-            'PRJ_TargetType'=>$request->input('projectTargetType'),
-            'PRJ_Assignee'=>$user->USR_Id,
-            'PRJ_Status'=>'active']
+        Campaign::create(
+            ['Name'=>$request->input('campaignName'),
+            'Description'=>$request->input('campaignDescription'),
+            'Assignee'=>$user->USR_Id,
+            'Status'=>'active']
         );
     }
 
@@ -229,18 +227,18 @@ class GUIController extends Controller
     public static function createNewMailingListUser(Request $request) {
         if($request->input('departmentSelect') == 0) {
             $name = $request->input('createNewDepartmentText');
-            $id = MLU_Departments::create(['MLD_Department'=>$name]);
-            $department = MLU_Departments::where('MLD_Id',$id->id)->first();
+            $id = MLU_Departments::create(['Department'=>$name]);
+            $department = MLU_Departments::where('Id',$id->id)->first();
         } else {
-            $department = MLU_Departments::where('MLD_Id',$request->input('departmentSelect'))->first();
+            $department = MLU_Departments::where('Id',$request->input('departmentSelect'))->first();
         }
         Mailing_List_User::create(
-            ['MGL_Username'=>$request->input('usernameText'),
-                'MGL_Email'=>$request->input('emailText'),
-                'MGL_FirstName'=>$request->input('firstNameText'),
-                'MGL_LastName'=>$request->input('lastNameText'),
-                'MGL_Department'=>$department->MLD_Id,
-                'MGL_UniqueURLId'=>RandomObjectGeneration::random_str(30)]
+            ['Username'=>$request->input('usernameText'),
+                'Email'=>$request->input('emailText'),
+                'FirstName'=>$request->input('firstNameText'),
+                'LastName'=>$request->input('lastNameText'),
+                'Department'=>$department->MLD_Id,
+                'UniqueURLId'=>RandomObjectGeneration::random_str(30)]
         );
         return redirect()->route('mailingListUser');
     }

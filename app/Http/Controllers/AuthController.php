@@ -15,19 +15,19 @@ class AuthController extends Controller
      */
     public static function create(Request $request) {
         User::create([
-            'USR_Username' => $request->input('usernameText'),
-            'USR_Email' => $request->input('emailText'),
-            'USR_FirstName' => $request->input('firstNameText'),
-            'USR_LastName' => $request->input('lastNameText'),
-            'USR_MiddleInitial' => $request->input('initialText'),
-            'USR_Password' => password_hash($request->input('passwordText'),PASSWORD_DEFAULT),
+            'Username' => $request->input('usernameText'),
+            'Email' => $request->input('emailText'),
+            'FirstName' => $request->input('firstNameText'),
+            'LastName' => $request->input('lastNameText'),
+            'MiddleInitial' => $request->input('initialText'),
+            'Password' => password_hash($request->input('passwordText'),PASSWORD_DEFAULT),
         ]);
         self::authenticate($request);
     }
 
     public static function authenticate(Request $request) {
-        $user = User::where('USR_Username',$request->input('usernameText'))->first();
-        if(password_verify($request->input('passwordText'),$user->USR_Password)) {
+        $user = User::where('Username',$request->input('usernameText'))->first();
+        if(password_verify($request->input('passwordText'),$user->Password)) {
             \Session::put('authUser',$user);
             \Session::put('authIp',$_SERVER['REMOTE_ADDR']);
             $intended = \Session::get('intended');

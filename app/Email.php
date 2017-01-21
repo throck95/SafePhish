@@ -54,9 +54,9 @@ class Email {
      */
     private static function logSentEmail(Mailing_List_User $recipient) {
         $sent_mail = Sent_Mail::create(
-            ['SML_UserId'=>$recipient->MGL_Id,
-            'SML_ProjectId'=>self::$templateConfig->getProjectId(),
-            'SML_Timestamp'=>Carbon::now()]
+            ['UserId'=>$recipient->Id,
+            'CampaignId'=>self::$templateConfig->getCampaignId(),
+            'Timestamp'=>Carbon::now()]
         );
     }
 
@@ -70,17 +70,17 @@ class Email {
     private static function phishingEmailData(Mailing_List_User $recipient) {
         $templateData = array(
             'companyName'=>self::$templateConfig->getCompanyName(),
-            'projectName'=>self::$templateConfig->getProjectName(),
-            'projectId'=>self::$templateConfig->getProjectId(),
-            'lastName'=>$recipient->MGL_LastName,
-            'username'=>$recipient->MGL_Username,
-            'urlId'=>$recipient->MGL_UniqueURLId
+            'campaignName'=>self::$templateConfig->getCampaignName(),
+            'campaignId'=>self::$templateConfig->getCampaignId(),
+            'lastName'=>$recipient->LastName,
+            'username'=>$recipient->Username,
+            'urlId'=>$recipient->UniqueURLId
         );
         $template = self::$templateConfig->getTemplate();
         $emailData = array(
             'subject'=>self::$emailConfig->getSubject(),
             'from'=>self::$emailConfig->getFromEmail(),
-            'to'=>$recipient->MGL_Email,
+            'to'=>$recipient->Email,
             'template'=>$template->getConfigPrefix() . $template->getName()
         );
         return array(

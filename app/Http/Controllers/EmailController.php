@@ -9,7 +9,7 @@ use App\EmailConfiguration;
 use App\Email;
 use App\Http\Controllers\AuthController as Auth;
 
-use App\Models\Project;
+use App\Models\Campaign;
 use App\Models\Sent_Mail;
 use App\Models\Mailing_List_User;
 
@@ -33,11 +33,10 @@ class EmailController extends Controller
                     array(
                         'templateName' => $request->input('emailTemplate'),
                         'companyName' => $request->input('companyText'),
-                        'projectName' => $request->input('projectData')['projectName'],
-                        'projectId' => intval($request->input('projectData')['projectId'])
+                        'campaignName' => $request->input('campaignData')['campaignName'],
+                        'campaignId' => intval($request->input('campaignData')['campaignId'])
                     )
                 );
-                $currentProject = Project::where('PRJ_Id', $templateConfig->getProjectId())->first();
                 $periodInWeeks = 4;
                 $emailConfig = new EmailConfiguration(
                     array(
@@ -49,7 +48,7 @@ class EmailController extends Controller
                         'subject' => $request->input('subject')
                     )
                 );
-                $recipients = self::validateMailingList($currentProject, $periodInWeeks);
+                $recipients = self::validateMailingList($periodInWeeks);
 
                 Email::executeEmail($emailConfig, $templateConfig, $recipients);
             } catch (ConfigurationException $ce) {
@@ -62,55 +61,40 @@ class EmailController extends Controller
     }
 
     /**
-     * retrieveProjects
-     * Helper function to grab the 3 most recent projects for a user, then grab the project object of each project.
+     * retrieveCampaigns
+     * Helper function to grab the 3 most recent campaigns for a user, then grab the campaign object of each campaign.
      *
      * @param   int             $id         Mailing_List_User ID of the requested user.
      * @return  array
      */
-    private static function retrieveProjects($id) {
+    private static function retrieveCampaigns($id) {
         $join = DB::table('sent_email')
-            ->leftJoin('projects','sent_email.SML_ProjectId','=','projects.PRJ_Id')
-            ->where('sent_email.SML_UserId',$id)
-            ->orderBy('sent_email.SML_Timestamp','desc')
+            ->leftJoin('campaigns','sent_email.CampaignId','=','campaigns.Id')
+            ->where('sent_email.UserId',$id)
+            ->orderBy('sent_email.Timestamp','desc')
             ->limit(3)
             ->get();
-        $projects = array();
+        $campaigns = array();
         foreach($join as $item) {
-            $projects[] = $item;
+            $campaigns[] = $item;
         }
-        return $projects;
+        return $campaigns;
     }
 
     /**
      * validateMailingList
      * Validates all the mailing_list recipients. Returns only those that will receive the email.
      *
-     * @param   array           $currentProject         The current project being validated against.
      * @param   int             $periodInWeeks          Number of weeks back to check for most recent email.
      * @return  array
      */
-    private static function validateMailingList(Project $currentProject, $periodInWeeks) {
+    private static function validateMailingList($periodInWeeks) {
         $users = Mailing_List_User::all();
         $mailingList = array();
         $date = date('Y-m-d h:i:s',strtotime("-$periodInWeeks weeks"));
-        $complexity = $currentProject->PRJ_ComplexityType;
-        $target = $currentProject->PRJ_TargetType;
         foreach($users as $user) {
-            $projects = self::retrieveProjects($user->MGL_Id);
-            if($projects[0]->updated_at <= $date ||
-                !((!is_null($projects[0]) &&
-                    $complexity == $projects[0]->PRJ_ComplexityType &&
-                    $target == $projects[0]->PRJ_TargetType)
-                ||
-                (!is_null($projects[0]) && !is_null($projects[1]) &&
-                    $complexity == $projects[0]->PRJ_ComplexityType &&
-                    $complexity == $projects[1]->PRJ_ComplexityType)
-                ||
-                (!is_null($projects[0]) && !is_null($projects[1]) && !is_null($projects[2]) &&
-                    $target == $projects[0]->PRJ_TargetType &&
-                    $target == $projects[1]->PRJ_TargetType &&
-                    $target == $projects[2]->PRJ_TargetType))) {
+            $campaigns = self::retrieveCampaigns($user->Id);
+            if($campaigns[0]->updated_at <= $date) {
                 $mailingList[] = $user;
             }
         }
