@@ -16,12 +16,13 @@ class Template extends Model
 {
     protected $table = 'templates';
 
-    protected $fillable = ['TMP_FileName',
-        'TMP_Educational',
-        'TMP_ComplexityType',
-        'TMP_SpecificityType'];
+    protected $fillable = ['EmailType',
+        'FileName',
+        'PublicName'];
 
-    private static function createNewTemplate($input, $path, $name) {
+    protected $primaryKey = 'FileName';
+
+    private static function createNewTemplate($input, $path, $name, $publicName) {
         if(file_exists("$path/$name.blade.php")) {
             throw new FileExistsException("File already exists.");
         }
@@ -41,11 +42,11 @@ class Template extends Model
                 "Input provided: " . var_export($input));
         }
         
-        if(count(self::where('TMP_FileName',$name)->first())) {
+        if(count(self::where('FileName',$name)->first())) {
             \File::delete("$path/$name.blade.php");
             throw new UnexpectedValueException("DATA DISCREPANCY: File exists according to database.");
         }
-        self::create(['TMP_FileName'=>$name,'TMP_Educational'=>0,'TMP_ComplexityType'=>'Advanced','TMP_SpecificityType'=>'Targeted']);
+        self::create(['EmailType'=>'phishing','FileName'=>$name,'PublicName'=>$publicName]);
     }
 
     private static function validateTemplateContent($input) {
@@ -61,11 +62,11 @@ class Template extends Model
         );
     }
 
-    public static function createPhish($input,$name) {
-        self::createNewTemplate($input,"../resources/views/emails/phishing",$name);
+    public static function createPhish($input,$name,$publicName) {
+        self::createNewTemplate($input,"../resources/views/emails/phishing",$name,$publicName);
     }
 
-    public static function createEdu($input,$name) {
-        self::createNewTemplate($input,"../resources/views/emails/edu",$name);
+    public static function createEdu($input,$name,$publicName) {
+        self::createNewTemplate($input,"../resources/views/emails/edu",$name,$publicName);
     }
 }

@@ -14,9 +14,11 @@ class Default_Settings extends Model
 {
     protected $table = 'default_emailsettings';
 
-    protected $fillable = ['DFT_UserId',
-        'DFT_MailServer',
-        'DFT_MailPort',
-        'DFT_Username',
-        'DFT_CompanyName'];
+    protected $primaryKey = 'UserId';
+
+    protected $fillable = ['UserId',
+        'MailServer',
+        'MailPort',
+        'Username',
+        'CompanyName'];
 }

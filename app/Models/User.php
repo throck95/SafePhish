@@ -17,7 +17,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
     public $timestamps = false;
 
-    protected $primaryKey = 'USR_UserId';
+    protected $primaryKey = 'Id';
 
     /**
      * The attributes that are mass assignable.
@@ -25,12 +25,12 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      * @var array
      */
     protected $fillable =
-        ['USR_Username',
-        'USR_Email',
-        'USR_FirstName',
-        'USR_LastName',
-        'USR_MiddleInitial',
-        'USR_Password'];
+        ['Username',
+        'Email',
+        'FirstName',
+        'LastName',
+        'MiddleInitial',
+        'Password'];
 
     /**
      * The attributes that should be hidden for arrays.

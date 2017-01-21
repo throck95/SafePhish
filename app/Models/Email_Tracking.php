@@ -16,9 +16,11 @@ class Email_Tracking extends Model
 
     public $timestamps = false;
 
-    protected $fillable = ['EML_Ip',
-        'EML_Host',
-        'EML_UserId',
-        'EML_ProjectId',
-        'EML_Timestamp'];
+    protected $primaryKey = 'Id';
+
+    protected $fillable = ['Ip',
+        'Host',
+        'UserId',
+        'CampaignId',
+        'Timestamp'];
 }

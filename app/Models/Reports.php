@@ -16,8 +16,10 @@ class Reports extends Model
 
     public $timestamps = false;
 
-    protected $fillable = ['RPT_EmailSubject',
-        'RPT_UserEmail',
-        'RPT_OriginalFrom',
-        'RPT_CreateDate'];
+    protected $primaryKey = 'Id';
+
+    protected $fillable = ['EmailSubject',
+        'UserEmail',
+        'OriginalFrom',
+        'CreateDate'];
 }

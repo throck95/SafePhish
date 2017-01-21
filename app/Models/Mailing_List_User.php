@@ -15,11 +15,13 @@ class Mailing_List_User extends Model
 {
     protected $table = 'mailing_list';
 
+    protected $primaryKey = 'Id';
+
     protected $fillable =
-        ['MGL_Username',
-            'MGL_Email',
-            'MGL_FirstName',
-            'MGL_LastName',
-            'MGL_Department',
-            'MGL_UniqueURLId'];
+        ['Username',
+            'Email',
+            'FirstName',
+            'LastName',
+            'Department',
+            'UniqueURLId'];
 }

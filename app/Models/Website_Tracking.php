@@ -16,11 +16,13 @@ class Website_Tracking extends Model
 
     public $timestamps = false;
 
-    protected $fillable = ['WBS_Ip',
-        'WBS_Host',
-        'WBS_BrowserAgent',
-        'WBS_ReqPath',
-        'WBS_UserId',
-        'WBS_ProjectId',
-        'WBS_Timestamp'];
+    protected $primaryKey = 'Id';
+
+    protected $fillable = ['Ip',
+        'Host',
+        'BrowserAgent',
+        'ReqPath',
+        'UserId',
+        'CampaignId',
+        'Timestamp'];
 }

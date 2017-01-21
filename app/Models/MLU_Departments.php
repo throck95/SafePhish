@@ -17,6 +17,8 @@ class MLU_Departments extends Model
 
     public $timestamps = false;
 
+    protected $primaryKey = 'Id';
+
     protected $fillable =
-        ['MLD_Department'];
+        ['Department'];
 }

@@ -17,7 +17,9 @@ class Sent_Mail extends Model
 
     public $timestamps = false;
 
-    protected $fillable = ['SML_UserId',
-        'SML_ProjectId',
-        'SML_Timestamp'];
+    protected $primaryKey = 'Id';
+
+    protected $fillable = ['UserId',
+        'CampaignId',
+        'Timestamp'];
 }
