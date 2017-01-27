@@ -6,10 +6,10 @@
     <meta name="_token" content="{{ csrf_token() }}" />
 @stop
 @section('scripts')
-    <!--<script type="text/javascript" src="/js/emailRequirements.js"></script>-->
+    <script type="text/javascript" src="/js/emailRequirements.js"></script>
 @stop
 @section('formcss')
-    <!--<link rel="stylesheet" type="text/css" href="/css/baseformstyles.css" />-->
+    <link rel="stylesheet" type="text/css" href="/css/baseformstyles.css" />
 @stop
 @section('emailClassDefault')
     activeNavButton tempActiveNavButton
@@ -28,7 +28,7 @@
         <select id='departmentSelect' name='departmentSelect'>
             <option value="-1">--Default--</option>
             @for ($i = 0; $i < count($departments); $i++)
-                <option value="{{ $departments[$i]->MLD_Id }}">{{ $departments[$i]->MLD_Department }}</option>
+                <option value="{{ $departments[$i]->Id }}">{{ $departments[$i]->Department }}</option>
             @endfor
             <option value="0">Create New</option>
         </select></p>
