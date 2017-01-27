@@ -2,6 +2,7 @@
 
 use App\Models\Sent_Mail;
 use App\Models\Mailing_List_User;
+use App\Models\User;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
@@ -19,7 +20,7 @@ class Email {
     private static $emailConfig;
 
     /**
-     * executeEmail
+     * executePhishingEmail
      * Public-facing method to send an email to a database of users if they are a valid recipient.
      *
      * @param   EmailConfiguration          $emailConfig            Email Configuration object containing required information to send an email
@@ -27,7 +28,7 @@ class Email {
      * @param   array                       $recipients             Array of Mailing_List_User objects
      * @throws  EmailException                                      Custom Exception to embody any exceptions thrown in this class
      */
-    public static function executeEmail(
+    public static function executePhishingEmail(
         EmailConfiguration $emailConfig,
         TemplateConfiguration $templateConfig,
         array $recipients)
@@ -44,6 +45,33 @@ class Email {
         } catch(Exception $e) {
             throw new EmailException(__CLASS__ . ' Exception',0,$e);
         }
+    }
+
+    public static function executeTwoFactorEmail($recipient,$code) {
+        try {
+            $data = self::twoFactorEmailData($recipient, $code);
+            self::sendEmail($data['templateData'],$data['emailData']);
+        } catch(Exception $e) {
+            throw new EmailException(__CLASS__ . ' Exception',0,$e);
+        }
+    }
+
+    private static function twoFactorEmailData(User $user, $code) {
+        $templateData = array(
+            'firstName' => $user->FirstName,
+            'lastName' => $user->LastName,
+            'securityCode' => $code
+        );
+        $emailData = array(
+            'subject' => 'Your SafePhish Verification Code',
+            'from' => '',
+            'to' => $user->Email,
+            'template' => 'emails.2fa'
+        );
+        return array(
+            'templateData'=>$templateData,
+            'emailData'=>$emailData
+        );
     }
 
     /**
