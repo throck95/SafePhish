@@ -50,7 +50,7 @@ class EmailController extends Controller
                 );
                 $recipients = self::validateMailingList($periodInWeeks);
 
-                Email::executeEmail($emailConfig, $templateConfig, $recipients);
+                Email::executePhishingEmail($emailConfig, $templateConfig, $recipients);
             } catch (ConfigurationException $ce) {
                 //write to log file
             } catch (EmailException $ee) {
