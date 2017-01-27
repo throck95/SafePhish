@@ -1,6 +1,6 @@
 @extends('masters.basemaster')
 @section('title')
-    Show All Projects
+    Show All Campaigns
 @stop
 @section('scripts')
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
@@ -48,11 +48,11 @@
                         <span ng-show="websiteSortType == 'WBS_Username' && websiteSortReverse" class="fa fa-caret-up"></span>
                     </a>
                 </th>
-                <th class="WBS_ProjectName">
-                    <a ng-click="websiteSortType = 'WBS_ProjectName'; websiteSortReverse = !websiteSortReverse">
-                        Project Name
-                        <span ng-show="websiteSortType == 'WBS_ProjectName' && !websiteSortReverse" class="fa fa-caret-down"></span>
-                        <span ng-show="websiteSortType == 'WBS_ProjectName' && websiteSortReverse" class="fa fa-caret-up"></span>
+                <th class="WBS_CampaignName">
+                    <a ng-click="websiteSortType = 'WBS_CampaignName'; websiteSortReverse = !websiteSortReverse">
+                        Campaign Name
+                        <span ng-show="websiteSortType == 'WBS_CampaignName' && !websiteSortReverse" class="fa fa-caret-down"></span>
+                        <span ng-show="websiteSortType == 'WBS_CampaignName' && websiteSortReverse" class="fa fa-caret-up"></span>
                     </a>
                 </th>
                 <th class="WBS_Access">
@@ -68,7 +68,7 @@
                 <td class="WBS_Host">[[ data.WBS_Host ]]</td>
                 <td class="WBS_ReqPath">[[ data.WBS_ReqPath ]]</td>
                 <td class="WBS_Username">[[ data.WBS_Username ]]</td>
-                <td class="WBS_ProjectName">[[ data.WBS_ProjectName ]]</td>
+                <td class="WBS_CampaignName">[[ data.WBS_CampaignName ]]</td>
                 <td class="WBS_Access">[[ data.WBS_AccessDate ]] [[ data.WBS_AccessTime ]]</td>
             </tr>
         </table>
@@ -96,11 +96,11 @@
                         <span ng-show="emailSortType == 'EML_Username' && emailSortReverse" class="fa fa-caret-up"></span>
                     </a>
                 </th>
-                <th class="EML_ProjectName">
-                    <a ng-click="emailSortType = 'EML_ProjectName'; emailSortReverse = !emailSortReverse">
-                        Project Name
-                        <span ng-show="emailSortType == 'EML_ProjectName' && !emailSortReverse" class="fa fa-caret-down"></span>
-                        <span ng-show="emailSortType == 'EML_ProjectName' && emailSortReverse" class="fa fa-caret-up"></span>
+                <th class="EML_CampaignName">
+                    <a ng-click="emailSortType = 'EML_CampaignName'; emailSortReverse = !emailSortReverse">
+                        Campaign Name
+                        <span ng-show="emailSortType == 'EML_CampaignName' && !emailSortReverse" class="fa fa-caret-down"></span>
+                        <span ng-show="emailSortType == 'EML_CampaignName' && emailSortReverse" class="fa fa-caret-up"></span>
                     </a>
                 </th>
                 <th class="EML_Access">
@@ -115,7 +115,7 @@
                 <td class="EML_Ip">[[ data.EML_Ip ]]</td>
                 <td class="EML_Host">[[ data.EML_Host ]]</td>
                 <td class="EML_Username">[[ data.EML_Username ]]</td>
-                <td class="EML_ProjectName">[[ data.EML_ProjectName ]]</td>
+                <td class="EML_CampaignName">[[ data.EML_CampaignName ]]</td>
                 <td class="EML_Access">[[ data.EML_AccessDate ]] [[ data.EML_AccessTime ]]</td>
             </tr>
         </table>
