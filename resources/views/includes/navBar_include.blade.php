@@ -10,7 +10,7 @@
 <div id="navBar">
     <div id="navButtonsDiv">
         <button class="navButton @yield('resultsClassDefault')" id="resultsNavButton">Results</button>
-        <button class="navButton @yield('projectsClassDefault')" id="projectsNavButton">Projects</button>
+        <button class="navButton @yield('campaignsClassDefault')" id="campaignsNavButton">Campaigns</button>
         <button class="navButton @yield('templatesClassDefault')" id="templatesNavButton">Templates</button>
         <button class="navButton @yield('emailClassDefault')" id="emailNavButton">Email</button>
     </div>
@@ -29,17 +29,17 @@
             <img class='scalable' src="/images/thumbnails/createNewTemplate.png" /><h2><a href="/templates/create">New Template</a></h2>
             <p>Create a New Template to be used in the interface.</p>
         </div>
-        <div class="projectsInfo">
-            <img class='scalable' src="/images/thumbnails/templatePaper.png" /><h2><a href="/projects/show">View Projects</a></h2>
-            <p>View all the projects, both active and inactive.</p>
+        <div class="campaignsInfo">
+            <img class='scalable' src="/images/thumbnails/templatePaper.png" /><h2><a href="/campaigns/show">View Campaigns</a></h2>
+            <p>View all the campaigns, both active and inactive.</p>
         </div>
-        <div class="projectsInfo">
-            <img class='scalable' src="/images/thumbnails/createNewProject.png" /><h2><a href="/projects/create">New Project</a></h2>
-            <p>Create a New Project to be used in managing phishing email scams.</p>
+        <div class="campaignsInfo">
+            <img class='scalable' src="/images/thumbnails/createNewCampaign.png" /><h2><a href="/campaigns/create">New Campaign</a></h2>
+            <p>Create a New Campaign to be used in managing phishing email scams.</p>
         </div>
         <div class="emailInfo">
-            <img class='scalable' src="/images/thumbnails/createNewEmail.png" /><h2><a href="/email/generate">Start Project</a></h2>
-            <p>Start a new phishing project or add to a current one.</p>
+            <img class='scalable' src="/images/thumbnails/createNewEmail.png" /><h2><a href="/email/generate">Start Campaign</a></h2>
+            <p>Start a new phishing campaign or add to a current one.</p>
         </div>
         <div class="emailInfo">
             <img class='scalable' src="/images/thumbnails/emailSettings.png" /><h2><a href="/email/settings">Settings</a></h2>

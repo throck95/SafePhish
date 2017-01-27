@@ -32,7 +32,7 @@
     <button id="emailToButton">To Email Address</button>
     <button id="emailFromButton">From Email Address</button>
     <button id="companyNameButton">Company Name</button>
-    <button id="projectNameButton">Project Name</button>
+    <button id="campaignNameButton">Campaign Name</button>
     <button id="imageButton">Image</button><br /><br />
     {!! Form::submit('Submit',array('id'=>'submitButton')) !!}
     {!! Form::close() !!}

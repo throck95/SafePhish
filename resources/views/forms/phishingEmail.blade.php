@@ -23,12 +23,12 @@
         <input type="text" id="mailServerText" name="mailServerText" value="{{ $dft_host }}" /></p>
     <p>{!! Form::label('mailPortText','Mail Port: ') !!}
         <input type="text" id="mailPortText" name="mailPortText" value="{{ $dft_port }}" /></p>
-    <p>{!! Form::label('projectNameSelect','Project Name: ') !!}
-        <select id='projectNameSelect' name='projectData' onchange="getProject(this)">
+    <p>{!! Form::label('campaignNameSelect','Campaign Name: ') !!}
+        <select id='campaignNameSelect' name='campaignData' onchange="getCampaign(this)">
             <option value="-1">--Default--</option>
-            @for ($i = 0; $i < count($projects); $i++)
-                <option value="{{ $projects[$i]->PRJ_Id }}">
-                    {{ $projects[$i]->PRJ_Name }} ({{ $projects[$i]->PRJ_Status }})</option>
+            @for ($i = 0; $i < count($campaigns); $i++)
+                <option value="{{ $campaigns[$i]->PRJ_Id }}">
+                    {{ $campaigns[$i]->Name }} ({{ $campaigns[$i]->Status }})</option>
             @endfor
             <option value="0">Create New</option>
         </select></p>
