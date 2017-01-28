@@ -32,3 +32,6 @@ Route::post('email/send','EmailController@sendEmail')->name('sendEmail');
 //MLU
 Route::get('/mailinglist/create/user','GUIController@generateNewMailingListUserForm')->name('mailingListUser');
 Route::post('/mailinglist/create/user','GUIController@createNewMailingListUser')->name('postMailingListUser');
+
+Route::get('/websitecsv','DataController@websiteTrackingCSV');
+Route::get('/emailcsv','DataController@emailTrackingCSV');
