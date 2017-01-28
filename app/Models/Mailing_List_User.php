@@ -18,8 +18,7 @@ class Mailing_List_User extends Model
     protected $primaryKey = 'Id';
 
     protected $fillable =
-        ['Username',
-            'Email',
+        ['Email',
             'FirstName',
             'LastName',
             'Department',
