@@ -7,7 +7,7 @@ use App\Models\Default_Settings;
 use App\Models\Mailing_List_User;
 use App\Models\MLU_Departments;
 use App\Models\Campaign;
-use App\Template;
+use App\Models\Template;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AuthController as Auth;
 use App\Models\User;
@@ -57,14 +57,14 @@ class GUIController extends Controller
     public static function generatePhishingEmailForm() {
         if(Auth::check()) {
             $user = \Session::get('authUser');
-            $settings = Default_Settings::where('UserId',$user->USR_Id)->first();
+            $settings = Default_Settings::where('UserId',$user->Id)->first();
             $campaigns = Campaign::all();
             $templates = self::returnAllTemplatesByDirectory('phishing');
             if(count($settings)) {
-                $dft_host = $settings->DFT_MailServer;
-                $dft_port = $settings->DFT_MailPort;
-                $dft_user = $settings->DFT_Username;
-                $dft_company = $settings->DFT_CompanyName;
+                $dft_host = $settings->MailServer;
+                $dft_port = $settings->MailPort;
+                $dft_user = $settings->Username;
+                $dft_company = $settings->CompanyName;
             } else {
                 $dft_host = '';
                 $dft_port = '';
@@ -90,7 +90,7 @@ class GUIController extends Controller
         $host = $request->input('mailServerText');
         $port = $request->input('mailPortText');
 
-        $settings = Default_Settings::firstOrNew(['UserId'=>$user->USR_Id]);
+        $settings = Default_Settings::firstOrNew(['UserId'=>$user->Id]);
         $settings->DFT_MailServer = $host;
         $settings->DFT_MailPort = $port;
         $settings->DFT_CompanyName = $company;
@@ -107,7 +107,7 @@ class GUIController extends Controller
     public static function generateDefaultEmailSettingsForm() {
         if(Auth::check()) {
             $user = \Session::get('authUser');
-            $settings = Default_Settings::where('UserId',$user->USR_Id)->first();
+            $settings = Default_Settings::where('UserId',$user->Id)->first();
             if(count($settings)) {
                 $dft_host = $settings->MailServer;
                 $dft_port = $settings->MailPort;
@@ -162,7 +162,7 @@ class GUIController extends Controller
         Campaign::create(
             ['Name'=>$request->input('campaignName'),
             'Description'=>$request->input('campaignDescription'),
-            'Assignee'=>$user->USR_Id,
+            'Assignee'=>$user->Id,
             'Status'=>'active']
         );
     }
@@ -228,7 +228,7 @@ class GUIController extends Controller
         if($request->input('departmentSelect') == 0) {
             $name = $request->input('createNewDepartmentText');
             $id = MLU_Departments::create(['Department'=>$name]);
-            $department = MLU_Departments::where('Id',$id->id)->first();
+            $department = MLU_Departments::where('Id',$id->Id)->first();
         } else {
             $department = MLU_Departments::where('Id',$request->input('departmentSelect'))->first();
         }
@@ -237,7 +237,7 @@ class GUIController extends Controller
                 'Email'=>$request->input('emailText'),
                 'FirstName'=>$request->input('firstNameText'),
                 'LastName'=>$request->input('lastNameText'),
-                'Department'=>$department->MLD_Id,
+                'Department'=>$department->Id,
                 'UniqueURLId'=>RandomObjectGeneration::random_str(30)]
         );
         return redirect()->route('mailingListUser');
