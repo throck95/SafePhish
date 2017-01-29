@@ -30,7 +30,8 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         'FirstName',
         'LastName',
         'MiddleInitial',
-        'Password'];
+        'Password',
+        '2FA'];
 
     /**
      * The attributes that should be hidden for arrays.
