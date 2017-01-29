@@ -18,6 +18,8 @@ Route::get('/websitedata/json','DataController@postWebsiteJson');
 Route::get('/emaildata/json','DataController@postEmailJson');
 Route::get('/reportsdata/json','DataController@postReportsJson');
 Route::get('/','GUIController@displayResults')->name('authHome');
+Route::post('/websitecsv','DataController@websiteTrackingCSV');
+Route::post('/emailcsv','DataController@emailTrackingCSV');
 
 //Errors
 Route::get('/unauthorized','ErrorController@e401')->name('e401');
@@ -33,5 +35,5 @@ Route::post('email/send','EmailController@sendEmail')->name('sendEmail');
 Route::get('/mailinglist/create/user','GUIController@generateNewMailingListUserForm')->name('mailingListUser');
 Route::post('/mailinglist/create/user','GUIController@createNewMailingListUser')->name('postMailingListUser');
 
-Route::get('/websitecsv','DataController@websiteTrackingCSV');
-Route::get('/emailcsv','DataController@emailTrackingCSV');
+//Users
+Route::post('/updateUser','GUIController@updateUser')->name('updateUser');

@@ -242,4 +242,18 @@ class GUIController extends Controller
         );
         return redirect()->route('mailingListUser');
     }
+
+    public static function updateUser(Request $request) {
+        if(Auth::check()) {
+            $email = $request->input('emailText');
+            $password = $request->input('passwordText');
+            $twoFactor = $request->input('twoFactorToggle');
+            if(!empty($twoFactor)) {
+                $twoFactor = $twoFactor == 'true' ? true : false;
+            }
+            $user = \Session::get('authUser');
+
+            User::updateUser($user, $email, password_hash($password, PASSWORD_DEFAULT), $twoFactor);
+        }
+    }
 }

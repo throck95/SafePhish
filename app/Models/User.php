@@ -41,4 +41,27 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     protected $hidden = [
         'password', 'remember_token',
     ];*/
+
+    public static function updateUser($user, $email, $password, $twoFactor) {
+        $query = User::query();
+        $query->where('Id',$user->Id);
+        $update = array();
+
+        if(!empty($email)) {
+            $update['Email'] = $email;
+        }
+        if(!empty($password)) {
+            $update['Password'] = $password;
+        }
+        if(!empty($twoFactor)) {
+            if($twoFactor) {
+                $update['2FA'] = 1;
+            } else {
+                $update['2FA'] = 0;
+            }
+        }
+
+        $query->update($update);
+        $query->get();
+    }
 }
