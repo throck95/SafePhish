@@ -56,9 +56,46 @@ class DataController extends Controller
         return redirect()->route('e401');
     }
 
-    public static function emailTrackingCSV() {
-        $json = Email_Tracking::all();
-        $path = 'C:\Users\tyler\Documents\emailTracking.csv';
+    public static function emailTrackingCSV(Request $request) {
+        if(!Auth::check()) {
+            return redirect()->route('e401');
+        }
+
+        $campaignId = $request->input('campaignText');
+        $userId = $request->input('userText');
+        $ip = $request->input('ipText');
+        $ipExact = $request->input('ipExactToggle');
+        $timestampStart = $request->input('timestampStart');
+        $timestampEnd = $request->input('timestampEnd');
+        $array = array($campaignId, $userId, $ip, $ipExact, $timestampStart, $timestampEnd);
+
+        if(empty($campaignId) && empty($userId) && empty($ip) && empty($ipExact) && empty($timestampStart) && empty($timestampEnd)) {
+            $json = Email_Tracking::all();
+        }
+        else {
+            $json = Email_Tracking::where(function($q) use ($array) {
+                if(!empty($array[0])) {
+                    $q->where('CampaignId',$array[0]);
+                }
+                if(!empty($array[1])) {
+                    $q->where('UserId',$array[1]);
+                }
+                if(!empty($array[3]) && !empty($array[2])) {
+                    $q->where('Ip','LIKE',$array[2]);
+                }
+                else if(empty($array[3]) && !empty($array[2])) {
+                    $q->where('Ip',$array[2]);
+                }
+                if(!empty($array[4])) {
+                    $q->where('Timestamp','>=',$array[4]);
+                }
+                if(!empty($array[5])) {
+                    $q->where('Timestamp','<=',$array[5]);
+                }
+            })->get();
+        }
+
+        $path = 'C:\Users\tyler\Documents\searchEmailTracking.csv';
         $array = json_decode($json, true);
         $f = fopen($path, 'w+');
 
@@ -74,8 +111,44 @@ class DataController extends Controller
         readfile($path);
     }
 
-    public static function websiteTrackingCSV() {
-        $json = Website_Tracking::all();
+    public static function websiteTrackingCSV(Request $request) {
+        if(!Auth::check()) {
+            return redirect()->route('e401');
+        }
+
+        $campaignId = $request->input('campaignText');
+        $userId = $request->input('userText');
+        $ip = $request->input('ipText');
+        $ipExact = $request->input('ipExactToggle');
+        $timestampStart = $request->input('timestampStart');
+        $timestampEnd = $request->input('timestampEnd');
+        $array = array($campaignId, $userId, $ip, $ipExact, $timestampStart, $timestampEnd);
+
+        if(empty($campaignId) && empty($userId) && empty($ip) && empty($ipExact) && empty($timestampStart) && empty($timestampEnd)) {
+            $json = Website_Tracking::all();
+        }
+        else {
+            $json = Website_Tracking::where(function($q) use ($array) {
+                if(!empty($array[0])) {
+                    $q->where('CampaignId',$array[0]);
+                }
+                if(!empty($array[1])) {
+                    $q->where('UserId',$array[1]);
+                }
+                if(!empty($array[3]) && !empty($array[2])) {
+                    $q->where('Ip','LIKE',$array[2]);
+                }
+                else if(empty($array[3]) && !empty($array[2])) {
+                    $q->where('Ip',$array[2]);
+                }
+                if(!empty($array[4])) {
+                    $q->where('Timestamp','>=',$array[4]);
+                }
+                if(!empty($array[5])) {
+                    $q->where('Timestamp','<=',$array[5]);
+                }
+            })->get();
+        }
         $path = 'C:\Users\tyler\Documents\websiteTracking.csv';
         $array = json_decode($json, true);
         $f = fopen($path, 'w+');
