@@ -24,6 +24,7 @@ class AuthController extends Controller
             'LastName' => $request->input('lastNameText'),
             'MiddleInitial' => $request->input('initialText'),
             'Password' => password_hash($request->input('passwordText'),PASSWORD_DEFAULT),
+            '2FA' => 0,
         ]);
         self::authenticate($request);
     }
@@ -31,26 +32,33 @@ class AuthController extends Controller
     public static function authenticate(Request $request) {
         $user = User::where('Username',$request->input('usernameText'))->first();
         if(password_verify($request->input('passwordText'),$user->Password)) {
-            $twoFactor = Two_Factor::where([
-                'UserId' => $user->Id, 'Ip' => $_SERVER['REMOTE_ADDR'] //also check timestamp within time period
-            ])->first();
-            if(count($twoFactor)) {
-                $twoFactor->delete();
-            }
-            $code = RandomObjectGeneration::random_str(6, '1234567890');
-            Two_Factor::create([
-                'UserID' => $user->Id,
-                'Ip' => $_SERVER['REMOTE_ADDR'],
-                'Code' => password_hash($code,PASSWORD_DEFAULT)
-            ]);
+            if($user->get('2FA') == 1) {
+                $twoFactor = Two_Factor::where([
+                    'UserId' => $user->Id, 'Ip' => $_SERVER['REMOTE_ADDR'] //also check timestamp within time period
+                ])->first();
+                if(count($twoFactor)) {
+                    $twoFactor->delete();
+                }
+                $code = RandomObjectGeneration::random_str(6, '1234567890');
+                Two_Factor::create([
+                    'UserID' => $user->Id,
+                    'Ip' => $_SERVER['REMOTE_ADDR'],
+                    'Code' => password_hash($code,PASSWORD_DEFAULT)
+                ]);
 
-            Email::executeTwoFactorEmail($user,$code);
-            //create cron job
-            /*
-             * cron job must do a one time schedule in the future to delete this entry
-             */
-            \Session::put('2faUser',$user);
-            return view('auth.2fa');
+                Email::executeTwoFactorEmail($user,$code);
+                \Session::put('2faUser',$user);
+                return view('auth.2fa');
+            }
+            else {
+                \Session::put('authUser',$user);
+                \Session::put('authIp',$_SERVER['REMOTE_ADDR']);
+                $intended = \Session::get('intended');
+                if($intended) {
+                    return redirect()->to($intended);
+                }
+                return redirect()->route('authHome');
+            }
         }
         return redirect()->route('login');
     }
@@ -66,7 +74,7 @@ class AuthController extends Controller
             $twoFactor->delete();
             $intended = \Session::get('intended');
             if($intended) {
-            return redirect()->to($intended);
+                return redirect()->to($intended);
             }
             return redirect()->route('authHome');
         }
