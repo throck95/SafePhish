@@ -256,4 +256,12 @@ class GUIController extends Controller
             User::updateUser($user, $email, password_hash($password, PASSWORD_DEFAULT), $twoFactor);
         }
     }
+
+    public static function updateMailingListUser(Request $request) {
+
+    }
+
+    public static function generateUpdateMailingListUserForm() {
+
+    }
 }

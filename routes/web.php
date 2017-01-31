@@ -32,8 +32,10 @@ Route::get('/email/generate','GUIController@generatePhishingEmailForm');
 Route::post('email/send','EmailController@sendEmail')->name('sendEmail');
 
 //MLU
-Route::get('/mailinglist/create/user','GUIController@generateNewMailingListUserForm')->name('mailingListUser');
-Route::post('/mailinglist/create/user','GUIController@createNewMailingListUser')->name('postMailingListUser');
+Route::get('/mailinglist/create','GUIController@generateNewMailingListUserForm')->name('mailingListUser');
+Route::post('/mailinglist/create','GUIController@createNewMailingListUser')->name('postMailingListUser');
+Route::get('/mailinglist/update','GUIController@generateUpdateMailingListUserForm')->name('updateMailingListUser');
+Route::post('/mailinglist/update','GUIController@updateMailingListUser')->name('postUpdateMailingListUser');
 
 //Users
 Route::post('/updateUser','GUIController@updateUser')->name('updateUser');

@@ -22,5 +22,31 @@ class Mailing_List_User extends Model
             'FirstName',
             'LastName',
             'Department',
-            'UniqueURLId'];
+            'UniqueURLId'
+        ];
+
+    public static function updateMailingListUser($mlu, $email, $fname, $lname, $departmentID, $uniqueURLId) {
+        $query = Mailing_List_User::query();
+        $query->where('Id',$mlu->Id);
+        $update = array();
+
+        if(!empty($email)) {
+            $update['Email'] = $email;
+        }
+        if(!empty($fname)) {
+            $update['FirstName'] = $fname;
+        }
+        if(!empty($lname)) {
+            $update['LastName'] = $lname;
+        }
+        if(!empty($departmentID)) {
+            $update['Department'] = MLU_Departments::where('Id',$departmentID)->first()->Id;
+        }
+        if(!empty($uniqueURLId)) {
+            $update['UniqueURLId'] = $uniqueURLId;
+        }
+
+        $query->update($update);
+        $query->get();
+    }
 }
