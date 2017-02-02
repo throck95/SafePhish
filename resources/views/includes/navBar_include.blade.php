@@ -1,5 +1,12 @@
 <header>
-    <div id="headerBar"></div>
+    <div id="headerBar">
+        @if(\Session::get('authUser'))
+            <a class="authenticationLink" target="_blank" href="#">MY ACCOUNT</a>
+            <a class="authenticationLink" href="/logout">LOGOUT</a>
+        @else
+            <a class="authenticationLink" href="/login">LOGIN</a>
+        @endif
+    </div>
     <div id="logoBar">
         <a target="_blank" href="#">
             <img id="spHeadLogo" src="/images/logos/safephish_logo_v1.png" />
@@ -30,9 +37,5 @@
                 <li><a href="#users">Users</a></li>
             @endif
         </ul>
-        <a class="authenticationLink" target="_blank" href="#">MY ACCOUNT</a> <!-- create a my account page -->
-        <a class="authenticationLink" href="/logout">LOGOUT</a>
-    @else
-        <a class="authenticationLink" href="/login">LOGIN</a>
     @endif
 </div>

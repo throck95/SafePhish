@@ -61,8 +61,8 @@ class DataController extends Controller
             return redirect()->route('e401');
         }
 
-        $campaignId = $request->input('campaignText');
-        $userId = $request->input('userText');
+        $campaignId = $request->input('campaignIdSelect');
+        $userId = $request->input('userIdText');
         $ip = $request->input('ipText');
         $ipExact = $request->input('ipExactToggle');
         $timestampStart = $request->input('timestampStart');
@@ -95,7 +95,7 @@ class DataController extends Controller
             })->get();
         }
 
-        $path = 'C:\Users\tyler\Documents\searchEmailTracking.csv';
+        $path = 'temp\emailTracking.csv';
         $array = json_decode($json, true);
         $f = fopen($path, 'w+');
 
@@ -116,8 +116,8 @@ class DataController extends Controller
             return redirect()->route('e401');
         }
 
-        $campaignId = $request->input('campaignText');
-        $userId = $request->input('userText');
+        $campaignId = $request->input('campaignIdSelect');
+        $userId = $request->input('userIdText');
         $ip = $request->input('ipText');
         $ipExact = $request->input('ipExactToggle');
         $timestampStart = $request->input('timestampStart');
@@ -149,7 +149,7 @@ class DataController extends Controller
                 }
             })->get();
         }
-        $path = 'C:\Users\tyler\Documents\websiteTracking.csv';
+        $path = 'temp\websiteTracking.csv';
         $array = json_decode($json, true);
         $f = fopen($path, 'w+');
 
