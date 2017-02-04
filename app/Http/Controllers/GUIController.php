@@ -41,6 +41,27 @@ class GUIController extends Controller
         return self::authRequired();
     }
 
+    public static function displayCampaigns() {
+        if(Auth::check()) {
+            return view("displays.showAllCampaigns");
+        }
+        return self::authRequired();
+    }
+
+    public static function displayTemplate($FileName) {
+        if(Auth::check()) {
+            $template = Template::where('FileName',$FileName)->first();
+            if(!is_null($template)) {
+                $emailType = $template->EmailType;
+                $file = explode("\n",file_get_contents("../resources/views/emails/$emailType/$FileName.blade.php"));
+                $variables = array('templateText'=>$file,'publicName'=>$template->PublicName,'fileName'=>$FileName);
+                return view('displays.showSelectedTemplate')->with($variables);
+            }
+            return redirect()->route('e404');
+        }
+        return self::authRequired();
+    }
+
     public static function generateCreateTemplate() {
         if(Auth::check()) {
             return view("forms.createNewTemplate");
@@ -74,6 +95,26 @@ class GUIController extends Controller
             $variables = array('dft_host'=>$dft_host,'dft_port'=>$dft_port,'dft_user'=>$dft_user,
                 'dft_company'=>$dft_company,'campaigns'=>$campaigns,'templates'=>$templates);
             return view('forms.phishingEmail')->with($variables);
+        }
+        return self::authRequired();
+    }
+
+    public static function generateEmailReportForm() {
+        if(Auth::check()) {
+            $campaigns = Campaign::all();
+            $users = Mailing_List_User::all();
+            $variables = array('campaigns'=>$campaigns,'users'=>$users);
+            return view('forms.generateEmailReport')->with($variables);
+        }
+        return self::authRequired();
+    }
+
+    public static function generateWebsiteReportForm() {
+        if(Auth::check()) {
+            $campaigns = Campaign::all();
+            $users = Mailing_List_User::all();
+            $variables = array('campaigns'=>$campaigns,'users'=>$users);
+            return view('forms.generateWebsiteReport')->with($variables);
         }
         return self::authRequired();
     }
