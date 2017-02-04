@@ -1,6 +1,4 @@
-@extends('masters.basemaster')
-@section('content')
-    <!--This is a Phishing Email sponsored by {{ $companyName }} to test your awareness of Phishing Scams. Project Name: {{ $projectName }}-->
+<!--This is a Phishing Email sponsored by {{ $companyName }} to test your awareness of Phishing Scams. Project Name: {{ $projectName }}-->
 <p>Mr. or Mrs. {{ $lastName }}: </p>
 <p>There have been numerous login attempts to your corporate account, {{ $username }}.</p>
 
@@ -20,8 +18,7 @@
     <p>Thank you,<br />
     Annuity IT Services</p>
 
-    <p>***This email was generated automatically based on logon attempts. This mailbox is not monitored. Please do not reply.***</p>
-    <!--webbug here-->
-    <!--{!! HTML::image('http://i.imgur.com/2MuTWFy.jpg') !!}-->
-    {!! HTML::image('http://localhost:8888/path/to/image.png') !!}
-@stop
+<p>***This email was generated automatically based on logon attempts. This mailbox is not monitored. Please do not reply.***</p>
+<!--webbug here-->
+<!--{!! HTML::image('http://i.imgur.com/2MuTWFy.jpg') !!}-->
+{!! HTML::image('http://localhost:8888/path/to/image.png') !!}
