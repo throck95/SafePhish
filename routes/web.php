@@ -7,6 +7,8 @@ Route::get('/register','GUIController@generateRegister')->name('register');
 Route::post('/register','AuthController@create');
 Route::get('/auth/check','AuthController@check');
 Route::get('/logout','AuthController@logout')->name('logout');
+Route::get('/2fa',function() {return view('auth.2fa');})->name('2fa');
+Route::post('/2fa','AuthController@twoFactorVerify');
 
 //Templates
 Route::get('/templates/create','GUIController@generateCreateTemplate');
@@ -39,3 +41,7 @@ Route::post('/mailinglist/update','GUIController@updateMailingListUser')->name('
 
 //Users
 Route::post('/updateUser','GUIController@updateUser')->name('updateUser');
+
+Route::get('/print',function() {
+    return view('auth.2fa');
+});

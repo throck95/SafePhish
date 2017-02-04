@@ -12,18 +12,29 @@
 
 @stop
 @section('stylesheets')
-
+    <link href="/css/2fa.css" type="text/css" rel="stylesheet" />
 @stop
 @section('bodyContent')
-    <div id="errorsDiv">
-        @foreach($errors as $error)
-            <p class="fa fa-times-circle">{{ $error }}</p>
-        @endforeach
-    </div>
+    <h2 style="margin: auto; text-align: center">Two-Factor Authentication</h2>
+    <br />
     {!! Form::open(array('url'=>'/2fa')) !!}
-    <p>{!! Form::text('codeText',null,array('id'=>'codeText','placeholder'=>'Authentication Code','name'=>'codeText')) !!}</p>
-    {!! Form::submit('Submit',array('id'=>'submitButton')) !!}
+    <div class="center"><strong style="float: left; width: 40%">Authentication code</strong><a href="#whatsthis" style="float: right; width: 30%; text-decoration: none">What's this?</a></div>
+    <div class="center">{!! Form::text('codeText',null,array('id'=>'codeText','name'=>'codeText','style'=>'width:90%')) !!}</div>
+    {!! Form::submit('Verify',array('id'=>'submitButton','style'=>'width:80%')) !!}
     {!! Form::close() !!}
+    <br />
+    <div style="width: 40%; margin: auto">
+        <p>Open the two-factor authentication email sent to your primary email address
+            to view your authentication code and verify your identity.</p>
+    </div>
+    <br />
+    <hr width="75%" />
+    <br />
+    <div style="width: 40%; margin: auto">
+        <p><strong>Don't have access to your email?</strong></p>
+        <p><a href="#recoverycode">Enter a two-factor recovery code</a></p>
+    </div>
+    <br />
 @stop
 @section('footer')
     <p></p>

@@ -1,0 +1,29 @@
+h2 {
+    font-weight: 300;
+}
+
+form {
+    border: 1px solid darkgrey;
+    margin: auto;
+    width: 450px;
+    text-align: center;
+    -webkit-border-radius: 6px;
+    border-radius: 6px;
+}
+
+#codeText, #submitButton {
+    -webkit-border-radius: 6px;
+    border-radius: 6px;
+}
+
+#codeText {
+    border: 1px solid darkgrey;
+}
+
+#submitButton:hover {
+    background-color: #c9c9c9;
+}
+
+#codeText:focus, #submitButton:focus {
+    outline: none;
+}
