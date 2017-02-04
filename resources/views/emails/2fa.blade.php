@@ -1,6 +1,6 @@
 <p>Dear {{ $firstName }} {{ $lastName }},</p>
 <p>In order to authenticate your account, please enter the code below as directed on the SafePhish sign in page.
-    You will have 10 minutes to complete this action before the code expires.</p>
+    You will have 30 minutes to complete this action before the code expires.</p>
 <p>{{ $securityCode }}</p>
 <p>SafePhish will never send an email requesting information that will uniquely identify you. If you feel you have
     received a suspicious email, please forward it to <a href="mailto:temporary.email@safephish.com">temporary.email@safephish.com.</a></p>
