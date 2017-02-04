@@ -22,6 +22,8 @@ class Template extends Model
 
     protected $primaryKey = 'FileName';
 
+    public $incrementing = false;
+
     private static function createNewTemplate($input, $path, $name, $publicName) {
         if(file_exists("$path/$name.blade.php")) {
             throw new FileExistsException("File already exists.");
@@ -67,6 +69,6 @@ class Template extends Model
     }
 
     public static function createEdu($input,$name,$publicName) {
-        self::createNewTemplate($input,"../resources/views/emails/edu",$name,$publicName);
+        self::createNewTemplate($input,"../resources/views/emails/educational",$name,$publicName);
     }
 }

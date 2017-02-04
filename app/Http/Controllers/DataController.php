@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Campaign;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AuthController as Auth;
@@ -10,7 +11,7 @@ use App\Models\Website_Tracking;
 use App\Models\Reports;
 use App\Models\Two_Factor;
 use App\Models\User;
-use League\Csv;
+use App\Models\Template;
 
 class DataController extends Controller
 {
@@ -52,6 +53,22 @@ class DataController extends Controller
         if(Auth::check()) {
             $json = Reports::all();
             return $json;
+        }
+        return redirect()->route('e401');
+    }
+
+    public static function postCampaignsJson() {
+        if(Auth::check()) {
+            $json = Campaign::all();
+            return "{\"campaigns\":$json}";
+        }
+        return redirect()->route('e401');
+    }
+
+    public static function postTemplatesJson() {
+        if(Auth::check()) {
+            $json = Template::all();
+            return "{\"templates\":$json}";
         }
         return redirect()->route('e401');
     }
