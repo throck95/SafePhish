@@ -9,6 +9,7 @@ Route::get('/auth/check','AuthController@check');
 Route::get('/logout','AuthController@logout')->name('logout');
 Route::get('/2fa',function() {return view('auth.2fa');})->name('2fa');
 Route::post('/2fa','AuthController@twoFactorVerify');
+Route::get('/2faresend','AuthController@resend2FA');
 
 //Templates
 Route::get('/templates/create','GUIController@generateCreateTemplate');
