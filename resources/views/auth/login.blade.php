@@ -6,24 +6,22 @@
     <meta name="_token" content="{{ csrf_token() }}" />
 @stop
 @section('scripts')
-    <script type="text/javascript" src="/js/testUserAuth.js"></script>
+    <script type="text/javascript" src="/js/login_validateInput.js"></script>
 @stop
 @section('formcss')
-    <link rel="stylesheet" type="text/css" href="/css/baseformstyles.css" />
+
 @stop
 @section('stylesheets')
-    <link rel="stylesheet" type="text/css" href="/css/loginErrors.css" />
+
 @stop
 @section('bodyContent')
-    <div id="errorsDiv">
-        @foreach($errors as $error)
-            <p class="fa fa-times-circle">{{ $error }}</p>
-        @endforeach
-    </div>
+    <h2 style="margin-left: 10px; font-weight: 300">Log In</h2>
     {!! Form::open(array('url'=>'/login')) !!}
-    <p>{!! Form::text('usernameText',null,array('id'=>'usernameText','placeholder'=>'Username','name'=>'usernameText')) !!}</p>
-    <p>{!! Form::password('passwordText',array('id'=>'passwordText','placeholder'=>'Password','name'=>'passwordText')) !!}</p>
-    {!! Form::submit('Submit',array('id'=>'submitButton')) !!}
+    <p>{!! Form::label('usernameText','Username: ') !!}
+        {!! Form::text('usernameText',null,array('id'=>'usernameText','name'=>'usernameText','size'=>30)) !!}</p>
+    <p>{!! Form::label('passwordText','Password: ') !!}
+        {!! Form::password('passwordText',array('id'=>'passwordText','name'=>'passwordText','size'=>30)) !!}</p>
+    {!! Form::submit('Login',array('id'=>'submitButton','style'=>'margin-left:10px')) !!}
     {!! Form::close() !!}
 @stop
 @section('footer')
