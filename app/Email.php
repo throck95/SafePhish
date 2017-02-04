@@ -64,7 +64,7 @@ class Email {
         );
         $emailData = array(
             'subject' => 'Your SafePhish Verification Code',
-            'from' => '',
+            'from' => getenv('MAIL_USERNAME'),
             'to' => $user->Email,
             'template' => 'emails.2fa'
         );
@@ -138,9 +138,6 @@ class Email {
                 $m->subject($subject);
             }
         );
-        if(!$mailResult) {
-            throw new FatalErrorException('Email failed to send to ' . $to . ', from ' . $from);
-        }
     }
 
     private static function setTemplateConfig(TemplateConfiguration $templateConfig) {
