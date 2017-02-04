@@ -21,7 +21,8 @@
         </div>
         <footer>
             @yield('footer')
-            <div id="idleTime"></div>
+            <div id="copyright" style="width: 50%; float:left"></div>
+            <p style="float:right"><a href="#support">Contact Us</a></p>
         </footer>
     </body>
 </html>
