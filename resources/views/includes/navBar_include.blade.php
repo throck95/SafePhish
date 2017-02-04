@@ -8,8 +8,8 @@
         @endif
     </div>
     <div id="logoBar">
-        <a target="_blank" href="#">
-            <img id="spHeadLogo" src="/images/logos/safephish_logo_v1.png" />
+        <a href="/">
+            <img id="spHeadLogo" src="/images/logos/safephish_logo.png" />
         </a>
     </div>
     @yield('header')
@@ -18,16 +18,28 @@
     @if(\Session::get('authUser') || \Session::get('adminUser'))
         <ul>
             <li class="dropdown">
-                <a href="#reports" class="dropbtn">Reports</a>
+                <a class="dropbtn">Reports</a>
                 <div class="navbar-dropdown">
-                    <a href="#reports_web">Web</a>
-                    <a href="#reports_email">Email</a>
+                    <a href="/reports/web">Web</a>
+                    <a href="/reports/email">Email</a>
                 </div>
             </li>
-            <li><a href="#campaigns">Campaigns</a></li>
-            <li><a href="#templates">Templates</a></li>
             <li class="dropdown">
-                <a href="#mlu" class="dropbtn">Mailing Lists</a>
+                <a class="dropbtn">Campaigns</a>
+                <div class="navbar-dropdown">
+                    <a href="/campaigns">Display</a>
+                    <a href="/campaigns/create">New</a>
+                </div>
+            </li>
+            <li class="dropdown">
+                <a class="dropbtn">Templates</a>
+                <div class="navbar-dropdown">
+                    <a href="/templates/all">Display</a>
+                    <a href="/templates/create">New</a>
+                </div>
+            </li>
+            <li class="dropdown">
+                <a class="dropbtn">Mailing Lists</a>
                 <div class="navbar-dropdown">
                     <a href="#mlu_manage">Manage</a>
                     <a href="#mlu_groups">Groups</a>
