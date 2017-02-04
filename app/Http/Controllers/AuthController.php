@@ -109,6 +109,6 @@ class AuthController extends Controller
         \Session::forget('authUser');
         \Session::forget('authIp');
         \Session::forget('intended');
-        return view('auth.logout'); //create this view
+        return redirect()->route('login');
     }
 }
