@@ -23,6 +23,3 @@
     </div>
     <br />
 @stop
-@section('footer')
-    <p></p>
-@stop

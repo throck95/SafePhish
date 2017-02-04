@@ -24,6 +24,3 @@
     {!! Form::submit('Login',array('id'=>'submitButton','style'=>'margin-left:10px')) !!}
     {!! Form::close() !!}
 @stop
-@section('footer')
-    <p></p>
-@stop

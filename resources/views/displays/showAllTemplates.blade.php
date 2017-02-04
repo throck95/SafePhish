@@ -39,6 +39,3 @@
         </table>
     </div>
 @stop
-@section('footer')
-    <p></p>
-@stop
