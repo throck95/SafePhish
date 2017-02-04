@@ -14,21 +14,25 @@ Route::get('/2faresend','AuthController@resend2FA');
 //Templates
 Route::get('/templates/create','GUIController@generateCreateTemplate');
 Route::post('/templates/create/phish','GUIController@createNewPhishTemplate');
-Route::get('/templates/display/all','GUIController@generateDisplayTemplatesForm');
+Route::get('/templates/all', function() {return view('displays.showAllTemplates');});
+Route::get('/templates/{FileName}','GUIController@displayTemplate');
 
 //Results
 Route::get('/websitedata/json','DataController@postWebsiteJson');
 Route::get('/emaildata/json','DataController@postEmailJson');
 Route::get('/reportsdata/json','DataController@postReportsJson');
-Route::get('/','GUIController@displayResults')->name('authHome');
-Route::post('/websitecsv','DataController@websiteTrackingCSV');
-Route::post('/emailcsv','DataController@emailTrackingCSV');
+Route::get('/',function() {return view('displays.dashboard');})->name('authHome');
+Route::get('/reports/web','GUIController@generateWebsiteReportForm');
+Route::get('/reports/email','GUIController@generateEmailReportForm');
+Route::post('/csv/web','DataController@websiteTrackingCSV');
+Route::post('/csv/email','DataController@emailTrackingCSV');
 
 //Errors
 Route::get('/unauthorized','ErrorController@e401')->name('e401');
 Route::get('/404','ErrorController@e404')->name('e404');
 
-//Projects
+//Campaigns
+Route::get('/campaigns','GUIController@displayCampaigns');
 
 //Emails
 Route::get('/email/generate','GUIController@generatePhishingEmailForm');
@@ -43,6 +47,10 @@ Route::post('/mailinglist/update','GUIController@updateMailingListUser')->name('
 //Users
 Route::post('/updateUser','GUIController@updateUser')->name('updateUser');
 
+//Json
+Route::get('/json/campaigns','DataController@postCampaignsJson');
+Route::get('/json/templates','DataController@postTemplatesJson');
+
 Route::get('/print',function() {
-    return view('auth.2fa');
+
 });
