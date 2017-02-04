@@ -31,7 +31,7 @@
             <th ng-click='sortColumn("Created")' ng-class='sortClass("Created")'>Created</th>
             <th ng-click='sortColumn("Updated")' ng-class='sortClass("Updated")'>Updated</th>
             <tr ng-repeat="x in campaigns | orderBy:column:reverse | filter:search | filter:buttonSearch:exceptEmpty">
-                <td>[[ x.Name ]]</td>
+                <td><a ng-href='/campaigns/[[ x.Id ]]'>[[ x.Name ]]</a></td>
                 <td>[[ x.Description ]]</td>
                 <td>[[ x.Status ]]</td>
                 <td>[[ x.created_at ]]</td>

@@ -32,7 +32,9 @@ Route::get('/unauthorized','ErrorController@e401')->name('e401');
 Route::get('/404','ErrorController@e404')->name('e404');
 
 //Campaigns
-Route::get('/campaigns','GUIController@displayCampaigns');
+Route::get('/campaigns','GUIController@displayCampaigns')->name('campaigns');
+Route::get('/campaigns/{Id}','GUIController@displayCampaign');
+Route::post('/campaigns/update/{Id}','GUIController@updateCampaign');
 
 //Emails
 Route::get('/email/generate','GUIController@generatePhishingEmailForm');
@@ -52,5 +54,5 @@ Route::get('/json/campaigns','DataController@postCampaignsJson');
 Route::get('/json/templates','DataController@postTemplatesJson');
 
 Route::get('/print',function() {
-
+    return view('errors.500');
 });

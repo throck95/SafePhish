@@ -21,4 +21,22 @@ class Campaign extends Model
         'Description',
         'Assignee',
         'Status'];
+
+    public static function updateCampaign($campaign,$description,$assignee,$status) {
+        $query = Campaign::query();
+        $query->where('Id',$campaign->Id);
+        $update = array();
+        if(!empty($description)) {
+            $update['Description'] = $description;
+        }
+        if(!empty($assignee)) {
+            $update['Assignee'] = $assignee;
+        }
+        if(!empty($status)) {
+            $update['Status'] = $status;
+        }
+
+        $query->update($update);
+        $query->get();
+    }
 }

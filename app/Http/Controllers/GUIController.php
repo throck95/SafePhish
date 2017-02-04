@@ -69,6 +69,30 @@ class GUIController extends Controller
         return self::authRequired();
     }
 
+    public static function displayCampaign($Id) {
+        if(Auth::check()) {
+            $campaign = Campaign::where('Id',$Id)->first();
+            $user = User::where('Id',$campaign->Assignee)->first();
+            $users = User::all();
+            $variables = array('campaign'=>$campaign,'user'=>$user,'users'=>$users);
+            return view('forms.editCampaign')->with($variables);
+        }
+        return self::authRequired();
+    }
+
+    public static function updateCampaign(Request $request,$Id) {
+        if(Auth::check()) {
+            $campaign = Campaign::where('Id',$Id)->first();
+            $description = $request->input('descriptionText');
+            $userId = $request->input('userIdText');
+            $status = $request->input('statusSelect');
+
+            Campaign::updateCampaign($campaign, $description, $userId, $status);
+            return redirect()->route('campaigns');
+        }
+        return self::authRequired();
+    }
+
     /**
      * generatePhishingEmailForm
      * Generates the Send Phishing Email Request Form in the GUI.
