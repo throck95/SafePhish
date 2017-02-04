@@ -1,14 +1,20 @@
-<html>
-<head>
-    <title>404 Not Found</title>
-</head>
-<body>
-<div class="container">
-    <div class="content">
-        <h2>Oops! An Error Occurred</h2>
-        <h3>The server returned a "404 Not Found."</h3>
-        <p>Something is broken. We are actively working to fix this problem. Please try back later. Sorry for any inconvenience caused.</p>
+@extends('masters.basemaster')
+@section('title')
+    Page Not Found
+@stop
+@section('scripts')
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+@stop
+@section('stylesheets')
+
+@stop
+@section('bodyContent')
+    <div style="text-align: center">
+        <img src="/images/logos/404.png" />
+        <br />
     </div>
-</div>
-</body>
-</html>
+@stop
+@section('footer')
+    <p></p>
+@stop
