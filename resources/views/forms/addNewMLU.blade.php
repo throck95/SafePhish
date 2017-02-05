@@ -14,11 +14,11 @@
 @section('bodyContent')
     {!! Form::open(array('route'=>'postMailingListUser')) !!}
     <p>{!! Form::label('emailText','Email Address: ') !!}
-        <input type="text" id="emailText" name="emailText" /></p>
+        {!! Form::text('emailText',null,array('name'=>'emailText')) !!}</p>
         <p>{!! Form::label('firstNameText','First Name: ') !!}
-        <input type="text" id="firstNameText" name="firstNameText" /></p>
+            {!! Form::text('firstNameText',null,array('name'=>'firstNameText')) !!}</p>
     <p>{!! Form::label('lastNameText','Last Name: ') !!}
-        <input type="text" id="lastNameText" name="lastNameText" /></p>
+        {!! Form::text('lastNameText',null,array('name'=>'lastNameText')) !!}</p>
     <p>{!! Form::label('departmentSelect','Department: ') !!}
         <select id='departmentSelect' name='departmentSelect[]' multiple>
             @for ($i = 0; $i < count($departments); $i++)
