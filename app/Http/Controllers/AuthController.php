@@ -73,6 +73,19 @@ class AuthController extends Controller
     }
 
     /**
+     * generateTwoFactorPage
+     * Route for generating the 2FA page.
+     *
+     * @return \Illuminate\Http\RedirectResponse | \Illuminate\View\View
+     */
+    public static function generateTwoFactorPage() {
+        if(\Session::has('2faUser')) {
+            return view('auth.2fa');
+        }
+        return redirect()->to('login');
+    }
+
+    /**
      * twoFactorVerify
      * Validates the 2FA code to authenticate the user.
      *
@@ -80,22 +93,25 @@ class AuthController extends Controller
      * @return  \Illuminate\Http\RedirectResponse
      */
     public static function twoFactorVerify(Request $request) {
-        $user = \Session::get('2faUser');
-        $twoFactor = Two_Factor::where([
-            'UserId' => $user->Id, 'Ip' => $_SERVER['REMOTE_ADDR']
-        ])->first();
-        if(password_verify($request->input('codeText'),$twoFactor->Code)) {
-            \Session::put('authUser',$user);
-            \Session::put('authIp',$_SERVER['REMOTE_ADDR']);
-            \Session::forget('2faUser');
-            $twoFactor->delete();
-            $intended = \Session::get('intended');
-            if($intended) {
-                return redirect()->to($intended);
+        if(\Session::has('2faUser')) {
+            $user = \Session::get('2faUser');
+            $twoFactor = Two_Factor::where([
+                'UserId' => $user->Id, 'Ip' => $_SERVER['REMOTE_ADDR']
+            ])->first();
+            if(password_verify($request->input('codeText'),$twoFactor->Code)) {
+                \Session::put('authUser',$user);
+                \Session::put('authIp',$_SERVER['REMOTE_ADDR']);
+                \Session::forget('2faUser');
+                $twoFactor->delete();
+                $intended = \Session::get('intended');
+                if($intended) {
+                    return redirect()->to($intended);
+                }
+                return redirect()->route('authHome');
             }
-            return redirect()->route('authHome');
+            return redirect()->route('2fa');
         }
-        return redirect()->route('2fa');
+        return redirect()->route('login');
     }
 
     /**

@@ -9,7 +9,7 @@ Route::post('/register','AuthController@create');
 Route::get('/logout','AuthController@logout');
 
 //2FA
-Route::get('/2fa',function() {return view('auth.2fa');})->name('2fa');
+Route::get('/2fa','AuthController@generateTwoFactorPage')->name('2fa');
 Route::post('/2fa','AuthController@twoFactorVerify');
 Route::get('/2faresend','AuthController@resend2FA');
 
