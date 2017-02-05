@@ -1,7 +1,7 @@
 <header>
     <div id="headerBar">
         @if(\Session::get('authUser'))
-            <a class="authenticationLink" target="_blank" href="#">MY ACCOUNT</a>
+            <a class="authenticationLink" href="/user/update">MY ACCOUNT</a>
             <a class="authenticationLink" href="/logout">LOGOUT</a>
         @else
             <a class="authenticationLink" href="/login">LOGIN</a>
