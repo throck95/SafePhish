@@ -42,8 +42,9 @@
                 <a class="dropbtn">Mailing Lists</a>
                 <div class="navbar-dropdown">
                     <a href="/mailinglist/users">Manage</a>
+                    <a href="/mailinglist/groups">Groups</a>
                     <a href="/mailinglist/create/user">New User</a>
-                    <a href="#mlu_groups">Groups</a>
+                    <a href="#mlu_create_group">New Group</a>
                 </div>
             </li>
             @if(\Session::get('adminUser'))

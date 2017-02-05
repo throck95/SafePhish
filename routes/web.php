@@ -48,6 +48,7 @@ Route::post('/mailinglist/create/group','GUIController@createNewMailingListDepar
 Route::get('/mailinglist/update/user/{Id}','GUIController@generateUpdateMailingListUserForm')->name('updateMailingListUser');
 Route::post('/mailinglist/update/user/{Id}','GUIController@updateMailingListUser')->name('postUpdateMailingListUser');
 Route::get('/mailinglist/users','GUIController@displayMLUs')->name('mlu');
+Route::get('/mailinglist/groups','GUIController@displayMLUDs')->name('mlud');
 
 //Users
 Route::post('/updateUser','GUIController@updateUser')->name('updateUser');
@@ -56,6 +57,7 @@ Route::post('/updateUser','GUIController@updateUser')->name('updateUser');
 Route::get('/json/campaigns','JsonController@postCampaignsJson');
 Route::get('/json/templates','JsonController@postTemplatesJson');
 Route::get('/json/mlu','JsonController@postMLUJson');
+Route::get('/json/mlud','JsonController@postMLUDJson');
 
 Route::post('/print',function(\Illuminate\Http\Request $request) {
     $departments = $request->input('departmentSelect');

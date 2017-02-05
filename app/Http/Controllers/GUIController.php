@@ -428,6 +428,13 @@ class GUIController extends Controller
         return self::authRequired();
     }
 
+    public static function displayMLUDs() {
+        if(Auth::check()) {
+            return view("displays.showAllMLUDepartments");
+        }
+        return self::authRequired();
+    }
+
     public static function updateUser(Request $request) {
         if(Auth::check()) {
             $email = $request->input('emailText');
