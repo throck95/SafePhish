@@ -44,7 +44,7 @@
                     <a href="/mailinglist/users">Manage</a>
                     <a href="/mailinglist/groups">Groups</a>
                     <a href="/mailinglist/create/user">New User</a>
-                    <a href="#mlu_create_group">New Group</a>
+                    <a href="/mailinglist/create/group">New Group</a>
                 </div>
             </li>
             @if(\Session::get('adminUser'))

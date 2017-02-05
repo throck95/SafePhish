@@ -42,7 +42,7 @@ Route::post('email/send','EmailController@sendEmail')->name('sendEmail');
 
 //MLU
 Route::get('/mailinglist/create/user','GUIController@generateNewMailingListUserForm')->name('mailingListUser');
-Route::get('/mailinglist/create/group','GUIController@generateNewMailingListUserForm')->name('mailingListDepartment');
+Route::get('/mailinglist/create/group','GUIController@generateNewMailingListDepartmentForm')->name('mailingListDepartment');
 Route::post('/mailinglist/create/user','GUIController@createNewMailingListUser')->name('postMailingListUser');
 Route::post('/mailinglist/create/group','GUIController@createNewMailingListDepartment')->name('postMailingListDepartment');
 Route::get('/mailinglist/update/user/{Id}','GUIController@generateUpdateMailingListUserForm')->name('updateMailingListUser');

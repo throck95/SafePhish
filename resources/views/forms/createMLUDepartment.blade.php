@@ -6,9 +6,9 @@
     <meta name="_token" content="{{ csrf_token() }}" />
 @stop
 @section('bodyContent')
-    {!! Form::open(array('url'=>"/mailinglist/update/group/$mlud->Id")) !!}
+    {!! Form::open(array('route'=>'postMailingListDepartment')) !!}
     <p>{!! Form::label('nameText','Name: ') !!}
-        {!! Form::text('nameText',$mlud->Department,array('name'=>'nameText')) !!}</p>
+        {!! Form::text('nameText',null,array('name'=>'nameText')) !!}</p>
     <p>{!! Form::label('userSelect','Users: ') !!}
         <select id='userSelect' name='userSelect[]' multiple>
             @for ($i = 0; $i < count($users); $i++)
@@ -16,6 +16,6 @@
             @endfor
         </select></p>
     <br /><br />
-    {!! Form::submit('Update Group',array('id'=>'submitButton')) !!}
+    {!! Form::submit('Create Group',array('id'=>'submitButton')) !!}
     {!! Form::close() !!}
 @stop

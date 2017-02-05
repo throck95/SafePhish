@@ -374,10 +374,17 @@ class GUIController extends Controller
             $departments = MLU_Departments::all();
             $variables = array('departments'=>$departments);
             return view('forms.addNewMLU')->with($variables);
-        } else {
-            \Session::put('intended',route('mailingListUser'));
-            return redirect()->route('login');
         }
+        return self::authRequired();
+    }
+
+    public static function generateNewMailingListDepartmentForm() {
+        if(Auth::check()) {
+            $mlu = Mailing_List_User::all();
+            $variables = array('users'=>$mlu);
+            return view('forms.createMLUDepartment')->with($variables);
+        }
+        return self::authRequired();
     }
 
     public static function createNewMailingListUser(Request $request) {
@@ -398,9 +405,16 @@ class GUIController extends Controller
     }
 
     public static function createNewMailingListDepartment(Request $request) {
-        MLU_Departments::create([
-            'Department'=>$request->input('departmentText')
+        $mlud = MLU_Departments::create([
+            'Department'=>$request->input('nameText')
         ]);
+        $users = $request->input('userSelect');
+        foreach($users as $user) {
+            Mailing_List_User_Department_Bridge::create(
+                ['UserId'=>$user,
+                    'DepartmentId'=>$mlud->Id]
+            );
+        }
         return redirect()->route('mailingListDepartment');
     }
 
