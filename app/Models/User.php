@@ -62,6 +62,6 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         }
 
         $query->update($update);
-        $query->get();
+        return $query->get();
     }
 }

@@ -492,13 +492,28 @@ class GUIController extends Controller
         if(Auth::check()) {
             $email = $request->input('emailText');
             $password = $request->input('passwordText');
+            $passwordVerify = $request->input('passwordVerifyText');
             $twoFactor = $request->input('twoFactorToggle');
             if(!empty($twoFactor)) {
-                $twoFactor = $twoFactor == 'true' ? true : false;
+                $twoFactor = $twoFactor == 'on' ? true : false;
             }
             $user = \Session::get('authUser');
-
-            User::updateUser($user, $email, password_hash($password, PASSWORD_DEFAULT), $twoFactor);
+            if($password != $passwordVerify) {
+                return redirect()->route('accountManagement');
+            }
+            $user = User::updateUser($user, $email, password_hash($password, PASSWORD_DEFAULT), $twoFactor);
+            \Session::put('authUser',$user->first());
+            return redirect()->route('accountManagement');
         }
+        return redirect()->route('login');
+    }
+
+    public static function accountManagementForm() {
+        if(Auth::check()) {
+            $user = \Session::get('authUser');
+            $variables = array('user'=>$user);
+            return view('forms.accountManagement')->with($variables);
+        }
+        return self::authRequired();
     }
 }
