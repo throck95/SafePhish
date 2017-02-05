@@ -435,6 +435,36 @@ class GUIController extends Controller
         return self::authRequired();
     }
 
+    public static function generateUpdateMLUDForm($Id) {
+        if(Auth::check()) {
+            $mlud = MLU_Departments::where('Id',$Id)->first();
+            $users = Mailing_List_User::all();
+            $variables = array('mlud'=>$mlud,'users'=>$users);
+            return view('forms.editMLUDepartment')->with($variables);
+        }
+        return self::authRequired();
+    }
+
+    public static function updateMailingListDepartment(Request $request, $Id) {
+        $department = $request->input('nameText');
+        if(!empty($department)) {
+            $query = MLU_Departments::query();
+            $query->where('Id',$Id);
+            $query->update(['Department'=>$department]);
+            $query->get();
+        }
+        $users = $request->input('userSelect');
+        $mlud = MLU_Departments::where('Id',$Id)->first();
+        Mailing_List_User_Department_Bridge::where('DepartmentId',$Id)->delete();
+        foreach($users as $user) {
+            Mailing_List_User_Department_Bridge::create(
+                ['UserId'=>$user,
+                    'DepartmentId'=>$mlud->Id]
+            );
+        }
+        return redirect()->route('mlud');
+    }
+
     public static function updateUser(Request $request) {
         if(Auth::check()) {
             $email = $request->input('emailText');

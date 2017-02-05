@@ -47,6 +47,8 @@ Route::post('/mailinglist/create/user','GUIController@createNewMailingListUser')
 Route::post('/mailinglist/create/group','GUIController@createNewMailingListDepartment')->name('postMailingListDepartment');
 Route::get('/mailinglist/update/user/{Id}','GUIController@generateUpdateMailingListUserForm')->name('updateMailingListUser');
 Route::post('/mailinglist/update/user/{Id}','GUIController@updateMailingListUser')->name('postUpdateMailingListUser');
+Route::get('/mailinglist/update/group/{Id}','GUIController@generateUpdateMLUDForm')->name('updateMailingListDepartment');
+Route::post('/mailinglist/update/group/{Id}','GUIController@updateMailingListDepartment')->name('postUpdateMailingListDepartment');
 Route::get('/mailinglist/users','GUIController@displayMLUs')->name('mlu');
 Route::get('/mailinglist/groups','GUIController@displayMLUDs')->name('mlud');
 
