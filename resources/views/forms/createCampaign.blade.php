@@ -10,7 +10,7 @@
 @stop
 @section('bodyContent')
     <h3 style="font-weight: 300">Create New Campaign</h3>
-    {!! Form::open(array('action'=>'GUIController@createNewCampaign')) !!}
+    {!! Form::open(array('action'=>'GUIController@createCampaign')) !!}
     <datalist id="usersDatalist">
         @for ($i = 0; $i < count($users); $i++)
             <option value="{{ $users[$i]->Id }}">

@@ -110,7 +110,32 @@ class GUIController extends Controller
             Campaign::updateCampaign($campaign, $description, $userId, $status);
             return redirect()->route('campaigns');
         }
+        return redirect()->route('login');
+    }
+
+    public static function createCampaignForm() {
+        if(Auth::check()) {
+            $users = User::all();
+            $variables = array('users'=>$users);
+            return view('forms.createCampaign')->with($variables);
+        }
         return self::authRequired();
+    }
+
+    public static function createCampaign(Request $request) {
+        if(Auth::check()) {
+            $name = $request->input('nameText');
+            $description = $request->input('descriptionText');
+            $assignee = $request->input('assigneeText');
+            Campaign::create([
+                'Name'=>$name,
+                'Description'=>$description,
+                'Assignee'=>$assignee,
+                'Status'=>'active'
+            ]);
+            return redirect()->route('createCampaign');
+        }
+        return redirect()->route('login');
     }
 
     /**
@@ -400,7 +425,7 @@ class GUIController extends Controller
             $variables = array('mlu'=>$mlu);
             return view('forms.editMLU')->with($variables);
         }
-        self::authRequired();
+        return self::authRequired();
     }
 
     public static function updateUser(Request $request) {

@@ -28,7 +28,7 @@
                 <a class="dropbtn">Campaigns</a>
                 <div class="navbar-dropdown">
                     <a href="/campaigns">Display</a>
-                    <a href="/campaigns/create">New</a>
+                    <a href="/campaign/create">New</a>
                 </div>
             </li>
             <li class="dropdown">

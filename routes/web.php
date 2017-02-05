@@ -33,6 +33,8 @@ Route::get('/404','ErrorController@e404')->name('e404');
 Route::get('/campaigns','GUIController@displayCampaigns')->name('campaigns');
 Route::get('/campaigns/{Id}','GUIController@displayCampaign');
 Route::post('/campaigns/update/{Id}','GUIController@updateCampaign');
+Route::get('/campaign/create','GUIController@createCampaignForm')->name('createCampaign');
+Route::post('/campaign/create','GUIController@createCampaign');
 
 //Emails
 Route::get('/email/generate','GUIController@generatePhishingEmailForm');
