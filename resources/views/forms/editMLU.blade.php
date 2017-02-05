@@ -19,6 +19,12 @@
         {!! Form::text('lastNameText',$mlu->LastName,array('name'=>'lastNameText')) !!}</p>
     <p>{!! Form::label('emailText','Email: ') !!}
         {!! Form::text('emailText',$mlu->Email,array('name'=>'emailText')) !!}</p>
+    <p>{!! Form::label('departmentSelect','Department: ') !!}
+        <select id='departmentSelect' name='departmentSelect[]' multiple>
+            @for ($i = 0; $i < count($departments); $i++)
+                <option value="{{ $departments[$i]->Id }}">{{ $departments[$i]->Department }}</option>
+            @endfor
+        </select></p>
     <p>{!! Form::label('statusSelect','Status: ') !!}
     <p>{!! Form::label('urlToggle','Generate New URL Id: ') !!}
         <input type="checkbox" name="urlToggle" checked /></p>

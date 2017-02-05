@@ -410,6 +410,14 @@ class GUIController extends Controller
         $urlToggle = $request->input('urlToggle');
         $fname = $request->input('firstNameText');
         $lname = $request->input('lastNameText');
+        Mailing_List_User_Department_Bridge::where('UserId',$Id)->delete();
+        $departments = $request->input('departmentSelect');
+        foreach($departments as $department) {
+            Mailing_List_User_Department_Bridge::create(
+                ['UserId'=>$mlu->Id,
+                    'DepartmentId'=>$department]
+            );
+        }
         if(!empty($urlToggle) && $urlToggle == 'on') {
             $url = RandomObjectGeneration::random_str(30);
             Mailing_List_User::updateMailingListUser($mlu,$email,$fname,$lname,$url);
@@ -422,7 +430,8 @@ class GUIController extends Controller
     public static function generateUpdateMailingListUserForm($Id) {
         if(Auth::check()) {
             $mlu = Mailing_List_User::where('Id',$Id)->first();
-            $variables = array('mlu'=>$mlu);
+            $departments = MLU_Departments::all();
+            $variables = array('mlu'=>$mlu,'departments'=>$departments);
             return view('forms.editMLU')->with($variables);
         }
         return self::authRequired();
