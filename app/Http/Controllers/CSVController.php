@@ -2,78 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Campaign;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
-use App\Http\Controllers\AuthController as Auth;
 use App\Models\Email_Tracking;
 use App\Models\Website_Tracking;
-use App\Models\Reports;
-use App\Models\Two_Factor;
-use App\Models\User;
-use App\Models\Template;
+use Illuminate\Http\Request;
 
-class DataController extends Controller
+class CSVController extends Controller
 {
     /**
-     * postWebsiteJson
-     * Posts data queried from website_tracking table. Requires authenticated user to execute data retrieval.
+     * generateEmailReport
+     * Defines the query to retrieve the report data then triggers a CSV download response.
      *
-     * @return  array|\Illuminate\Http\RedirectResponse
+     * @param   Request         $request
+     * @return  \Illuminate\Http\RedirectResponse | resource
      */
-    public static function postWebsiteJson() {
-        if(Auth::check()) {
-            $json = Website_Tracking::all();
-            return $json;
-        }
-        return redirect()->route('e401');
-    }
-
-    /**
-     * postEmailJson
-     * Posts data queried from email_tracking table. Requires authenticated user to execute data retrieval.
-     *
-     * @return  array|\Illuminate\Http\RedirectResponse
-     */
-    public static function postEmailJson() {
-        if(Auth::check()) {
-            $json = Email_Tracking::all();
-            return $json;
-        }
-        return redirect()->route('e401');
-    }
-
-    /**
-     * postReportsJson
-     * Posts data queried from reports table. Requires authenticated user to execute data retrieval.
-     *
-     * @return  array|\Illuminate\Http\RedirectResponse
-     */
-    public static function postReportsJson() {
-        if(Auth::check()) {
-            $json = Reports::all();
-            return $json;
-        }
-        return redirect()->route('e401');
-    }
-
-    public static function postCampaignsJson() {
-        if(Auth::check()) {
-            $json = Campaign::all();
-            return "{\"campaigns\":$json}";
-        }
-        return redirect()->route('e401');
-    }
-
-    public static function postTemplatesJson() {
-        if(Auth::check()) {
-            $json = Template::all();
-            return "{\"templates\":$json}";
-        }
-        return redirect()->route('e401');
-    }
-
-    public static function emailTrackingCSV(Request $request) {
+    public static function generateEmailReport(Request $request) {
         if(!Auth::check()) {
             return redirect()->route('e401');
         }
@@ -116,7 +58,7 @@ class DataController extends Controller
         $array = json_decode($json, true);
         $f = fopen($path, 'w+');
 
-        $arrays = self::baseCSV($array, $f);
+        $arrays = self::generateCSVArray($array, $f);
         foreach($arrays as $array) {
             fputcsv($f, $array);
         }
@@ -128,7 +70,14 @@ class DataController extends Controller
         readfile($path);
     }
 
-    public static function websiteTrackingCSV(Request $request) {
+    /**
+     * generateWebsiteReport
+     * Defines the query to retrieve the report data then triggers a CSV download response.
+     *
+     * @param   Request         $request
+     * @return  \Illuminate\Http\RedirectResponse | resource
+     */
+    public static function generateWebsiteReport(Request $request) {
         if(!Auth::check()) {
             return redirect()->route('e401');
         }
@@ -170,7 +119,7 @@ class DataController extends Controller
         $array = json_decode($json, true);
         $f = fopen($path, 'w+');
 
-        $arrays = self::baseCSV($array, $f);
+        $arrays = self::generateCSVArray($array, $f);
         for($i = 0; $i < sizeof($array); $i++) {
             $temp = array_slice($arrays[$i],0,1,true) + array('BrowserAgent' => $array[$i]['BrowserAgent']) + array('ReqPath' => $array[$i]['ReqPath']) + array_slice($arrays[$i],1,count($arrays) - 1, true);
             $arrays[$i] = $temp;
@@ -184,7 +133,15 @@ class DataController extends Controller
         readfile($path);
     }
 
-    private static function baseCSV($array, $f) {
+    /**
+     * generateCSVArray
+     * Returns an array of arrays. Each array stores a line of the report.
+     *
+     * @param   array       $array
+     * @param   resource    $f
+     * @return  array
+     */
+    private static function generateCSVArray($array, $f) {
         $arrays = array();
         $firstLineKeys = false;
         foreach($array as $line) {

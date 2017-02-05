@@ -15,32 +15,57 @@ use League\Flysystem\Exception;
 
 class GUIController extends Controller
 {
-    public static function generateLogin() {
-        if(!Auth::check()) {
-            return view("auth.login");
-        }
-        return redirect()->to('/');
-    }
-
-    public static function generateRegister() {
-        if(!Auth::check()) {
-            return view("auth.register");
-        }
-        return redirect()->to('/');
-    }
-
+    /**
+     * authRequired
+     * Adds session variable for return redirect and then redirects to login page.
+     *
+     * @return  \Illuminate\Http\RedirectResponse
+     */
     private static function authRequired() {
         \Session::put('intended',$_SERVER['REQUEST_URI']);
         return redirect()->route('login');
     }
 
-    public static function displayResults() {
-        if(Auth::check()) {
-            return view("displays.showReports");
+    /**
+     * returnAllTemplatesByDirectory
+     * Helper function that queries template names from specific directory in file structure.
+     *
+     * @param   string      $directory          Directory name
+     * @return  array
+     */
+    private static function returnAllTemplatesByDirectory($directory) {
+        $files = [];
+        $fileNames = [];
+        $filesInFolder = \File::files("../resources/views/emails/$directory");
+        foreach($filesInFolder as $path) {
+            $files[] = pathinfo($path);
         }
-        return self::authRequired();
+        for($i = 0; $i < sizeof($files); $i++) {
+            $fileNames[$i] = $files[$i]['filename'];
+            $fileNames[$i] = substr($fileNames[$i],0,-6);
+        }
+        return $fileNames;
     }
 
+    /**
+     * dashboard
+     * Home route.
+     *
+     * @return  \Illuminate\Http\RedirectResponse | \Illuminate\View\View
+     */
+    public static function dashboard() {
+        if(Auth::check()) {
+            return view("displays.dashboard");
+        }
+        return redirect()->route('login');
+    }
+
+    /**
+     * displayCampaigns
+     * Route to display all campaigns.
+     *
+     * @return  \Illuminate\Http\RedirectResponse | \Illuminate\View\View
+     */
     public static function displayCampaigns() {
         if(Auth::check()) {
             return view("displays.showAllCampaigns");
@@ -48,27 +73,13 @@ class GUIController extends Controller
         return self::authRequired();
     }
 
-    public static function displayTemplate($FileName) {
-        if(Auth::check()) {
-            $template = Template::where('FileName',$FileName)->first();
-            if(!is_null($template)) {
-                $emailType = $template->EmailType;
-                $file = explode("\n",file_get_contents("../resources/views/emails/$emailType/$FileName.blade.php"));
-                $variables = array('templateText'=>$file,'publicName'=>$template->PublicName,'fileName'=>$FileName);
-                return view('displays.showSelectedTemplate')->with($variables);
-            }
-            return redirect()->route('e404');
-        }
-        return self::authRequired();
-    }
-
-    public static function generateCreateTemplate() {
-        if(Auth::check()) {
-            return view("forms.createNewTemplate");
-        }
-        return self::authRequired();
-    }
-
+    /**
+     * displayCampaign
+     * Display an individual campaign.
+     *
+     * @param   string      $Id
+     * @return  \Illuminate\Http\RedirectResponse | \Illuminate\View\View
+     */
     public static function displayCampaign($Id) {
         if(Auth::check()) {
             $campaign = Campaign::where('Id',$Id)->first();
@@ -80,6 +91,14 @@ class GUIController extends Controller
         return self::authRequired();
     }
 
+    /**
+     * updateCampaign
+     * Update the campaign (selected by the param ID) with the request object.
+     *
+     * @param   Request         $request
+     * @param   string          $Id
+     * @return  \Illuminate\Http\RedirectResponse
+     */
     public static function updateCampaign(Request $request,$Id) {
         if(Auth::check()) {
             $campaign = Campaign::where('Id',$Id)->first();
@@ -94,10 +113,57 @@ class GUIController extends Controller
     }
 
     /**
+     * displayTemplates
+     * Route to display all templates.
+     *
+     * @return  \Illuminate\Http\RedirectResponse | \Illuminate\View\View
+     */
+    public static function displayTemplates() {
+        if(Auth::check()) {
+            return view("displays.showAllTemplates");
+        }
+        return self::authRequired();
+    }
+
+    /**
+     * displayTemplate
+     * Display an individual template.
+     *
+     * @param   string      $FileName
+     * @return  \Illuminate\Http\RedirectResponse | \Illuminate\View\View
+     */
+    public static function displayTemplate($FileName) {
+        if(Auth::check()) {
+            $template = Template::where('FileName',$FileName)->first();
+            if(!is_null($template)) {
+                $emailType = $template->EmailType;
+                $file = explode("\n",file_get_contents("../resources/views/emails/$emailType/$FileName.blade.php"));
+                $variables = array('templateText'=>$file,'publicName'=>$template->PublicName,'fileName'=>$FileName);
+                return view('displays.showSelectedTemplate')->with($variables);
+            }
+            return redirect()->route('e404');
+        }
+        return self::authRequired();
+    }
+
+    /**
+     * generateCreateTemplate
+     * Route to template creation.
+     *
+     * @return  \Illuminate\Http\RedirectResponse | \Illuminate\View\View
+     */
+    public static function generateCreateTemplate() {
+        if(Auth::check()) {
+            return view("forms.createNewTemplate");
+        }
+        return self::authRequired();
+    }
+
+    /**
      * generatePhishingEmailForm
      * Generates the Send Phishing Email Request Form in the GUI.
      *
-     * @return  \Illuminate\View\View|\Illuminate\Http\RedirectResponse
+     * @return  \Illuminate\View\View | \Illuminate\Http\RedirectResponse
      */
     public static function generatePhishingEmailForm() {
         if(Auth::check()) {
@@ -123,6 +189,12 @@ class GUIController extends Controller
         return self::authRequired();
     }
 
+    /**
+     * generateEmailReportForm
+     * Route to display the email report generation.
+     *
+     * @return  \Illuminate\Http\RedirectResponse | \Illuminate\View\View
+     */
     public static function generateEmailReportForm() {
         if(Auth::check()) {
             $campaigns = Campaign::all();
@@ -133,6 +205,12 @@ class GUIController extends Controller
         return self::authRequired();
     }
 
+    /**
+     * generateWebsiteReportForm
+     * Route to display the website report generation.
+     *
+     * @return  \Illuminate\Http\RedirectResponse | \Illuminate\View\View
+     */
     public static function generateWebsiteReportForm() {
         if(Auth::check()) {
             $campaigns = Campaign::all();
@@ -233,27 +311,6 @@ class GUIController extends Controller
     }
 
     /**
-     * returnAllTemplatesByDirectory
-     * Helper function that queries template names from specific directory in file structure.
-     *
-     * @param   string      $directory          Directory name
-     * @return  array
-     */
-    private static function returnAllTemplatesByDirectory($directory) {
-        $files = [];
-        $fileNames = [];
-        $filesInFolder = \File::files("../resources/views/emails/$directory");
-        foreach($filesInFolder as $path) {
-            $files[] = pathinfo($path);
-        }
-        for($i = 0; $i < sizeof($files); $i++) {
-            $fileNames[$i] = $files[$i]['filename'];
-            $fileNames[$i] = substr($fileNames[$i],0,-6);
-        }
-        return $fileNames;
-    }
-
-    /**
      * phishHTMLReturner
      * Takes phishing template name as input and returns content of template to
      * be used as a preview in the GUI.
@@ -264,17 +321,19 @@ class GUIController extends Controller
     public static function phishHTMLReturner($id) {
         try {
             if(Auth::check()) {
-                $path = "../resources/views/emails/phishing/$id.blade.php";
-                $contents = \File::get($path);
-            } else {
-                $contents = "Failed user authentication.";
+                $template = Template::where('Id',$id)->first();
+                if(!is_null($template)) {
+                    $path = "../resources/views/emails/phishing/$id.blade.php";
+                    return \File::get($path);
+                }
+                return "Template does not exist.";
             }
+            self::authRequired();
         }
         catch (Exception $e) {
             //log exception
-            $contents = "Preview Unavailable";
+            return "Preview Unavailable";
         }
-        return $contents;
     }
 
     public static function generateNewMailingListUserForm() {

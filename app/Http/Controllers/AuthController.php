@@ -4,13 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Libraries\RandomObjectGeneration;
 use App\Models\Two_Factor;
-use Illuminate\Http\Request;
 use App\Models\User;
 use App\Email;
+use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
     /**
+     * create
      * Create a new user instance after a valid registration.
      *
      * @param   Request         $request
@@ -29,6 +30,14 @@ class AuthController extends Controller
         self::authenticate($request);
     }
 
+    /**
+     * authenticate
+     * Authenticates the user against the user's database object. Submits to 2FA if they have
+     * the option enabled, otherwise logs the user in.
+     *
+     * @param   Request         $request
+     * @return  \Illuminate\Http\RedirectResponse
+     */
     public static function authenticate(Request $request) {
         $user = User::where('Username',$request->input('usernameText'))->first();
         if(password_verify($request->input('passwordText'),$user->Password)) {
@@ -63,25 +72,13 @@ class AuthController extends Controller
         return redirect()->route('login');
     }
 
-    public static function resend2FA() {
-        $user = \Session::get('2faUser');
-        $twoFactor = Two_Factor::where([
-            'UserId' => $user->Id, 'Ip' => $_SERVER['REMOTE_ADDR']
-        ])->first();
-        if(count($twoFactor)) {
-            $twoFactor->delete();
-        }
-        $code = RandomObjectGeneration::random_str(6, '1234567890');
-        Two_Factor::create([
-            'UserID' => $user->Id,
-            'Ip' => $_SERVER['REMOTE_ADDR'],
-            'Code' => password_hash($code,PASSWORD_DEFAULT)
-        ]);
-
-        Email::executeTwoFactorEmail($user,$code);
-        return redirect()->route('2fa');
-    }
-
+    /**
+     * twoFactorVerify
+     * Validates the 2FA code to authenticate the user.
+     *
+     * @param   Request         $request
+     * @return  \Illuminate\Http\RedirectResponse
+     */
     public static function twoFactorVerify(Request $request) {
         $user = \Session::get('2faUser');
         $twoFactor = Two_Factor::where([
@@ -101,14 +98,65 @@ class AuthController extends Controller
         return redirect()->route('2fa');
     }
 
+    /**
+     * resend2FA
+     * Generates and sends a new 2FA code.
+     *
+     * @return  \Illuminate\Http\RedirectResponse
+     */
+    public static function resend2FA() {
+        $user = \Session::get('2faUser');
+        $twoFactor = Two_Factor::where([
+            'UserId' => $user->Id, 'Ip' => $_SERVER['REMOTE_ADDR']
+        ])->first();
+        if(count($twoFactor)) {
+            $twoFactor->delete();
+        }
+        $code = RandomObjectGeneration::random_str(6, '1234567890');
+        Two_Factor::create([
+            'UserID' => $user->Id,
+            'Ip' => $_SERVER['REMOTE_ADDR'],
+            'Code' => password_hash($code,PASSWORD_DEFAULT)
+        ]);
+
+        Email::executeTwoFactorEmail($user,$code);
+        return redirect()->route('2fa');
+    }
+
+    /**
+     * check
+     * Validates if the user is authenticated on this IP Address.
+     *
+     * @return  bool
+     */
     public static function check() {
         return \Session::get('authUser') && \Session::get('authIp') == $_SERVER['REMOTE_ADDR'];
     }
 
+    /**
+     * logout
+     * Removes session variables storing the authenticated account.
+     *
+     * @return  \Illuminate\Http\RedirectResponse
+     */
     public static function logout() {
         \Session::forget('authUser');
         \Session::forget('authIp');
         \Session::forget('intended');
         return redirect()->route('login');
+    }
+
+    public static function generateLogin() {
+        if(self::check()) {
+            return redirect()->route('authHome');
+        }
+        return view('auth.login');
+    }
+
+    public static function generateRegister() {
+        if(self::check()) {
+            return redirect()->route('authHome');
+        }
+        return view('auth.register');
     }
 }

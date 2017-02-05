@@ -34,7 +34,7 @@
             <li class="dropdown">
                 <a class="dropbtn">Templates</a>
                 <div class="navbar-dropdown">
-                    <a href="/templates/all">Display</a>
+                    <a href="/templates">Display</a>
                     <a href="/templates/create">New</a>
                 </div>
             </li>

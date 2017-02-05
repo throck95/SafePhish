@@ -18,4 +18,8 @@ class ErrorController extends Controller
     public static function e404() {
         return view("errors.404");
     }
+
+    public static function e500() {
+        return view("errors.500");
+    }
 }

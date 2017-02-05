@@ -1,12 +1,14 @@
 <?php
 
-//Authentication
-Route::get('/login','GUIController@generateLogin')->name('login');
+//Auth
+Route::get('/','GUIController@dashboard')->name('authHome');
+Route::get('/login','AuthController@generateLogin')->name('login');
 Route::post('/login','AuthController@authenticate');
-Route::get('/register','GUIController@generateRegister')->name('register');
+Route::get('/register','AuthController@generateRegister')->name('register');
 Route::post('/register','AuthController@create');
-Route::get('/auth/check','AuthController@check');
 Route::get('/logout','AuthController@logout');
+
+//2FA
 Route::get('/2fa',function() {return view('auth.2fa');})->name('2fa');
 Route::post('/2fa','AuthController@twoFactorVerify');
 Route::get('/2faresend','AuthController@resend2FA');
@@ -14,18 +16,14 @@ Route::get('/2faresend','AuthController@resend2FA');
 //Templates
 Route::get('/templates/create','GUIController@generateCreateTemplate');
 Route::post('/templates/create/phish','GUIController@createNewPhishTemplate');
-Route::get('/templates/all', function() {return view('displays.showAllTemplates');});
+Route::get('/templates','GUIController@displayTemplates')->name('templates');
 Route::get('/templates/{FileName}','GUIController@displayTemplate');
 
-//Results
-Route::get('/websitedata/json','DataController@postWebsiteJson');
-Route::get('/emaildata/json','DataController@postEmailJson');
-Route::get('/reportsdata/json','DataController@postReportsJson');
-Route::get('/',function() {return view('displays.dashboard');})->name('authHome');
+//CSV
 Route::get('/reports/web','GUIController@generateWebsiteReportForm');
 Route::get('/reports/email','GUIController@generateEmailReportForm');
-Route::post('/csv/web','DataController@websiteTrackingCSV');
-Route::post('/csv/email','DataController@emailTrackingCSV');
+Route::post('/csv/web','CSVController@generateWebsiteReport');
+Route::post('/csv/email','CSVController@generateEmailReport');
 
 //Errors
 Route::get('/unauthorized','ErrorController@e401')->name('e401');
@@ -50,8 +48,8 @@ Route::post('/mailinglist/update','GUIController@updateMailingListUser')->name('
 Route::post('/updateUser','GUIController@updateUser')->name('updateUser');
 
 //Json
-Route::get('/json/campaigns','DataController@postCampaignsJson');
-Route::get('/json/templates','DataController@postTemplatesJson');
+Route::get('/json/campaigns','JsonController@postCampaignsJson');
+Route::get('/json/templates','JsonController@postTemplatesJson');
 
 Route::get('/print',function() {
     return view('errors.500');
