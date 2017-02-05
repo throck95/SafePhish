@@ -41,7 +41,8 @@
             <li class="dropdown">
                 <a class="dropbtn">Mailing Lists</a>
                 <div class="navbar-dropdown">
-                    <a href="#mlu_manage">Manage</a>
+                    <a href="/mailinglist/users">Manage</a>
+                    <a href="/mailinglist/create/user">New User</a>
                     <a href="#mlu_groups">Groups</a>
                 </div>
             </li>

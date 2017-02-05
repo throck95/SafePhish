@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Libraries\RandomObjectGeneration;
 use App\Models\Default_Settings;
 use App\Models\Mailing_List_User;
+use App\Models\Mailing_List_User_Department_Bridge;
 use App\Models\MLU_Departments;
 use App\Models\Campaign;
 use App\Models\Template;
@@ -159,6 +160,13 @@ class GUIController extends Controller
         return self::authRequired();
     }
 
+    public static function displayMLUs() {
+        if(Auth::check()) {
+            return view("displays.showAllMLU");
+        }
+        return self::authRequired();
+    }
+
     /**
      * generatePhishingEmailForm
      * Generates the Send Phishing Email Request Form in the GUI.
@@ -234,10 +242,10 @@ class GUIController extends Controller
         $port = $request->input('mailPortText');
 
         $settings = Default_Settings::firstOrNew(['UserId'=>$user->Id]);
-        $settings->DFT_MailServer = $host;
-        $settings->DFT_MailPort = $port;
-        $settings->DFT_CompanyName = $company;
-        $settings->DFT_Username = $user->USR_Username;
+        $settings->MailServer = $host;
+        $settings->MailPort = $port;
+        $settings->CompanyName = $company;
+        $settings->Username = $user->Username;
         $settings->save();
     }
 
@@ -340,8 +348,7 @@ class GUIController extends Controller
         if(Auth::check()) {
             $departments = MLU_Departments::all();
             $variables = array('departments'=>$departments);
-            return view('forms.addNewMailingListUser')->with($variables);
-            //return $variables;
+            return view('forms.addNewMLU')->with($variables);
         } else {
             \Session::put('intended',route('mailingListUser'));
             return redirect()->route('login');
@@ -349,22 +356,51 @@ class GUIController extends Controller
     }
 
     public static function createNewMailingListUser(Request $request) {
-        if($request->input('departmentSelect') == 0) {
-            $name = $request->input('createNewDepartmentText');
-            $id = MLU_Departments::create(['Department'=>$name]);
-            $department = MLU_Departments::where('Id',$id->Id)->first();
-        } else {
-            $department = MLU_Departments::where('Id',$request->input('departmentSelect'))->first();
-        }
-        Mailing_List_User::create(
-            ['Username'=>$request->input('usernameText'),
-                'Email'=>$request->input('emailText'),
+        $mlu = Mailing_List_User::create(
+            ['Email'=>$request->input('emailText'),
                 'FirstName'=>$request->input('firstNameText'),
                 'LastName'=>$request->input('lastNameText'),
-                'Department'=>$department->Id,
                 'UniqueURLId'=>RandomObjectGeneration::random_str(30)]
         );
+        $departments = $request->input('departmentSelect');
+        foreach($departments as $department) {
+            Mailing_List_User_Department_Bridge::create(
+                ['UserId'=>$mlu->Id,
+                    'DepartmentId'=>$department]
+            );
+        }
         return redirect()->route('mailingListUser');
+    }
+
+    public static function createNewMailingListDepartment(Request $request) {
+        MLU_Departments::create([
+            'Department'=>$request->input('departmentText')
+        ]);
+        return redirect()->route('mailingListDepartment');
+    }
+
+    public static function updateMailingListUser(Request $request, $Id) {
+        $mlu = Mailing_List_User::where('Id',$Id)->first();
+        $email = $request->input('emailText');
+        $urlToggle = $request->input('urlToggle');
+        $fname = $request->input('firstNameText');
+        $lname = $request->input('lastNameText');
+        if(!empty($urlToggle) && $urlToggle == 'on') {
+            $url = RandomObjectGeneration::random_str(30);
+            Mailing_List_User::updateMailingListUser($mlu,$email,$fname,$lname,$url);
+        } else {
+            Mailing_List_User::updateMailingListUser($mlu,$email,$fname,$lname);
+        }
+        return redirect()->route('mlu');
+    }
+
+    public static function generateUpdateMailingListUserForm($Id) {
+        if(Auth::check()) {
+            $mlu = Mailing_List_User::where('Id',$Id)->first();
+            $variables = array('mlu'=>$mlu);
+            return view('forms.editMLU')->with($variables);
+        }
+        self::authRequired();
     }
 
     public static function updateUser(Request $request) {
@@ -379,13 +415,5 @@ class GUIController extends Controller
 
             User::updateUser($user, $email, password_hash($password, PASSWORD_DEFAULT), $twoFactor);
         }
-    }
-
-    public static function updateMailingListUser(Request $request) {
-
-    }
-
-    public static function generateUpdateMailingListUserForm() {
-
     }
 }

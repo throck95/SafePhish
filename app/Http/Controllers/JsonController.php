@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\AuthController as Auth;
+use App\Models\Mailing_List_User;
 use App\Models\Template;
 use App\Models\Campaign;
 
@@ -32,6 +33,20 @@ class JsonController extends Controller
         if(Auth::check()) {
             $json = Template::all();
             return "{\"templates\":$json}";
+        }
+        return redirect()->route('e401');
+    }
+
+    /**
+     * postMLUJson
+     * Queries all mailing list users and returns a JSON string with the objects.
+     *
+     * @return  \Illuminate\Http\RedirectResponse | string
+     */
+    public static function postMLUJson() {
+        if(Auth::check()) {
+            $json = Mailing_List_User::all();
+            return "{\"mlu\":$json}";
         }
         return redirect()->route('e401');
     }

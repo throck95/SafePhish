@@ -39,10 +39,13 @@ Route::get('/email/generate','GUIController@generatePhishingEmailForm');
 Route::post('email/send','EmailController@sendEmail')->name('sendEmail');
 
 //MLU
-Route::get('/mailinglist/create','GUIController@generateNewMailingListUserForm')->name('mailingListUser');
-Route::post('/mailinglist/create','GUIController@createNewMailingListUser')->name('postMailingListUser');
-Route::get('/mailinglist/update','GUIController@generateUpdateMailingListUserForm')->name('updateMailingListUser');
-Route::post('/mailinglist/update','GUIController@updateMailingListUser')->name('postUpdateMailingListUser');
+Route::get('/mailinglist/create/user','GUIController@generateNewMailingListUserForm')->name('mailingListUser');
+Route::get('/mailinglist/create/group','GUIController@generateNewMailingListUserForm')->name('mailingListDepartment');
+Route::post('/mailinglist/create/user','GUIController@createNewMailingListUser')->name('postMailingListUser');
+Route::post('/mailinglist/create/group','GUIController@createNewMailingListDepartment')->name('postMailingListDepartment');
+Route::get('/mailinglist/update/user/{Id}','GUIController@generateUpdateMailingListUserForm')->name('updateMailingListUser');
+Route::post('/mailinglist/update/user/{Id}','GUIController@updateMailingListUser')->name('postUpdateMailingListUser');
+Route::get('/mailinglist/users','GUIController@displayMLUs')->name('mlu');
 
 //Users
 Route::post('/updateUser','GUIController@updateUser')->name('updateUser');
@@ -50,7 +53,13 @@ Route::post('/updateUser','GUIController@updateUser')->name('updateUser');
 //Json
 Route::get('/json/campaigns','JsonController@postCampaignsJson');
 Route::get('/json/templates','JsonController@postTemplatesJson');
+Route::get('/json/mlu','JsonController@postMLUJson');
 
-Route::get('/print',function() {
-    return view('errors.500');
-});
+Route::post('/print',function(\Illuminate\Http\Request $request) {
+    $departments = $request->input('departmentSelect');
+    var_dump($departments);
+    echo "<br />";
+    foreach ($departments as $department) {
+        echo $department . "<br />";
+    }
+})->name('print');
