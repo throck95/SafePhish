@@ -8,8 +8,8 @@ app.controller('campaignController',function($scope,$http) {
         .then(function(response) {
             $scope.campaigns = response.data.campaigns;
         });
-    $scope.column = 'Name';
-    $scope.reverse = false;
+    $scope.column = 'Created';
+    $scope.reverse = true;
     $scope.search = '';
     $scope.buttonSearch = '';
 
