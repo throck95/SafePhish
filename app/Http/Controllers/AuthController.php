@@ -62,6 +62,9 @@ class AuthController extends Controller
             else {
                 \Session::put('authUser',$user);
                 \Session::put('authIp',$_SERVER['REMOTE_ADDR']);
+                if($user->UserType == 1) {
+                    \Session::put('adminUser',$user);
+                }
                 $intended = \Session::get('intended');
                 if($intended) {
                     return redirect()->to($intended);
@@ -101,6 +104,9 @@ class AuthController extends Controller
             if(password_verify($request->input('codeText'),$twoFactor->Code)) {
                 \Session::put('authUser',$user);
                 \Session::put('authIp',$_SERVER['REMOTE_ADDR']);
+                if($user->UserType == 1) {
+                    \Session::put('adminUser',$user);
+                }
                 \Session::forget('2faUser');
                 $twoFactor->delete();
                 $intended = \Session::get('intended');
@@ -149,6 +155,10 @@ class AuthController extends Controller
         return \Session::get('authUser') && \Session::get('authIp') == $_SERVER['REMOTE_ADDR'];
     }
 
+    public static function adminCheck() {
+        return \Session::has('adminUser');
+    }
+
     /**
      * logout
      * Removes session variables storing the authenticated account.
@@ -158,6 +168,7 @@ class AuthController extends Controller
     public static function logout() {
         \Session::forget('authUser');
         \Session::forget('authIp');
+        \Session::forget('adminUser');
         \Session::forget('intended');
         return redirect()->route('login');
     }
