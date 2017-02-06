@@ -9,6 +9,7 @@ use App\Models\Mailing_List_User_Department_Bridge;
 use App\Models\MLU_Departments;
 use App\Models\Campaign;
 use App\Models\Template;
+use App\Models\User_Permissions;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AuthController as Auth;
 use App\Models\User;
@@ -488,7 +489,7 @@ class GUIController extends Controller
         return redirect()->route('mlud');
     }
 
-    public static function updateUser(Request $request) {
+    public static function updateUserAccountManagement(Request $request) {
         if(Auth::check()) {
             $email = $request->input('emailText');
             $password = $request->input('passwordText');
@@ -515,5 +516,27 @@ class GUIController extends Controller
             return view('forms.accountManagement')->with($variables);
         }
         return self::authRequired();
+    }
+
+    public static function updateUser(Request $request, $Id) {
+        if(Auth::adminCheck()) {
+            $email = $request->input('emailText');
+            $password = $request->input('passwordResetToggle');
+            if(!empty($password) && $password == 'on') {
+                $keyspace = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%&';
+                $password = RandomObjectGeneration::random_str(10,$keyspace);
+            }
+            $user = User::where('Id',$Id)->first();
+            $userType = $request->input('userTypeText');
+            if(!empty($userType)) {
+                $userPermissions = User_Permissions::where('Id',$userType)->first();
+                if(empty($userPermissions)) {
+                    $userType = '';
+                }
+            }
+            User::updateUser($user,$email,$password,'',$userType);
+            return redirect()->route('adminUserUpdate');
+        }
+        return redirect()->route('e401');
     }
 }

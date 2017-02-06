@@ -54,13 +54,15 @@ Route::get('/mailinglist/groups','GUIController@displayMLUDs')->name('mlud');
 
 //Users
 Route::get('/user/update','GUIController@accountManagementForm')->name('accountManagement');
-Route::post('/user/update','GUIController@updateUser')->name('updateUser');
+Route::post('/user/update','GUIController@updateUserAccountManagement')->name('updateUser');
+Route::post('/user/update/{Id}','GUIController@updateUser')->name('adminUpdateUser');
 
 //Json
 Route::get('/json/campaigns','JsonController@postCampaignsJson');
 Route::get('/json/templates','JsonController@postTemplatesJson');
 Route::get('/json/mlu','JsonController@postMLUJson');
 Route::get('/json/mlud','JsonController@postMLUDJson');
+Route::get('/json/users','JsonController@postUsersJson');
 
 Route::post('/print',function(\Illuminate\Http\Request $request) {
     $departments = $request->input('departmentSelect');

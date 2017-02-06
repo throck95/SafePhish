@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use Illuminate\Support\Facades\DB;
 
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract {
 
@@ -34,16 +35,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         '2FA',
         'UserType'];
 
-    /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
-
-    protected $hidden = [
-        'password', 'remember_token',
-    ];*/
-
-    public static function updateUser($user, $email, $password, $twoFactor = '', $userType = '') {
+    public static function updateUser($user, $email, $password, $twoFactor, $userType = '') {
         $query = User::query();
         $query->where('Id',$user->Id);
         $update = array();
@@ -67,5 +59,14 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
         $query->update($update);
         return $query->get();
+    }
+
+    public static function queryUsers() {
+        return DB::table('users')
+             ->leftJoin('user_permissions','users.UserType','users.Id')
+            ->select('users.Id','users.Username','users.Email','users.FirstName',
+                'users.LastName','users.MiddleInitial','user_permissions.PermissionType')
+            ->orderBy('users.Id', 'asc')
+            ->get();
     }
 }
