@@ -31,7 +31,8 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         'LastName',
         'MiddleInitial',
         'Password',
-        '2FA'];
+        '2FA',
+        'UserType'];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -42,7 +43,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         'password', 'remember_token',
     ];*/
 
-    public static function updateUser($user, $email, $password, $twoFactor) {
+    public static function updateUser($user, $email, $password, $twoFactor = '', $userType = '') {
         $query = User::query();
         $query->where('Id',$user->Id);
         $update = array();
@@ -59,6 +60,9 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
             } else {
                 $update['2FA'] = 0;
             }
+        }
+        if(!empty($userType)) {
+            $update['UserType'] = $userType;
         }
 
         $query->update($update);
