@@ -393,7 +393,7 @@ class GUIController extends Controller
             ['Email'=>$request->input('emailText'),
                 'FirstName'=>$request->input('firstNameText'),
                 'LastName'=>$request->input('lastNameText'),
-                'UniqueURLId'=>RandomObjectGeneration::random_str(30)]
+                'UniqueURLId'=>RandomObjectGeneration::random_str(12)]
         );
         $departments = $request->input('departmentSelect');
         foreach($departments as $department) {
@@ -434,7 +434,7 @@ class GUIController extends Controller
             );
         }
         if(!empty($urlToggle) && $urlToggle == 'on') {
-            $url = RandomObjectGeneration::random_str(30);
+            $url = RandomObjectGeneration::random_str(12);
             Mailing_List_User::updateMailingListUser($mlu,$email,$fname,$lname,$url);
         } else {
             Mailing_List_User::updateMailingListUser($mlu,$email,$fname,$lname);
