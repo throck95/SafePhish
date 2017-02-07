@@ -35,8 +35,7 @@
                 <td>[[ x.EmailType ]]</td>
                 <td>[[ x.created_at ]]</td>
                 <td>[[ x.updated_at ]]</td>
-                <td><a ng-href='/templates/[[ x.FileName ]]'>Edit</a></td>
-                <td><a ng-href="#delete">Delete</a></td>
+                <td><a ng-href='/templates/[[ x.FileName ]]'>View</a></td>
             </tr>
         </table>
     </div>

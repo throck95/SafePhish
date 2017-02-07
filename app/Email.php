@@ -76,7 +76,7 @@ class Email {
             'password' => $password
         );
         $emailData = array(
-            'subject' => 'Your SafePhish Verification Code',
+            'subject' => 'Welcome to SafePhish!',
             'from' => getenv('MAIL_USERNAME'),
             'to' => $user->Email,
             'template' => 'emails.newUser'
