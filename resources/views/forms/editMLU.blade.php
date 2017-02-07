@@ -25,7 +25,6 @@
                 <option value="{{ $departments[$i]->Id }}">{{ $departments[$i]->Department }}</option>
             @endfor
         </select></p>
-    <p>{!! Form::label('statusSelect','Status: ') !!}
     <p>{!! Form::label('urlToggle','Generate New URL Id: ') !!}
         <input type="checkbox" name="urlToggle" checked /></p>
     {!! Form::submit('Update User',array('id'=>'submitButton')) !!}
