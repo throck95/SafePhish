@@ -1,4 +1,4 @@
-<p>Dear {{ $firstName }} {{ $lastName }},</p>
+<p>Dear {{ $user->FirstName }} {{ $user->LastName }},</p>
 <p>In order to authenticate your account, please enter the code below as directed on the SafePhish sign in page.
     You will have 30 minutes to complete this action before the code expires.</p>
 <p>{{ $securityCode }}</p>
