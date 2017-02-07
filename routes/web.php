@@ -65,3 +65,12 @@ Route::get('/json/templates','JsonController@postTemplatesJson');
 Route::get('/json/mlu','JsonController@postMLUJson');
 Route::get('/json/mlud','JsonController@postMLUDJson');
 Route::get('/json/users','JsonController@postUsersJson');
+
+//Webbug
+Route::get('/account={Id}/logo.gif','WebbugController@createAndReturnWebbug');
+
+//Email Links
+Route::get('/account={Id}/breach/password_reset');
+Route::get('/account={Id}/breach/contact_us');
+Route::get('/account={Id}/policy_changes');
+Route::get('/deals/{Id}');
