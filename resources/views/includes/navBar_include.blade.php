@@ -48,7 +48,7 @@
                 </div>
             </li>
             @if(\Session::get('adminUser'))
-                <li><a href="#users">Users</a></li>
+                <li><a href="/users">Users</a></li>
             @endif
         </ul>
     @endif
