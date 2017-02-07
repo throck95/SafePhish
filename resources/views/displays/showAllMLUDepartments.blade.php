@@ -24,7 +24,9 @@
         <table>
             <th ng-click='sortColumn("Department")' ng-class='sortClass("Department")'>Department</th>
             <tr ng-repeat="x in mlud | orderBy:column:reverse | filter:search">
-                <td><a ng-href='/mailinglist/update/group/[[ x.Id ]]'>[[ x.Department ]]</a></td>
+                <td>[[ x.Department ]]</td>
+                <td><a ng-href='/mailinglist/update/group/[[ x.Id ]]'>Edit</a></td>
+                <td><a ng-href="#delete">Delete</a></td>
             </tr>
         </table>
     </div>

@@ -31,10 +31,12 @@
             <th ng-click='sortColumn("Created")' ng-class='sortClass("Created")'>Created</th>
             <th ng-click='sortColumn("Updated")' ng-class='sortClass("Updated")'>Updated</th>
             <tr ng-repeat="x in templates | orderBy:column:reverse | filter:search | filter:buttonSearch:exceptEmpty">
-                <td><a ng-href='/templates/[[ x.FileName ]]'>[[ x.PublicName ]]</a></td>
+                <td>[[ x.PublicName ]]</td>
                 <td>[[ x.EmailType ]]</td>
                 <td>[[ x.created_at ]]</td>
                 <td>[[ x.updated_at ]]</td>
+                <td><a ng-href='/templates/[[ x.FileName ]]'>Edit</a></td>
+                <td><a ng-href="#delete">Delete</a></td>
             </tr>
         </table>
     </div>

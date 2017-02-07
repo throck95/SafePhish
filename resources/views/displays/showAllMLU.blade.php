@@ -26,9 +26,11 @@
             <th ng-click='sortColumn("LastName")' ng-class='sortClass("LastName")'>Last Name</th>
             <th ng-click='sortColumn("Email")' ng-class='sortClass("Email")'>Email</th>
             <tr ng-repeat="x in mlu | orderBy:column:reverse | filter:search">
-                <td><a ng-href='/mailinglist/update/user/[[ x.Id ]]'>[[ x.FirstName ]]</a></td>
+                <td>[[ x.FirstName ]]</td>
                 <td>[[ x.LastName ]]</td>
                 <td>[[ x.Email ]]</td>
+                <td><a ng-href='/mailinglist/update/user/[[ x.Id ]]'>Edit</a></td>
+                <td><a ng-href="#delete">Delete</a></td>
             </tr>
         </table>
     </div>
