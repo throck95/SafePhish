@@ -14,13 +14,13 @@
     {!! Form::open(array('url'=>"/user/update/$user->Id")) !!}
     <p>
     <p>{!! Form::label('usernameLbl','Username: ') !!}
-        {!! Form::label(null,$user->Username,array('Id'=>'usernameLbl')) !!}</p>
+        {!! Form::label(null,$user->Username,array('id'=>'usernameLbl')) !!}</p>
     <p>{!! Form::label('firstNameLbl','First Name: ') !!}
-        {!! Form::label(null,"$user->FirstName $user->MiddleInitial",array('Id'=>'firstNameLbl')) !!}</p>
+        {!! Form::label(null,"$user->FirstName $user->MiddleInitial",array('id'=>'firstNameLbl')) !!}</p>
     <p>{!! Form::label('lastNameLbl','Last Name: ') !!}
-        {!! Form::label(null,$user->LastName,array('Id'=>'lastNameLbl')) !!}</p>
+        {!! Form::label(null,$user->LastName,array('id'=>'lastNameLbl')) !!}</p>
     <p>{!! Form::label('2faLbl','Two-Factor Authentication: ') !!}
-        {!! Form::label(null,$twoFactor,array('Id'=>'2faLbl')) !!}</p>
+        {!! Form::label(null,$twoFactor,array('id'=>'2faLbl')) !!}</p>
     <p>{!! Form::label('emailText','Email: ') !!}
         {!! Form::text('emailText',$user->Email,array('name'=>'emailText')) !!}</p>
     <datalist id="permissionsDatalist">
