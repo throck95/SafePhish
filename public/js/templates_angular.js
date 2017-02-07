@@ -45,8 +45,4 @@ app.controller('templateController',function($scope,$http) {
         }
         return angular.equals(expected, actual);
     };
-
-    $scope.alertTest = function(object) {
-        window.alert(object.FileName);
-    };
 });
