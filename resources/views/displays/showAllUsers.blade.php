@@ -13,6 +13,9 @@
 @section('bodyContent')
     <label>Filters: </label>
     <div ng-app="usersApp" ng-controller="usersController">
+        <button ng-click='buttonFilter("Admin")'>Admin Accounts</button>
+        <button ng-click='buttonFilter("Standard")'>Standard Accounts</button>
+        <button ng-click='buttonFilter("")'>All Accounts</button>
         <div class="form-group">
             <div class="input-group">
                 <div class="input-group-addon">
@@ -26,13 +29,15 @@
             <th ng-click='sortColumn("FirstName")' ng-class='sortClass("FirstName")'>First Name</th>
             <th ng-click='sortColumn("LastName")' ng-class='sortClass("LastName")'>Last Name</th>
             <th ng-click='sortColumn("Email")' ng-class='sortClass("Email")'>Email</th>
-            <th ng-click='sortColumn("UserType")' ng-class='sortClass("UserType")'>User Type</th>
-            <tr ng-repeat="x in users | orderBy:column:reverse | filter:search">
-                <td><a ng-href='/user/update/[[ x.Id ]]'>[[ x.Username ]]</a></td>
+            <th ng-click='sortColumn("PermissionType")' ng-class='sortClass("PermissionType")'>User Type</th>
+            <tr ng-repeat="x in users | orderBy:column:reverse | filter:search | filter:buttonSearch:exceptEmpty">
+                <td>[[ x.Username ]]</td>
                 <td>[[ x.FirstName ]] [[ x.MiddleInitial ]]</td>
                 <td>[[ x.LastName ]]</td>
                 <td>[[ x.Email ]]</td>
-                <td>[[ x.UserType ]]</td>
+                <td>[[ x.PermissionType ]]</td>
+                <td><a ng-href='/user/update/[[ x.Id ]]'>Edit</a></td>
+                <td><a ng-href="#delete">Delete</a></td>
             </tr>
         </table>
     </div>

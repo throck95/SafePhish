@@ -55,7 +55,9 @@ Route::get('/mailinglist/groups','GUIController@displayMLUDs')->name('mlud');
 //Users
 Route::get('/user/update','GUIController@accountManagementForm')->name('accountManagement');
 Route::post('/user/update','GUIController@updateUserAccountManagement')->name('updateUser');
+Route::get('/user/update/{Id}','GUIController@displayUser');
 Route::post('/user/update/{Id}','GUIController@updateUser')->name('adminUpdateUser');
+Route::get('/users','GUIController@displayUsers')->name('users');
 
 //Json
 Route::get('/json/campaigns','JsonController@postCampaignsJson');

@@ -535,7 +535,26 @@ class GUIController extends Controller
                 }
             }
             User::updateUser($user,$email,$password,'',$userType);
-            return redirect()->route('adminUserUpdate');
+            return redirect()->route('users');
+        }
+        return redirect()->route('e401');
+    }
+
+    public static function displayUsers() {
+        if(Auth::adminCheck()) {
+            return view('displays.showAllUsers');
+        }
+        return redirect()->route('e401');
+    }
+
+    public static function displayUser($Id) {
+        if(Auth::adminCheck()) {
+            $user = User::where('Id',$Id)->first();
+            $twoFactor = $user->getAttribute('2FA');
+            $twoFactor = $twoFactor == 0 ? 'Enabled' : 'Disabled';
+            $permissions = User_Permissions::all();
+            $variables = array('user'=>$user,'twoFactor'=>$twoFactor,'permissions'=>$permissions);
+            return view('forms.editUser')->with($variables);
         }
         return redirect()->route('e401');
     }

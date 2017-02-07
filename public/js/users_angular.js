@@ -11,6 +11,7 @@ app.controller('usersController',function($scope,$http) {
     $scope.column = 'Username';
     $scope.reverse = false;
     $scope.search = '';
+    $scope.buttonSearch = '';
 
     $scope.sortColumn = function(col) {
         $scope.column = col;
@@ -32,5 +33,16 @@ app.controller('usersController',function($scope,$http) {
         } else {
             return '';
         }
+    };
+
+    $scope.buttonFilter = function(query) {
+        $scope.buttonSearch = query;
+    };
+
+    $scope.exceptEmpty = function(actual, expected) {
+        if(!expected) {
+            return true;
+        }
+        return angular.equals(expected, actual);
     };
 });
