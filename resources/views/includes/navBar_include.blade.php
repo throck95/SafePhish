@@ -48,7 +48,13 @@
                 </div>
             </li>
             @if(\Session::get('adminUser'))
-                <li><a href="/users">Users</a></li>
+                <li class="dropdown">
+                    <a class="dropbtn">Users</a>
+                    <div class="navbar-dropdown">
+                        <a href="/users">Manager</a>
+                        <a href="/register">Register</a>
+                    </div>
+                </li>
             @endif
         </ul>
     @endif

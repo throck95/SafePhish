@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Libraries\RandomObjectGeneration;
 use App\Models\Two_Factor;
 use App\Models\User;
+use App\Models\User_Permissions;
 use App\Email;
 use Illuminate\Http\Request;
 
@@ -18,16 +19,30 @@ class AuthController extends Controller
      * @return  User
      */
     public static function create(Request $request) {
-        User::create([
-            'Username' => $request->input('usernameText'),
-            'Email' => $request->input('emailText'),
+        $users = User::all();
+        $username = $request->input('usernameText');
+        foreach($users as $user) {
+            if($user->Username == $username) {
+                return redirect()->route('register');
+            }
+        }
+        if($request->input('emailText') != $request->input('confirmEmailText')) {
+            return redirect()->route('register');
+        }
+        $email = $request->input('emailText');
+        $keyspace = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%&';
+        $password = RandomObjectGeneration::random_str(10,$keyspace);
+        $user = User::create([
+            'Username' => $username,
+            'Email' => $email,
             'FirstName' => $request->input('firstNameText'),
             'LastName' => $request->input('lastNameText'),
             'MiddleInitial' => $request->input('initialText'),
-            'Password' => password_hash($request->input('passwordText'),PASSWORD_DEFAULT),
+            'Password' => password_hash($password,PASSWORD_DEFAULT),
             '2FA' => 0,
         ]);
-        self::authenticate($request);
+        Email::executeAccountCreated($user,$password);
+        return redirect()->route('users');
     }
 
     /**
@@ -181,9 +196,11 @@ class AuthController extends Controller
     }
 
     public static function generateRegister() {
-        if(self::check()) {
-            return redirect()->route('authHome');
+        if(self::adminCheck()) {
+            $permissions = User_Permissions::all();
+            $variables = array('permissions'=>$permissions);
+            return view('auth.register')->with($variables);
         }
-        return view('auth.register');
+        return redirect()->route('e401');
     }
 }

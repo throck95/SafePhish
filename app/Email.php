@@ -56,6 +56,37 @@ class Email {
         }
     }
 
+    public static function executeAccountCreated($recipient,$password) {
+        try {
+            $data = self::accountCreatedEmailData($recipient,$password);
+            self::sendEmail($data['templateData'],$data['emailData']);
+        } catch(Exception $e) {
+            throw new EmailException(__CLASS__ . ' Exception',0,$e);
+        }
+    }
+
+    public static function executePasswordReset($recipient,$password) {
+
+    }
+
+    private static function accountCreatedEmailData(User $user, $password) {
+        $templateData = array(
+            'firstName' => $user->FirstName,
+            'lastName' => $user->LastName,
+            'password' => $password
+        );
+        $emailData = array(
+            'subject' => 'Your SafePhish Verification Code',
+            'from' => getenv('MAIL_USERNAME'),
+            'to' => $user->Email,
+            'template' => 'emails.newUser'
+        );
+        return array(
+            'templateData'=>$templateData,
+            'emailData'=>$emailData
+        );
+    }
+
     private static function twoFactorEmailData(User $user, $code) {
         $templateData = array(
             'firstName' => $user->FirstName,
