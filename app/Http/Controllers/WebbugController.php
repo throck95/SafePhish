@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Email_Tracking;
+use App\Models\User;
 use App\Models\Website_Tracking;
 use App\Models\Mailing_List_User;
 
@@ -17,15 +18,14 @@ class WebbugController extends Controller
      *
      * @param 	string		$id		Contains UniqueURLId that references specific user and specific campaign ID
      */
-    public function webbugParse($id) {
-        $urlId = substr($id,0,15);
-        $campaignId = substr($id,15);
-        $recipient = Mailing_List_User::where('UniqueURLId',$urlId)->first();
-        $userId = $recipient->MGL_Id;
+    private function webbugParse($id) {
+        $urlId = substr($id,0,12);
+        $campaignId = substr($id,13);
+        $user = Mailing_List_User::where('UniqueURLId',$urlId)->first();
         if(strpos($_SERVER['REQUEST_URI'],'email') !== false) {
-            $this->webbugExecutionEmail($userId,$campaignId);
+            $this->webbugExecutionEmail($user,$campaignId);
         } else {
-            $this->webbugExecutionWebsite($userId,$campaignId);
+            $this->webbugExecutionWebsite($user,$campaignId);
         }
     }
 
@@ -33,14 +33,14 @@ class WebbugController extends Controller
      * webbugExecutionEmail
      * Email specific execution of the webbug tracker.
      *
-     * @param 	int         $userId			    User ID of user passed
+     * @param 	User        $user
      * @param 	string		$campaignId			Campaign ID to create a filter choice in the results
      */
-    private function webbugExecutionEmail($userId, $campaignId) {
-        $tracking = Email_Tracking::create(
+    private function webbugExecutionEmail($user, $campaignId) {
+        Email_Tracking::create(
             ['Ip'=>$_SERVER['REMOTE_ADDR'],
                 'Host'=>gethostbyaddr($_SERVER['REMOTE_ADDR']),
-                'UserId'=>$userId,
+                'UserId'=>$user->Id,
                 'CampaignId'=>$campaignId,
                 'Timestamp'=>Carbon::now()]
         );
@@ -50,18 +50,24 @@ class WebbugController extends Controller
      * webbugExecutionWebsite
      * Website specific execution of the webbug tracker.
      *
-     * @param 	int         $userId			    User ID of user passed
+     * @param 	User        $user
      * @param 	string		$campaignId			Campaign ID to create a filter choice in the results
      */
-    private function webbugExecutionWebsite($userId,$campaignId) {
-        $tracking = Website_Tracking::create(
+    private function webbugExecutionWebsite($user,$campaignId) {
+        Website_Tracking::create(
             ['Ip'=>$_SERVER['REMOTE_ADDR'],
                 'Host'=>gethostbyaddr($_SERVER['REMOTE_ADDR']),
                 'BrowserAgent'=>$_SERVER['HTTP_USER_AGENT'],
                 'ReqPath'=>$_SERVER['REQUEST_URI'],
-                'UserId'=>$userId,
+                'UserId'=>$user->Id,
                 'CampaignId'=>$campaignId,
                 'Timestamp'=>Carbon::now()]
         );
+    }
+
+    public function createAndReturnWebbug($Id) {
+        $this->webbugParse($Id);
+        header('Content-Type: image/gif');
+        return base64_decode('R0lGODlhAQABAJAAAP8AAAAAACH5BAUQAAAALAAAAAABAAEAAAICBAEAOw==');
     }
 }
