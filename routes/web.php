@@ -65,12 +65,3 @@ Route::get('/json/templates','JsonController@postTemplatesJson');
 Route::get('/json/mlu','JsonController@postMLUJson');
 Route::get('/json/mlud','JsonController@postMLUDJson');
 Route::get('/json/users','JsonController@postUsersJson');
-
-Route::post('/print',function(\Illuminate\Http\Request $request) {
-    $departments = $request->input('departmentSelect');
-    var_dump($departments);
-    echo "<br />";
-    foreach ($departments as $department) {
-        echo $department . "<br />";
-    }
-})->name('print');
