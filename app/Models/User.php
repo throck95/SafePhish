@@ -62,11 +62,19 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     }
 
     public static function queryUsers() {
-        return DB::table('users')
-             ->leftJoin('user_permissions','users.UserType','users.Id')
+        $users = DB::table('users')
+             ->leftJoin('user_permissions','users.UserType','user_permissions.Id')
             ->select('users.Id','users.Username','users.Email','users.FirstName',
                 'users.LastName','users.MiddleInitial','user_permissions.PermissionType')
             ->orderBy('users.Id', 'asc')
             ->get();
+        $user = \Session::get('authUser');
+        for($i = 0; $i < count($users); $i++) {
+            if($users[$i]->Id == $user->Id) {
+                unset($users[$i]);
+                break;
+            }
+        }
+        return $users;
     }
 }
