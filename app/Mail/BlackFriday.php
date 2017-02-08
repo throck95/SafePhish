@@ -36,6 +36,6 @@ class BlackFriday extends Mailable
         $variables = array('user'=>$this->user,'campaign'=>$this->campaign);
         return $this->from(getenv('MAIL_USERNAME'),getenv('MAIL_NAME'))
             ->subject('Check out these Black Friday Deals!')
-            ->view('phishing.black_friday')->with($variables);
+            ->view('emails.phishing.black_friday')->with($variables);
     }
 }

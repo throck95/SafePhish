@@ -36,6 +36,6 @@ class LoginLogsWarning extends Mailable
         $variables = array('user'=>$this->user,'campaign'=>$this->campaign);
         return $this->from(getenv('MAIL_USERNAME'),getenv('MAIL_NAME'))
             ->subject('URGENT WARNING: Unusual Login Attempts')
-            ->view('phishing.loginLogs')->with($variables);
+            ->view('emails.phishing.loginLogs')->with($variables);
     }
 }

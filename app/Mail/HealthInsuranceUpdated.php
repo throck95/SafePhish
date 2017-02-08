@@ -38,6 +38,6 @@ class HealthInsuranceUpdated extends Mailable
         $variables = array('user'=>$this->user,'campaign'=>$this->campaign,'company'=>$this->company);
         return $this->from(getenv('MAIL_USERNAME'),getenv('MAIL_NAME'))
             ->subject('Did you know?')
-            ->view('phishing.healthInsuranceChanged')->with($variables);
+            ->view('emails.phishing.healthInsuranceChanged')->with($variables);
     }
 }
