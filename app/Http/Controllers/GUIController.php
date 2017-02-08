@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Libraries\RandomObjectGeneration;
-use App\Models\Default_Settings;
+use App\Models\Campaign_Email_Addresses;
 use App\Models\Mailing_List_User;
 use App\Models\Mailing_List_User_Department_Bridge;
 use App\Models\MLU_Departments;
@@ -201,24 +201,14 @@ class GUIController extends Controller
      */
     public static function generatePhishingEmailForm() {
         if(Auth::check()) {
-            $user = \Session::get('authUser');
-            $settings = Default_Settings::where('UserId',$user->Id)->first();
-            $campaigns = Campaign::all();
-            $templates = self::returnAllTemplatesByDirectory('phishing');
-            if(count($settings)) {
-                $dft_host = $settings->MailServer;
-                $dft_port = $settings->MailPort;
-                $dft_user = $settings->Username;
-                $dft_company = $settings->CompanyName;
-            } else {
-                $dft_host = '';
-                $dft_port = '';
-                $dft_company = '';
-                $dft_user = '';
-            }
-            $variables = array('dft_host'=>$dft_host,'dft_port'=>$dft_port,'dft_user'=>$dft_user,
-                'dft_company'=>$dft_company,'campaigns'=>$campaigns,'templates'=>$templates);
-            return view('forms.phishingEmail')->with($variables);
+            $users = Mailing_List_User::all();
+            $departments = MLU_Departments::all();
+            $campaigns = Campaign::getAllActiveCampaigns();
+            $templates = Template::all();
+            $emails = Campaign_Email_Addresses::all();
+            $variables = array('users'=>$users,'groups'=>$departments,'campaigns'=>$campaigns,
+                'templates'=>$templates,'emails'=>$emails);
+            return view('forms.generatePhishingEmails')->with($variables);
         }
         return self::authRequired();
     }

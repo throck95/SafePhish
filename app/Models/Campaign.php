@@ -39,4 +39,8 @@ class Campaign extends Model
         $query->update($update);
         $query->get();
     }
+
+    public static function getAllActiveCampaigns() {
+        return Campaign::where('Status','active')->get();
+    }
 }
