@@ -23,7 +23,7 @@ class Cryptor
     {
         if(!$key) {
             // if you don't supply your own key, this will be the default
-            $key = file_get_contents('../../test.txt');
+            $key = file_get_contents('../../SafePhish_Cryptor_Secret_Key.txt');
         }
         if(ctype_print($key)) {
             // convert key to binary format
