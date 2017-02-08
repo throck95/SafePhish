@@ -14,8 +14,6 @@ Route::post('/2fa','AuthController@twoFactorVerify');
 Route::get('/2faresend','AuthController@resend2FA');
 
 //Templates
-Route::get('/templates/create','GUIController@generateCreateTemplate');
-Route::post('/templates/create/phish','GUIController@createNewPhishTemplate');
 Route::get('/templates','GUIController@displayTemplates')->name('templates');
 Route::get('/templates/{FileName}','GUIController@displayTemplate');
 
@@ -74,3 +72,6 @@ Route::get('/account={Id}/breach/password_reset');
 Route::get('/account={Id}/breach/contact_us');
 Route::get('/account={Id}/policy_changes');
 Route::get('/deals/{Id}');
+
+//Images
+Route::get('/images/black_friday.png','ImagesController@displayBlackFridayImage');
