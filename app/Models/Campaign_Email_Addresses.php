@@ -17,9 +17,11 @@ class Campaign_Email_Addresses extends Model
 {
     protected $table = 'campaign_email_addresses';
 
-    protected $primaryKey = 'Id';
+    protected $primaryKey = 'EmailAddress';
 
-    protected $fillable = ['Email_Address',
+    public $incrementing = false;
+
+    protected $fillable = ['EmailAddress',
         'Name',
         'Password'];
 
@@ -32,7 +34,7 @@ class Campaign_Email_Addresses extends Model
             throw new DuplicateKeyException("Email Address already exists.");
         }
         return self::create([
-            'Email_Address'=>$email,
+            'EmailAddress'=>$email,
             'Name'=>$name,
             'Password'=>$encrypted
         ]);
@@ -43,14 +45,14 @@ class Campaign_Email_Addresses extends Model
         $encrypted = $cryptor->encrypt($password);
         unset($password);
         $query = self::query();
-        $query->where('Email_Address',$email);
+        $query->where('EmailAddress',$email);
         $query->update(['Password'=>$encrypted,'Name'=>$name]);
         return $query->get();
     }
 
     public static function decryptPassword($email) {
         $cryptor = new Cryptor();
-        $password = self::where('Email_Address',$email)->first()->Password;
+        $password = self::where('EmailAddress',$email)->first()->Password;
         return $cryptor->decrypt($password);
     }
 }

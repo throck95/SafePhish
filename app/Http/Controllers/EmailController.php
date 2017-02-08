@@ -28,11 +28,11 @@ class EmailController extends Controller
     public static function sendPhishingEmail(Request $request)
     {
         if(Auth::check()) {
-            $fromEmail = Campaign_Email_Addresses::where('Email_Address',$request->input('fromEmailText'))->first();
+            $fromEmail = Campaign_Email_Addresses::where('EmailAddress',$request->input('fromEmailText'))->first();
             $template = Template::where('FileName',$request->input('templateText'))->first();
             $campaign = Campaign::where('Id',$request->input('campaignText'))->first();
             if(!empty($fromEmail) && !empty($template) && !empty($campaign)) {
-                putenv("MAIL_USERNAME=$fromEmail->Email");
+                putenv("MAIL_USERNAME=$fromEmail->EmailAddress");
                 putenv("MAIL_NAME=$fromEmail->Name");
                 $cryptor = new Cryptor();
                 $password = $cryptor->decrypt($fromEmail->Password);
@@ -61,6 +61,7 @@ class EmailController extends Controller
                 }
             }
         }
+        return redirect()->route('generatePhish');
     }
 
     public static function sendNewAccountEmail(User $user, $password) {
