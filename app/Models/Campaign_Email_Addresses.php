@@ -13,7 +13,7 @@ use App\Libraries\Cryptor;
 use Illuminate\Database\Eloquent\Model;
 use MongoDB\Driver\Exception\DuplicateKeyException;
 
-class CampaignEmailAddresses extends Model
+class Campaign_Email_Addresses extends Model
 {
     protected $table = 'campaign_email_addresses';
 
