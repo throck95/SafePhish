@@ -9,7 +9,7 @@
 namespace App\Models;
 
 
-use App\Cryptor;
+use App\Libraries\Cryptor;
 use Illuminate\Database\Eloquent\Model;
 use MongoDB\Driver\Exception\DuplicateKeyException;
 
