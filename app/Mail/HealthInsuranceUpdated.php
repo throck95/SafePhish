@@ -14,16 +14,18 @@ class HealthInsuranceUpdated extends Mailable
 
     private $user;
     private $campaign;
+    private $company;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(Mailing_List_User $user, $campaign)
+    public function __construct(Mailing_List_User $user, $campaign, $company)
     {
         $this->user = $user;
         $this->campaign = $campaign;
+        $this->company = $company;
     }
 
     /**
@@ -33,9 +35,8 @@ class HealthInsuranceUpdated extends Mailable
      */
     public function build()
     {
-        $variables = array('user'=>$this->user,'campaign'=>$this->campaign,'company'=>'strategic HR, inc.');
-        return $this->to($this->user->Email,$this->user->FirstName . ' ' . $this->user->LastName)
-            ->from(getenv('MAIL_USERNAME'),getenv('MAIL_NAME'))
+        $variables = array('user'=>$this->user,'campaign'=>$this->campaign,'company'=>$this->company);
+        return $this->from(getenv('MAIL_USERNAME'),getenv('MAIL_NAME'))
             ->subject('Did you know?')
             ->view('phishing.healthInsuranceChanged')->with($variables);
     }

@@ -20,7 +20,7 @@ class LoginLogsWarning extends Mailable
      *
      * @return void
      */
-    public function __construct(Mailing_List_User $user, $campaign)
+    public function __construct(Mailing_List_User $user, $campaign, $company)
     {
         $this->user = $user;
         $this->campaign = $campaign;
@@ -34,8 +34,7 @@ class LoginLogsWarning extends Mailable
     public function build()
     {
         $variables = array('user'=>$this->user,'campaign'=>$this->campaign);
-        return $this->to($this->user->Email,$this->user->FirstName . ' ' . $this->user->LastName)
-            ->from(getenv('MAIL_USERNAME'),getenv('MAIL_NAME'))
+        return $this->from(getenv('MAIL_USERNAME'),getenv('MAIL_NAME'))
             ->subject('URGENT WARNING: Unusual Login Attempts')
             ->view('phishing.loginLogs')->with($variables);
     }

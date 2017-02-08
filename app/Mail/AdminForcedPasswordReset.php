@@ -34,8 +34,7 @@ class AdminForcedPasswordReset extends Mailable
     public function build()
     {
         $variables = array('user'=>$this->user,'password'=>$this->password);
-        return $this->to($this->user->Email,$this->user->FirstName . ' ' . $this->user->LastName)
-            ->from(getenv('MAIL_USERNAME'),getenv('MAIL_NAME'))
+        return $this->from(getenv('MAIL_USERNAME'),getenv('MAIL_NAME'))
             ->subject('SafePhish Password Reset')
             ->view('emails.resetPassword')->with($variables);
     }
