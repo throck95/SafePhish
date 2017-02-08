@@ -20,9 +20,10 @@ class CampaignEmailAddresses extends Model
     protected $primaryKey = 'Id';
 
     protected $fillable = ['Email_Address',
+        'Name',
         'Password'];
 
-    public static function insertEmail($email, $password) {
+    public static function insertEmail($email, $name, $password) {
         $cryptor = new Cryptor();
         $encrypted = $cryptor->encrypt($password);
         unset($password);
@@ -32,17 +33,18 @@ class CampaignEmailAddresses extends Model
         }
         return self::create([
             'Email_Address'=>$email,
+            'Name'=>$name,
             'Password'=>$encrypted
         ]);
     }
 
-    public static function updateEmail($email, $password) {
+    public static function updateEmail($email, $name, $password) {
         $cryptor = new Cryptor();
         $encrypted = $cryptor->encrypt($password);
         unset($password);
         $query = self::query();
         $query->where('Email_Address',$email);
-        $query->update(['Password'=>$encrypted]);
+        $query->update(['Password'=>$encrypted,'Name'=>$name]);
         return $query->get();
     }
 
