@@ -18,7 +18,9 @@ class Template extends Model
 
     protected $fillable = ['EmailType',
         'FileName',
-        'PublicName'];
+        'PublicName',
+        'Mailable'
+    ];
 
     protected $primaryKey = 'FileName';
 
