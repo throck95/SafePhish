@@ -29,7 +29,7 @@ class Campaign_Email_Addresses extends Model
         $cryptor = new Cryptor();
         $encrypted = $cryptor->encrypt($password);
         unset($password);
-        $query = self::where('Email_Address',$email)->first();
+        $query = self::where('EmailAddress',$email)->first();
         if(count($query)) {
             throw new DuplicateKeyException("Email Address already exists.");
         }
