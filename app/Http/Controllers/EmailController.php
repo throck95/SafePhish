@@ -5,22 +5,16 @@ namespace App\Http\Controllers;
 use App\Libraries\Cryptor;
 use App\Mail\NewUser;
 use App\Mail\TwoFactorCode;
-use App\Models\CampaignEmailAddresses;
+use App\Models\Campaign_Email_Addresses;
 use App\Models\MLU_Departments;
 use App\Models\Template;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-
 use App\Http\Controllers\AuthController as Auth;
-
 use App\Models\Campaign;
 use App\Models\Sent_Mail;
 use App\Models\Mailing_List_User;
-
-use App\Exceptions\ConfigurationException;
-use App\Exceptions\EmailException;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
 class EmailController extends Controller
@@ -34,7 +28,7 @@ class EmailController extends Controller
     public static function sendPhishingEmail(Request $request)
     {
         if(Auth::check()) {
-            $fromEmail = CampaignEmailAddresses::where('Email_Address',$request->input('fromEmailText'))->first();
+            $fromEmail = Campaign_Email_Addresses::where('Email_Address',$request->input('fromEmailText'))->first();
             $template = Template::where('FileName',$request->input('templateText'))->first();
             $campaign = Campaign::where('Id',$request->input('campaignText'))->first();
             if(!empty($fromEmail) && !empty($template) && !empty($campaign)) {
