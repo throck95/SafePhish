@@ -67,7 +67,7 @@ class WebbugController extends Controller
 
     public function createAndReturnWebbug($Id) {
         $this->webbugParse($Id);
-        header('Content-Type: image/gif');
-        return base64_decode('R0lGODlhAQABAJAAAP8AAAAAACH5BAUQAAAALAAAAAABAAEAAAICBAEAOw==');
+        header('Content-Type: image/png');
+        return base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAAA1BMVEUAAACnej3aAAAAAXRSTlMAQObYZgAAAApJREFUCNdjYAAAAAIAAeIhvDMAAAAASUVORK5CYII=');
     }
 }
