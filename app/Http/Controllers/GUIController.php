@@ -29,27 +29,6 @@ class GUIController extends Controller
     }
 
     /**
-     * returnAllTemplatesByDirectory
-     * Helper function that queries template names from specific directory in file structure.
-     *
-     * @param   string      $directory          Directory name
-     * @return  array
-     */
-    private static function returnAllTemplatesByDirectory($directory) {
-        $files = [];
-        $fileNames = [];
-        $filesInFolder = \File::files("../resources/views/emails/$directory");
-        foreach($filesInFolder as $path) {
-            $files[] = pathinfo($path);
-        }
-        for($i = 0; $i < sizeof($files); $i++) {
-            $fileNames[$i] = $files[$i]['filename'];
-            $fileNames[$i] = substr($fileNames[$i],0,-6);
-        }
-        return $fileNames;
-    }
-
-    /**
      * dashboard
      * Home route.
      *
@@ -246,79 +225,6 @@ class GUIController extends Controller
     }
 
     /**
-     * updateDefaultEmailSettings
-     * Post function for updating Default Email Settings, which are used to autofill the Send Email Request Form
-     *
-     * @param   Request         $request            Settings sent from form
-     */
-    public static function updateDefaultEmailSettings(Request $request) {
-        $user = User::where('Username',$request->input('usernameText'))->first();
-        $company = $request->input('companyText');
-        $host = $request->input('mailServerText');
-        $port = $request->input('mailPortText');
-
-        $settings = Default_Settings::firstOrNew(['UserId'=>$user->Id]);
-        $settings->MailServer = $host;
-        $settings->MailPort = $port;
-        $settings->CompanyName = $company;
-        $settings->Username = $user->Username;
-        $settings->save();
-    }
-
-    /**
-     * generateDefaultEmailSettingsForm
-     * Generates the Settings form based on input from the database.
-     *
-     * @return  \Illuminate\Http\RedirectResponse|\Illuminate\View\View
-     */
-    public static function generateDefaultEmailSettingsForm() {
-        if(Auth::check()) {
-            $user = \Session::get('authUser');
-            $settings = Default_Settings::where('UserId',$user->Id)->first();
-            if(count($settings)) {
-                $dft_host = $settings->MailServer;
-                $dft_port = $settings->MailPort;
-                $dft_user = $settings->Username;
-                $dft_company = $settings->CompanyName;
-            } else {
-                $dft_host = '';
-                $dft_port = '';
-                $dft_company = '';
-                $dft_user = '';
-            }
-            $variables = array('dft_host'=>$dft_host,'dft_port'=>$dft_port,'dft_user'=>$dft_user,'dft_company'=>$dft_company);
-            return view('forms.defaultEmailSettings')->with($variables);
-        } else {
-            \Session::put('intended',route('defaultSettings')); //define route defaultSettings
-            return redirect()->route('login');
-        }
-    }
-
-    /**
-     * createNewPhishTemplate
-     * Creates new phishing template and writes it to the file structure.
-     *
-     * @param   Request         $request        Template name and content sent by user to create new template
-     */
-    public static function createNewPhishTemplate(Request $request) {
-        $name = $request->input('templateName');
-        $content = $request->input('templateContent');
-        Template::createPhish($content,$name);
-    }
-
-    /**
-     * createNewEduTemplate
-     * Creates new educational template and writes it to the file structure.
-     *
-     * @param   Request         $request        Template name and content sent by user to create new template
-     */
-    public static function createNewEduTemplate(Request $request) {
-        $name = $request->input('templateName');
-        $content = $request->input('templateContent');
-        Template::createEdu($content,$name);
-    }
-
-    /**
      * createNewCampaign
      * Creates new campaign and inserts into database.
      *
@@ -332,32 +238,6 @@ class GUIController extends Controller
             'Assignee'=>$user->Id,
             'Status'=>'active']
         );
-    }
-
-    /**
-     * phishHTMLReturner
-     * Takes phishing template name as input and returns content of template to
-     * be used as a preview in the GUI.
-     *
-     * @param   string      $id             Template Name
-     * @return  string                      Template Content
-     */
-    public static function phishHTMLReturner($id) {
-        try {
-            if(Auth::check()) {
-                $template = Template::where('Id',$id)->first();
-                if(!is_null($template)) {
-                    $path = "../resources/views/emails/phishing/$id.blade.php";
-                    return \File::get($path);
-                }
-                return "Template does not exist.";
-            }
-            self::authRequired();
-        }
-        catch (Exception $e) {
-            //log exception
-            return "Preview Unavailable";
-        }
     }
 
     public static function generateNewMailingListUserForm() {
@@ -383,7 +263,7 @@ class GUIController extends Controller
             ['Email'=>$request->input('emailText'),
                 'FirstName'=>$request->input('firstNameText'),
                 'LastName'=>$request->input('lastNameText'),
-                'UniqueURLId'=>RandomObjectGeneration::random_str(12)]
+                'UniqueURLId'=>RandomObjectGeneration::random_str(getenv('DEFAULT_LENGTH_IDS'))]
         );
         $departments = $request->input('departmentSelect');
         foreach($departments as $department) {
@@ -424,7 +304,7 @@ class GUIController extends Controller
             );
         }
         if(!empty($urlToggle) && $urlToggle == 'on') {
-            $url = RandomObjectGeneration::random_str(12);
+            $url = RandomObjectGeneration::random_str(getenv('DEFAULT_LENGTH_IDS'));
             Mailing_List_User::updateMailingListUser($mlu,$email,$fname,$lname,$url);
         } else {
             Mailing_List_User::updateMailingListUser($mlu,$email,$fname,$lname);
@@ -514,7 +394,7 @@ class GUIController extends Controller
             $password = $request->input('passwordResetToggle');
             if(!empty($password) && $password == 'on') {
                 $keyspace = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%&';
-                $password = RandomObjectGeneration::random_str(10,$keyspace);
+                $password = RandomObjectGeneration::random_str(getenv('DEFAULT_LENGTH_PASSWORDS'),$keyspace);
             }
             $user = User::where('Id',$Id)->first();
             $userType = $request->input('userTypeText');

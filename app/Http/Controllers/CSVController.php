@@ -31,8 +31,7 @@ class CSVController extends Controller
 
         if(empty($campaignId) && empty($userId) && empty($ip) && empty($ipExact) && empty($timestampStart) && empty($timestampEnd)) {
             $json = Email_Tracking::all();
-        }
-        else {
+        } else {
             $json = Email_Tracking::where(function($q) use ($array) {
                 if(!empty($array[0])) {
                     $q->where('CampaignId',$array[0]);

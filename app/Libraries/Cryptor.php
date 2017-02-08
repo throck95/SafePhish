@@ -22,11 +22,9 @@ class Cryptor
     public function __construct($key = false, $method = false)
     {
         if(!$key) {
-            // if you don't supply your own key, this will be the default
-            $key = file_get_contents('../../SafePhish_Cryptor_Secret_Key.txt');
+            $key = file_get_contents('../../' . getenv('CRYPTOR_SECRET_KEY'));
         }
         if(ctype_print($key)) {
-            // convert key to binary format
             $this->key = openssl_digest($key, 'SHA256', true);
         } else {
             $this->key = $key;
@@ -47,7 +45,6 @@ class Cryptor
         return $encrypted_string;
     }
 
-    // decrypt encrypted string
     public function decrypt($data)
     {
         $iv_strlen = 2 * $this->iv_bytes();
@@ -55,8 +52,7 @@ class Cryptor
             list(, $iv, $crypted_string) = $regs;
             $decrypted_string = openssl_decrypt($crypted_string, $this->method, $this->key, 0, hex2bin($iv));
             return $decrypted_string;
-        } else {
-            return false;
         }
+        return false;
     }
 }

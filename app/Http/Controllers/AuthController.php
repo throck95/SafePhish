@@ -30,7 +30,7 @@ class AuthController extends Controller
         }
         $email = $request->input('emailText');
         $keyspace = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%&';
-        $password = RandomObjectGeneration::random_str(10,$keyspace);
+        $password = RandomObjectGeneration::random_str(getenv('DEFAULT_LENGTH_PASSWORDS'),$keyspace);
         $user = User::create([
             'Username' => $username,
             'Email' => $email,
@@ -73,18 +73,16 @@ class AuthController extends Controller
                 \Session::put('2faUser',$user);
                 return redirect()->route('2fa');
             }
-            else {
-                \Session::put('authUser',$user);
-                \Session::put('authIp',$_SERVER['REMOTE_ADDR']);
-                if($user->UserType == 1) {
-                    \Session::put('adminUser',$user);
-                }
-                $intended = \Session::get('intended');
-                if($intended) {
-                    return redirect()->to($intended);
-                }
-                return redirect()->route('authHome');
+            \Session::put('authUser',$user);
+            \Session::put('authIp',$_SERVER['REMOTE_ADDR']);
+            if($user->UserType == 1) {
+                \Session::put('adminUser',$user);
             }
+            $intended = \Session::get('intended');
+            if($intended) {
+                return redirect()->to($intended);
+            }
+            return redirect()->route('authHome');
         }
         return redirect()->route('login');
     }

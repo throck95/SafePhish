@@ -23,10 +23,9 @@ class WebbugController extends Controller
         $campaignId = substr($id,13);
         $user = Mailing_List_User::where('UniqueURLId',$urlId)->first();
         if(strpos($_SERVER['REQUEST_URI'],'email') !== false) {
-            $this->webbugExecutionEmail($user,$campaignId);
-        } else {
-            $this->webbugExecutionWebsite($user,$campaignId);
+            return $this->webbugExecutionEmail($user, $campaignId);
         }
+        return $this->webbugExecutionWebsite($user,$campaignId);
     }
 
     /**
