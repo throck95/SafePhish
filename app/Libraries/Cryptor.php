@@ -6,7 +6,7 @@
  * Time: 2:04 PM
  */
 
-namespace App;
+namespace App\Libraries;
 
 
 class Cryptor
