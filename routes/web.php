@@ -35,8 +35,8 @@ Route::get('/campaign/create','GUIController@createCampaignForm')->name('createC
 Route::post('/campaign/create','GUIController@createCampaign');
 
 //Emails
-Route::get('/email/generate','GUIController@generatePhishingEmailForm');
-Route::post('email/send','EmailController@sendEmail')->name('sendEmail');
+Route::get('/email/generate','GUIController@generatePhishingEmailForm')->name('generatePhish');
+Route::post('email/send','EmailController@sendPhishingEmail')->name('sendPhish');
 
 //MLU
 Route::get('/mailinglist/create/user','GUIController@generateNewMailingListUserForm')->name('mailingListUser');
@@ -65,7 +65,7 @@ Route::get('/json/mlud','JsonController@postMLUDJson');
 Route::get('/json/users','JsonController@postUsersJson');
 
 //Webbug
-Route::get('/account={Id}/logo.gif','WebbugController@createAndReturnWebbug');
+Route::get('/account={Id}/emaillogo.gif','WebbugController@createAndReturnWebbug');
 
 //Email Links
 Route::get('/account={Id}/breach/password_reset');
