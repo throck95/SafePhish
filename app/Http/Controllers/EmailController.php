@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Libraries\Cryptor;
+use App\Mail\NewUser;
+use App\Mail\TwoFactorCode;
+use App\Models\CampaignEmailAddresses;
+use App\Models\MLU_Departments;
+use App\Models\Template;
+use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
-use App\TemplateConfiguration;
-use App\EmailConfiguration;
-use App\Email;
 use App\Http\Controllers\AuthController as Auth;
 
 use App\Models\Campaign;
@@ -16,6 +21,7 @@ use App\Models\Mailing_List_User;
 use App\Exceptions\ConfigurationException;
 use App\Exceptions\EmailException;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class EmailController extends Controller
 {
@@ -25,79 +31,67 @@ class EmailController extends Controller
      *
      * @param    Request $request Request object passed via AJAX from client.
      */
-    public static function sendEmail(Request $request)
+    public static function sendPhishingEmail(Request $request)
     {
         if(Auth::check()) {
-            try {
-                $templateConfig = new TemplateConfiguration(
-                    array(
-                        'templateName' => $request->input('emailTemplate'),
-                        'companyName' => $request->input('companyText'),
-                        'campaignName' => $request->input('campaignData')['campaignName'],
-                        'campaignId' => intval($request->input('campaignData')['campaignId'])
-                    )
-                );
-                $periodInWeeks = 4;
-                $emailConfig = new EmailConfiguration(
-                    array(
-                        'host' => $request->input('mailServerText'),
-                        'port' => $request->input('mailPortText'),
-                        'authUsername' => $request->input('fromEmailText'),
-                        'authPassword' => $request->input('fromPass'),
-                        'fromEmail' => $request->input('fromEmailText'),
-                        'subject' => $request->input('subject')
-                    )
-                );
-                $recipients = self::validateMailingList($periodInWeeks);
-
-                Email::executePhishingEmail($emailConfig, $templateConfig, $recipients);
-            } catch (ConfigurationException $ce) {
-                //write to log file
-            } catch (EmailException $ee) {
-                //write to log file
-                //track emails unsent and include in log?
+            $fromEmail = CampaignEmailAddresses::where('Email_Address',$request->input('fromEmailText'))->first();
+            $template = Template::where('FileName',$request->input('templateText'))->first();
+            $campaign = Campaign::where('Id',$request->input('campaignText'))->first();
+            if(!empty($fromEmail) && !empty($template) && !empty($campaign)) {
+                putenv("MAIL_USERNAME=$fromEmail->Email");
+                putenv("MAIL_NAME=$fromEmail->Name");
+                $cryptor = new Cryptor();
+                $password = $cryptor->decrypt($fromEmail->Password);
+                putenv("MAIL_PASSWORD=$password");
+                $templateClass = "\\App\\Mail\\$template->Mailable";
+                $sendingChoice = $request->input('sendingChoiceRadio');
+                if($sendingChoice == 'user') {
+                    $user = Mailing_List_User::where('Id',$request->input('userIdText'))->first();
+                    if(!empty($user)) {
+                        Mail::to($user->Email,$user->FirstName . ' ' . $user->LastName)
+                            ->send(new $templateClass($user,$campaign,$request->input('companyText')));
+                        self::logSentEmail($user,$campaign);
+                    }
+                } else {
+                    $group = MLU_Departments::where('Id',$request->input('groupIdText'))->first();
+                    if(!empty($group)) {
+                        foreach($group as $userId) {
+                            $user = Mailing_List_User::where('Id',$userId)->first();
+                            if(!empty($user)) {
+                                Mail::to($user->Email,$user->FirstName . ' ' . $user->LastName)
+                                    ->send(new $templateClass($user,$campaign,$request->input('companyText')));
+                                self::logSentEmail($user,$campaign);
+                            }
+                        }
+                    }
+                }
             }
         }
     }
 
-    /**
-     * retrieveCampaigns
-     * Helper function to grab the 3 most recent campaigns for a user, then grab the campaign object of each campaign.
-     *
-     * @param   int             $id         Mailing_List_User ID of the requested user.
-     * @return  array
-     */
-    private static function retrieveCampaigns($id) {
-        $join = DB::table('sent_email')
-            ->leftJoin('campaigns','sent_email.CampaignId','=','campaigns.Id')
-            ->where('sent_email.UserId',$id)
-            ->orderBy('sent_email.Timestamp','desc')
-            ->limit(3)
-            ->get();
-        $campaigns = array();
-        foreach($join as $item) {
-            $campaigns[] = $item;
+    public static function sendNewAccountEmail(User $user, $password) {
+        if(Auth::adminCheck()) {
+            Mail::to($user->Email,$user->FirstName . ' ' . $user->LastName)
+                ->send(new NewUser($user,$password));
         }
-        return $campaigns;
+    }
+
+    public static function sendTwoFactorEmail(User $user, $code) {
+        Mail::to($user->Email,$user->FirstName . ' ' . $user->LastName)
+            ->send(new TwoFactorCode($user,$code));
     }
 
     /**
-     * validateMailingList
-     * Validates all the mailing_list recipients. Returns only those that will receive the email.
+     * logSentEmail
+     * Logs to sent_email table info about this email and associated recipient.
      *
-     * @param   int             $periodInWeeks          Number of weeks back to check for most recent email.
-     * @return  array
+     * @param   Mailing_List_User           $user
      */
-    private static function validateMailingList($periodInWeeks) {
-        $users = Mailing_List_User::all();
-        $mailingList = array();
-        $date = date('Y-m-d h:i:s',strtotime("-$periodInWeeks weeks"));
-        foreach($users as $user) {
-            $campaigns = self::retrieveCampaigns($user->Id);
-            if($campaigns[0]->updated_at <= $date) {
-                $mailingList[] = $user;
-            }
-        }
-        return $mailingList;
+    private static function logSentEmail(Mailing_List_User $user, Campaign $campaign) {
+        Sent_Mail::create(
+            ['UserId'=>$user->Id,
+                'CampaignId'=>$campaign->Id,
+                'Timestamp'=>Carbon::now()]
+        );
     }
 }

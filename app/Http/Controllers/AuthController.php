@@ -6,7 +6,6 @@ use App\Libraries\RandomObjectGeneration;
 use App\Models\Two_Factor;
 use App\Models\User;
 use App\Models\User_Permissions;
-use App\Email;
 use Illuminate\Http\Request;
 
 class AuthController extends Controller
@@ -41,7 +40,7 @@ class AuthController extends Controller
             'Password' => password_hash($password,PASSWORD_DEFAULT),
             '2FA' => 0,
         ]);
-        Email::executeAccountCreated($user,$password);
+        EmailController::sendNewAccountEmail($user,$password);
         return redirect()->route('users');
     }
 
@@ -70,7 +69,7 @@ class AuthController extends Controller
                     'Code' => password_hash($code,PASSWORD_DEFAULT)
                 ]);
 
-                Email::executeTwoFactorEmail($user,$code);
+                EmailController::sendTwoFactorEmail($user,$code);
                 \Session::put('2faUser',$user);
                 return redirect()->route('2fa');
             }
@@ -156,7 +155,7 @@ class AuthController extends Controller
             'Code' => password_hash($code,PASSWORD_DEFAULT)
         ]);
 
-        Email::executeTwoFactorEmail($user,$code);
+        EmailController::sendTwoFactorEmail($user,$code);
         return redirect()->route('2fa');
     }
 
