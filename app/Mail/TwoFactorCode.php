@@ -34,6 +34,9 @@ class TwoFactorCode extends Mailable
     public function build()
     {
         $variables = array('user'=>$this->user,'securityCode'=>$this->code);
-        return $this->view('emails.2fa')->with($variables);
+        return $this->to($this->user->Email,$this->user->FirstName . ' ' . $this->user->LastName)
+            ->from(getenv('MAIL_USERNAME'),getenv('MAIL_NAME'))
+            ->subject('Your SafePhish Verification Code')
+            ->view('emails.2fa')->with($variables);
     }
 }

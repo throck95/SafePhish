@@ -2,28 +2,28 @@
 
 namespace App\Mail;
 
-use App\Models\User;
+use App\Models\Mailing_List_User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class AdminForcedPasswordReset extends Mailable
+class LoginLogsWarning extends Mailable
 {
     use Queueable, SerializesModels;
 
     private $user;
-    private $password;
+    private $campaign;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(User $user, $password)
+    public function __construct(Mailing_List_User $user, $campaign)
     {
         $this->user = $user;
-        $this->password = $password;
+        $this->campaign = $campaign;
     }
 
     /**
@@ -33,10 +33,10 @@ class AdminForcedPasswordReset extends Mailable
      */
     public function build()
     {
-        $variables = array('user'=>$this->user,'password'=>$this->password);
+        $variables = array('user'=>$this->user,'campaign'=>$this->campaign);
         return $this->to($this->user->Email,$this->user->FirstName . ' ' . $this->user->LastName)
             ->from(getenv('MAIL_USERNAME'),getenv('MAIL_NAME'))
-            ->subject('SafePhish Password Reset')
-            ->view('emails.resetPassword')->with($variables);
+            ->subject('URGENT WARNING: Unusual Login Attempts')
+            ->view('phishing.loginLogs')->with($variables);
     }
 }
