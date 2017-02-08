@@ -65,7 +65,7 @@ Route::get('/json/mlud','JsonController@postMLUDJson');
 Route::get('/json/users','JsonController@postUsersJson');
 
 //Webbug
-Route::get('/account={Id}/emaillogo.gif','WebbugController@createAndReturnWebbug');
+Route::get('/account={Id}/emaillogo.png','WebbugController@createAndReturnWebbug');
 
 //Email Links
 Route::get('/account={Id}/breach/password_reset');
