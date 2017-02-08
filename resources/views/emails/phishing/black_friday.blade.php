@@ -1,2 +1,2 @@
-<p><img src="/images/black_friday.png" href="/deals/{{ $user->UniqueURLId }}-{{ $campaign->Id }}" /></p>
-<img src="/account={{ $user->UniqueURLId }}-{{ $campaign->Id }}/logo.gif" />
+<p><img src='{!! url("/images/black_friday.png") !!}' href='{!! url("/deals/$user->UniqueURLId-$campaign->Id") !!}' /></p>
+<img src='{!! url("/account=$user->UniqueURLId-$campaign->Id/emaillogo.png") !!}' />

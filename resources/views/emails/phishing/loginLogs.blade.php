@@ -8,8 +8,8 @@
     {{ \Carbon\Carbon::now()->toDateTimeString() }} -- Logon Event 528: **Logon success. logonType=4 - Batch Logon**</p>
 
 <p>This is an unusual access time for you, an unusually fast login interval, and a login type rarely used. If this was not you, please
-    <a href="/account={{ $user->UniqueURLId }}-{{ $campaign->Id }}/breach/password_reset">reset your password</a> and
-    <a href="/account={{ $user->UniqueURLId }}-{{ $campaign->Id }}/breach/contact_us">contact us</a> immediately.</p>
+    <a href='{!! url("/account=$user->UniqueURLId-$campaign->Id/breach/password_reset") !!}'>reset your password</a> and
+    <a href='{!! url("/account=$user->UniqueURLId-$campaign->Id/breach/contact_us") !!}'>contact us</a> immediately.</p>
 
 <p>***This email was generated automatically based on logon attempts. This mailbox is not monitored. Please do not reply.***</p>
-<img src="http://localhost:8000/account={{ $user->UniqueURLId }}-{{ $campaign->Id }}/emaillogo.gif" />
+<img src='{!! url("/account=$user->UniqueURLId-$campaign->Id/emaillogo.png") !!}' />
