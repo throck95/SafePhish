@@ -22,7 +22,7 @@ class Cryptor
     public function __construct($key = false, $method = false)
     {
         if(!$key) {
-            $key = file_get_contents('../../' . getenv('CRYPTOR_SECRET_KEY'));
+            $key = file_get_contents(getenv('CRYPTOR_SECRET_KEY'));
         }
         if(ctype_print($key)) {
             $this->key = openssl_digest($key, 'SHA256', true);
