@@ -6,6 +6,7 @@ use App\Libraries\Cryptor;
 use App\Mail\NewUser;
 use App\Mail\TwoFactorCode;
 use App\Models\Campaign_Email_Addresses;
+use App\Models\Mailing_List_User_Department_Bridge;
 use App\Models\MLU_Departments;
 use App\Models\Template;
 use App\Models\User;
@@ -49,8 +50,9 @@ class EmailController extends Controller
                 } else {
                     $group = MLU_Departments::where('Id',$request->input('groupIdText'))->first();
                     if(!empty($group)) {
-                        foreach($group as $userId) {
-                            $user = Mailing_List_User::where('Id',$userId)->first();
+                        $bridge = Mailing_List_User_Department_Bridge::where('DepartmentId',$group->Id)->get();
+                        foreach($bridge as $pair) {
+                            $user = Mailing_List_User::where('Id',$pair->UserId)->first();
                             if(!empty($user)) {
                                 Mail::to($user->Email,$user->FirstName . ' ' . $user->LastName)
                                     ->send(new $templateClass($user,$campaign,$request->input('companyText')));
