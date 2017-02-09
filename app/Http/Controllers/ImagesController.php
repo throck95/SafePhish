@@ -28,4 +28,14 @@ class ImagesController extends Controller
 
         fpassthru($file);
     }
+
+    public function displayIRSLogo() {
+        $path = 'images/emails/irs_logo.jpg';
+        $file = fopen($path,'rb');
+
+        header('Content-Type: image/jpeg');
+        header('Content-Length: ' . filesize($path));
+
+        fpassthru($file);
+    }
 }

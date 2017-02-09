@@ -75,3 +75,4 @@ Route::get('/deals/{Id}');
 
 //Images
 Route::get('/images/black_friday.png','ImagesController@displayBlackFridayImage');
+Route::get('/images/irs_logo.jpg','ImagesController@displayIRSLogo');
