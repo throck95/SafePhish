@@ -37,7 +37,7 @@
                 <td>[[ x.Email ]]</td>
                 <td>[[ x.PermissionType ]]</td>
                 <td><a ng-href='/user/update/[[ x.Id ]]'>Edit</a></td>
-                <td><a ng-href="#delete">Delete</a></td>
+                <!--<td><a ng-href="#delete">Delete</a></td>-->
             </tr>
         </table>
     </div>

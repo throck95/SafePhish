@@ -30,7 +30,7 @@
                 <td>[[ x.LastName ]]</td>
                 <td>[[ x.Email ]]</td>
                 <td><a ng-href='/mailinglist/update/user/[[ x.Id ]]'>Edit</a></td>
-                <td><a ng-href="#delete">Delete</a></td>
+                <!--<td><a ng-href="#delete">Delete</a></td>-->
             </tr>
         </table>
     </div>

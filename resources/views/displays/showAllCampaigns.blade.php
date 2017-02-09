@@ -37,7 +37,6 @@
                 <td>[[ x.created_at ]]</td>
                 <td>[[ x.updated_at ]]</td>
                 <td><a ng-href='/campaigns/[[ x.Id ]]'>Edit</a></td>
-                <td><a ng-href="#delete">Delete</a></td>
             </tr>
         </table>
     </div>

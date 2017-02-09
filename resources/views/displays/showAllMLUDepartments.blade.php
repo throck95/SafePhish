@@ -26,7 +26,7 @@
             <tr ng-repeat="x in mlud | orderBy:column:reverse | filter:search">
                 <td>[[ x.Department ]]</td>
                 <td><a ng-href='/mailinglist/update/group/[[ x.Id ]]'>Edit</a></td>
-                <td><a ng-href="#delete">Delete</a></td>
+                <!--<td><a ng-href="#delete">Delete</a></td>-->
             </tr>
         </table>
     </div>
