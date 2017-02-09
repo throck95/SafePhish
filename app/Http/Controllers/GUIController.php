@@ -13,7 +13,6 @@ use App\Models\User_Permissions;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AuthController as Auth;
 use App\Models\User;
-use League\Flysystem\Exception;
 
 class GUIController extends Controller
 {
