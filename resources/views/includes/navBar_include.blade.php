@@ -50,7 +50,7 @@
                 <li class="dropdown">
                     <a class="dropbtn">Users</a>
                     <div class="navbar-dropdown">
-                        <a href="/users">Manager</a>
+                        <a href="/users">Manage</a>
                         <a href="/register">Register</a>
                     </div>
                 </li>
