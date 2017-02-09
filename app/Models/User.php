@@ -54,7 +54,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
             }
         }
         if(!empty($userType)) {
-            $update['UserType'] = $userType;
+            $update['UserType'] = $userType->Id;
         }
 
         $query->update($update);

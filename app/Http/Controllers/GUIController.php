@@ -390,20 +390,18 @@ class GUIController extends Controller
     public static function updateUser(Request $request, $Id) {
         if(Auth::adminCheck()) {
             $email = $request->input('emailText');
-            $password = $request->input('passwordResetToggle');
+            $password = $request->input('passwordToggle');
             if(!empty($password) && $password == 'on') {
                 $keyspace = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%&';
-                $password = RandomObjectGeneration::random_str(getenv('DEFAULT_LENGTH_PASSWORDS'),$keyspace);
+                $password = RandomObjectGeneration::random_str(intval(getenv('DEFAULT_LENGTH_PASSWORDS')),$keyspace);
             }
             $user = User::where('Id',$Id)->first();
-            $userType = $request->input('userTypeText');
+            $userType = $request->input('permissionsText');
             if(!empty($userType)) {
-                $userPermissions = User_Permissions::where('Id',$userType)->first();
-                if(empty($userPermissions)) {
-                    $userType = '';
-                }
+                $userType = User_Permissions::where('Id',$userType)->first();
             }
-            User::updateUser($user,$email,$password,'',$userType);
+            User::updateUser($user,$email,password_hash($password,PASSWORD_DEFAULT),'',$userType);
+            EmailController::sendNewAccountEmail($user,$password);
             return redirect()->route('users');
         }
         return redirect()->route('e401');
