@@ -139,22 +139,25 @@ class AuthController extends Controller
      * @return  \Illuminate\Http\RedirectResponse
      */
     public static function resend2FA() {
-        $user = \Session::get('2faUser');
-        $twoFactor = Two_Factor::where([
-            'UserId' => $user->Id, 'Ip' => $_SERVER['REMOTE_ADDR']
-        ])->first();
-        if(count($twoFactor)) {
-            $twoFactor->delete();
-        }
-        $code = RandomObjectGeneration::random_str(6, '1234567890');
-        Two_Factor::create([
-            'UserID' => $user->Id,
-            'Ip' => $_SERVER['REMOTE_ADDR'],
-            'Code' => password_hash($code,PASSWORD_DEFAULT)
-        ]);
+        if(\Session::has('2faUser')) {
+            $user = \Session::get('2faUser');
+            $twoFactor = Two_Factor::where([
+                'UserId' => $user->Id, 'Ip' => $_SERVER['REMOTE_ADDR']
+            ])->first();
+            if(count($twoFactor)) {
+                $twoFactor->delete();
+            }
+            $code = RandomObjectGeneration::random_str(6, '1234567890');
+            Two_Factor::create([
+                'UserID' => $user->Id,
+                'Ip' => $_SERVER['REMOTE_ADDR'],
+                'Code' => password_hash($code,PASSWORD_DEFAULT)
+            ]);
 
-        EmailController::sendTwoFactorEmail($user,$code);
-        return redirect()->route('2fa');
+            EmailController::sendTwoFactorEmail($user,$code);
+            return redirect()->route('2fa');
+        }
+        return redirect()->route('login');
     }
 
     /**
