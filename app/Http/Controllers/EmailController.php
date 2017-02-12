@@ -11,7 +11,6 @@ use App\Models\MLU_Departments;
 use App\Models\Template;
 use App\Models\User;
 use Carbon\Carbon;
-use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AuthController as Auth;
 use App\Models\Campaign;
