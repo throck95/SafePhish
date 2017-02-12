@@ -9,15 +9,12 @@
 namespace App\Libraries;
 
 
+use Illuminate\Contracts\Encryption\EncryptException;
+
 class Cryptor
 {
     protected $method = 'AES-256-CTR';
     private $key;
-
-    protected function iv_bytes()
-    {
-        return openssl_cipher_iv_length($this->method);
-    }
 
     public function __construct($key = false, $method = false)
     {
@@ -33,7 +30,7 @@ class Cryptor
             if(in_array($method, openssl_get_cipher_methods())) {
                 $this->method = $method;
             } else {
-                die(__METHOD__ . ": unrecognised encryption method: {$method}");
+                throw new EncryptException("Encryption method, $method, not found.");
             }
         }
     }
@@ -54,5 +51,10 @@ class Cryptor
             return $decrypted_string;
         }
         return false;
+    }
+
+    protected function iv_bytes()
+    {
+        return openssl_cipher_iv_length($this->method);
     }
 }
