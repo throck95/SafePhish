@@ -23,10 +23,6 @@ Route::get('/reports/email','GUIController@generateEmailReportForm');
 Route::post('/csv/web','CSVController@generateWebsiteReport');
 Route::post('/csv/email','CSVController@generateEmailReport');
 
-//Errors
-Route::get('/unauthorized','ErrorController@e401')->name('e401');
-Route::get('/404','ErrorController@e404')->name('e404');
-
 //Campaigns
 Route::get('/campaigns','GUIController@displayCampaigns')->name('campaigns');
 Route::get('/campaigns/{Id}','GUIController@displayCampaign');
