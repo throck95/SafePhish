@@ -1,6 +1,6 @@
 <header>
     <div id="headerBar">
-        @if(\Session::get('authUser'))
+        @if(\App\Http\Controllers\AuthController::check())
             <a class="authenticationLink" href="/user/update">MY ACCOUNT</a>
             <a class="authenticationLink" href="/logout">LOGOUT</a>
         @else
@@ -15,7 +15,7 @@
     @yield('header')
 </header>
 <div id="navBar">
-    @if(\Session::get('authUser') || \Session::get('adminUser'))
+    @if(\App\Http\Controllers\AuthController::check())
         <ul>
             <li class="dropdown">
                 <a class="dropbtn">Reports</a>
@@ -46,7 +46,7 @@
                     <a href="/mailinglist/create/group">New Group</a>
                 </div>
             </li>
-            @if(\Session::get('adminUser'))
+            @if(\App\Http\Controllers\AuthController::adminCheck())
                 <li class="dropdown">
                     <a class="dropbtn">Users</a>
                     <div class="navbar-dropdown">
