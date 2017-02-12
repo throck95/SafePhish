@@ -124,6 +124,8 @@ return [
 
     'log_level' => env('APP_LOG_LEVEL', 'debug'),
 
+    'log_max_files' => intval(env('APP_LOG_SAVE_TIME',30)),
+
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers
