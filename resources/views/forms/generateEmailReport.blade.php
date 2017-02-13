@@ -12,7 +12,7 @@
 
 @stop
 @section('bodyContent')
-    {!! Form::open(array('action'=>'DataController@emailTrackingCSV')) !!}
+    {!! Form::open(array('action'=>'CSVController@generateEmailReport')) !!}
     <p>{!! Form::label('campaignIdSelect','Campaign: ') !!}
         <select id='campaignIdSelect' name='campaignIdSelect'>
             <option disabled selected value>-- Select an ID --</option>

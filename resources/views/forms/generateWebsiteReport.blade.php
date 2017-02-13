@@ -12,7 +12,7 @@
     <link rel="stylesheet" type="text/css" href="/css/baseformstyles.css" />
 @stop
 @section('bodyContent')
-    {!! Form::open(array('action'=>'DataController@websiteTrackingCSV')) !!}
+    {!! Form::open(array('action'=>'CSVController@generateWebsiteReport')) !!}
     <p>{!! Form::label('campaignIdSelect','Campaign: ') !!}
         <select id='campaignIdSelect' name='campaignIdSelect'>
             <option disabled selected value>-- Select an ID --</option>
