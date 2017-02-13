@@ -68,9 +68,12 @@ class AuthController extends Controller
     public static function authenticate(Request $request) {
         try {
             $user = User::where('Username',$request->input('usernameText'))->first();
-            if(empty($user) || !password_verify($request->input('passwordText'),$user->Password)) {
+            $password = $request->input('passwordText');
+            if(empty($user) || !password_verify($password,$user->Password)) {
                 return redirect()->route('login');
             }
+
+            User::updateUser($user,$user->Email,password_hash($password,PASSWORD_DEFAULT),$user->getAttribute('2FA'));
 
             $session = Sessions::where('UserId',$user->Id)->first();
             if(!empty($session)) {
