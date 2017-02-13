@@ -35,7 +35,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         '2FA',
         'UserType'];
 
-    public static function updateUser($user, $email, $password, $twoFactor, $userType = '') {
+    public static function updateUser(User $user, $email, $password, $twoFactor, $userType = '') {
         $query = User::query();
         $query->where('Id',$user->Id);
         $update = array();
