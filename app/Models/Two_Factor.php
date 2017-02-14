@@ -8,9 +8,9 @@ class Two_Factor extends Model
 {
     protected $table = 'two_factor_codes';
 
-    protected $primaryKey = 'Id';
+    protected $primaryKey = 'id';
 
-    protected $fillable = ['UserId',
-        'Ip',
-        'Code'];
+    protected $fillable = ['user_id',
+        'ip_address',
+        'code'];
 }

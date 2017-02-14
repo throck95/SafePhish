@@ -8,9 +8,9 @@ class User_Permissions extends Model
 {
     protected $table = 'user_permissions';
 
-    protected $primaryKey = 'ID';
+    protected $primaryKey = 'id';
 
     public $timestamps = false;
 
-    protected $fillable = ['PermissionType'];
+    protected $fillable = ['permission_type'];
 }

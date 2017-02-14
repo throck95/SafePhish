@@ -18,7 +18,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
     public $timestamps = false;
 
-    protected $primaryKey = 'Id';
+    protected $primaryKey = 'id';
 
     /**
      * The attributes that are mass assignable.
@@ -26,35 +26,35 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      * @var array
      */
     protected $fillable =
-        ['Username',
-        'Email',
-        'FirstName',
-        'LastName',
-        'MiddleInitial',
-        'Password',
-        '2FA',
-        'UserType'];
+        ['username',
+        'email',
+        'first_name',
+        'last_name',
+        'middle_initial',
+        'password',
+        'two_factor_enabled',
+        'user_type'];
 
     public static function updateUser(User $user, $email, $password, $twoFactor, $userType = '') {
         $query = User::query();
-        $query->where('Id',$user->Id);
+        $query->where('id',$user->Id);
         $update = array();
 
         if(!empty($email)) {
-            $update['Email'] = $email;
+            $update['email'] = $email;
         }
         if(!empty($password)) {
-            $update['Password'] = $password;
+            $update['password'] = $password;
         }
         if(!empty($twoFactor)) {
             if($twoFactor) {
-                $update['2FA'] = 1;
+                $update['two_factor_enabled'] = 1;
             } else {
-                $update['2FA'] = 0;
+                $update['two_factor_enabled'] = 0;
             }
         }
         if(!empty($userType)) {
-            $update['UserType'] = $userType->Id;
+            $update['user_type'] = $userType->id;
         }
 
         $query->update($update);
@@ -63,18 +63,18 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
     public static function queryUsers() {
         $users = DB::table('users')
-             ->leftJoin('user_permissions','users.UserType','user_permissions.Id')
-            ->select('users.Id','users.Username','users.Email','users.FirstName',
-                'users.LastName','users.MiddleInitial','user_permissions.PermissionType')
-            ->orderBy('users.Id', 'asc')
+             ->leftJoin('user_permissions','users.user_type','user_permissions.id')
+            ->select('users.id','users.username','users.email','users.first_name',
+                'users.last_name','users.middle_initial','user_permissions.permission_type')
+            ->orderBy('users.id', 'asc')
             ->get();
-        $user = \Session::get('authUser');
+        /*$user = \Session::get('authUser');
         for($i = 0; $i < count($users); $i++) {
-            if($users[$i]->Id == $user->Id) {
+            if($users[$i]->id == $user->id) {
                 unset($users[$i]);
                 break;
             }
-        }
+        }*/
         return $users;
     }
 }

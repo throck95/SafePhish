@@ -2,18 +2,17 @@
 
 namespace App\Models;
 
-
 use Illuminate\Database\Eloquent\Model;
 
 class Sessions extends Model
 {
     protected $table = 'sessions';
 
-    protected $primaryKey = 'Id';
+    protected $primaryKey = 'id';
 
-    protected $fillable = ['UserId',
-        'Ip',
-        'TwoFactorId',
-        'Authenticated'
+    protected $fillable = ['user_id',
+        'ip_address',
+        'two_factor_id',
+        'authenticated'
     ];
 }

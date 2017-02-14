@@ -1,13 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: tthrockmorton
- * Date: 7/20/2016
- * Time: 12:39 PM
- */
 
 namespace App\Models;
-
 
 use App\Libraries\Cryptor;
 use Illuminate\Database\Eloquent\Model;
@@ -17,26 +10,26 @@ class Campaign_Email_Addresses extends Model
 {
     protected $table = 'campaign_email_addresses';
 
-    protected $primaryKey = 'EmailAddress';
+    protected $primaryKey = 'email_address';
 
     public $incrementing = false;
 
-    protected $fillable = ['EmailAddress',
-        'Name',
-        'Password'];
+    protected $fillable = ['email_address',
+        'name',
+        'password'];
 
     public static function insertEmail($email, $name, $password) {
         $cryptor = new Cryptor();
         $encrypted = $cryptor->encrypt($password);
         unset($password);
-        $query = self::where('EmailAddress',$email)->first();
+        $query = self::where('email_address',$email)->first();
         if(count($query)) {
             throw new DuplicateKeyException("Email Address already exists.");
         }
         return self::create([
-            'EmailAddress'=>$email,
-            'Name'=>$name,
-            'Password'=>$encrypted
+            'email_address'=>$email,
+            'name'=>$name,
+            'password'=>$encrypted
         ]);
     }
 
@@ -45,14 +38,14 @@ class Campaign_Email_Addresses extends Model
         $encrypted = $cryptor->encrypt($password);
         unset($password);
         $query = self::query();
-        $query->where('EmailAddress',$email);
-        $query->update(['Password'=>$encrypted,'Name'=>$name]);
+        $query->where('email_address',$email);
+        $query->update(['password'=>$encrypted,'name'=>$name]);
         return $query->get();
     }
 
     public static function decryptPassword($email) {
         $cryptor = new Cryptor();
-        $password = self::where('EmailAddress',$email)->first()->Password;
+        $password = self::where('email_address',$email)->first()->Password;
         return $cryptor->decrypt($password);
     }
 }

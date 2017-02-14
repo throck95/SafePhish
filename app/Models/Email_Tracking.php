@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: tthrockmorton
- * Date: 8/1/2016
- * Time: 11:20 AM
- */
 
 namespace App\Models;
 
@@ -16,11 +10,11 @@ class Email_Tracking extends Model
 
     public $timestamps = false;
 
-    protected $primaryKey = 'Id';
+    protected $primaryKey = 'id';
 
-    protected $fillable = ['Ip',
-        'Host',
-        'UserId',
-        'CampaignId',
-        'Timestamp'];
+    protected $fillable = ['ip_address',
+        'host',
+        'user_id',
+        'campaign_id',
+        'timestamp'];
 }

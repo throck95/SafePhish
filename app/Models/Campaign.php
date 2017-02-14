@@ -1,13 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: tthrockmorton
- * Date: 7/20/2016
- * Time: 12:39 PM
- */
 
 namespace App\Models;
-
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -15,25 +8,25 @@ class Campaign extends Model
 {
     protected $table = 'campaigns';
 
-    protected $primaryKey = 'Id';
+    protected $primaryKey = 'id';
 
-    protected $fillable = ['Name',
-        'Description',
-        'Assignee',
-        'Status'];
+    protected $fillable = ['name',
+        'description',
+        'assignee',
+        'status'];
 
     public static function updateCampaign($campaign,$description,$assignee,$status) {
         $query = Campaign::query();
-        $query->where('Id',$campaign->Id);
+        $query->where('id',$campaign->Id);
         $update = array();
         if(!empty($description)) {
-            $update['Description'] = $description;
+            $update['description'] = $description;
         }
         if(!empty($assignee)) {
-            $update['Assignee'] = $assignee;
+            $update['assignee'] = $assignee;
         }
         if(!empty($status)) {
-            $update['Status'] = $status;
+            $update['status'] = $status;
         }
 
         $query->update($update);
@@ -41,6 +34,6 @@ class Campaign extends Model
     }
 
     public static function getAllActiveCampaigns() {
-        return Campaign::where('Status','active')->get();
+        return Campaign::where('status','active')->get();
     }
 }
