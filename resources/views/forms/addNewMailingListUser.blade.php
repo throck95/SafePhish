@@ -19,10 +19,10 @@
             {!! Form::text('firstNameText',null,array('name'=>'firstNameText')) !!}</p>
     <p>{!! Form::label('lastNameText','Last Name: ') !!}
         {!! Form::text('lastNameText',null,array('name'=>'lastNameText')) !!}</p>
-    <p>{!! Form::label('departmentSelect','Department: ') !!}
-        <select id='departmentSelect' name='departmentSelect[]' multiple>
-            @for ($i = 0; $i < count($departments); $i++)
-                <option value="{{ $departments[$i]->Id }}">{{ $departments[$i]->Department }}</option>
+    <p>{!! Form::label('groupSelect','Groups: ') !!}
+        <select id='groupSelect' name='groupSelect[]' multiple>
+            @for ($i = 0; $i < count($groups); $i++)
+                <option value="{{ $groups[$i]->id }}">{{ $groups[$i]->name }}</option>
             @endfor
         </select></p>
     <br /><br />
