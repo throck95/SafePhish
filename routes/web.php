@@ -1,7 +1,7 @@
 <?php
 
 //Auth
-Route::get('/','GUIController@dashboard')->name('authHome');
+Route::get('/','GetController@dashboard')->name('authHome');
 Route::get('/login','AuthController@generateLogin')->name('login');
 Route::post('/login','AuthController@authenticate');
 Route::get('/register','AuthController@generateRegister')->name('register');
@@ -14,50 +14,50 @@ Route::post('/2fa','AuthController@twoFactorVerify');
 Route::get('/2faresend','AuthController@resend2FA');
 
 //Templates
-Route::get('/templates','GUIController@displayTemplates')->name('templates');
-Route::get('/templates/{FileName}','GUIController@displayTemplate');
+Route::get('/templates','GetController@displayTemplates')->name('templates');
+Route::get('/templates/{fileName}','GetController@displayTemplate');
 
 //CSV
-Route::get('/reports/web','GUIController@generateWebsiteReportForm');
-Route::get('/reports/email','GUIController@generateEmailReportForm');
+Route::get('/reports/web','GetController@generateWebsiteReportForm');
+Route::get('/reports/email','GetController@generateEmailReportForm');
 Route::post('/csv/web','CSVController@generateWebsiteReport');
 Route::post('/csv/email','CSVController@generateEmailReport');
 
 //Campaigns
-Route::get('/campaigns','GUIController@displayCampaigns')->name('campaigns');
-Route::get('/campaigns/{Id}','GUIController@displayCampaign');
-Route::post('/campaigns/update/{Id}','GUIController@updateCampaign');
-Route::get('/campaign/create','GUIController@createCampaignForm')->name('createCampaign');
-Route::post('/campaign/create','GUIController@createCampaign');
+Route::get('/campaigns','GetController@displayCampaigns')->name('campaigns');
+Route::get('/campaigns/{id}','GetController@displayCampaign');
+Route::post('/campaigns/update/{id}','PostController@updateCampaign');
+Route::get('/campaign/create','GetController@createCampaignForm');
+Route::post('/campaign/create','PostController@createCampaign')->name('createCampaign');
 
 //Emails
-Route::get('/email/generate','GUIController@generatePhishingEmailForm')->name('generatePhish');
+Route::get('/email/generate','GetController@displayPhishingEmailForm')->name('generatePhish');
 Route::post('email/send','EmailController@sendPhishingEmail')->name('sendPhish');
 
 //MLU
-Route::get('/mailinglist/create/user','GUIController@generateNewMailingListUserForm')->name('mailingListUser');
-Route::get('/mailinglist/create/group','GUIController@generateNewMailingListDepartmentForm')->name('mailingListDepartment');
-Route::post('/mailinglist/create/user','GUIController@createNewMailingListUser')->name('postMailingListUser');
-Route::post('/mailinglist/create/group','GUIController@createNewMailingListDepartment')->name('postMailingListDepartment');
-Route::get('/mailinglist/update/user/{Id}','GUIController@generateUpdateMailingListUserForm')->name('updateMailingListUser');
-Route::post('/mailinglist/update/user/{Id}','GUIController@updateMailingListUser')->name('postUpdateMailingListUser');
-Route::get('/mailinglist/update/group/{Id}','GUIController@generateUpdateMLUDForm')->name('updateMailingListDepartment');
-Route::post('/mailinglist/update/group/{Id}','GUIController@updateMailingListDepartment')->name('postUpdateMailingListDepartment');
-Route::get('/mailinglist/users','GUIController@displayMLUs')->name('mlu');
-Route::get('/mailinglist/groups','GUIController@displayMLUDs')->name('mlud');
+Route::get('/mailinglist/create/user','GetController@createMailingListUserForm');
+Route::get('/mailinglist/create/group','GetController@createMailingListGroupForm');
+Route::post('/mailinglist/create/user','PostController@createMailingListUser')->name('postMailingListUser');
+Route::post('/mailinglist/create/group','PostController@createMailingListGroup')->name('postMailingListGroup');
+Route::get('/mailinglist/update/user/{id}','GetController@updateMailingListUserForm');
+Route::get('/mailinglist/update/group/{id}','GetController@updateMailingListGroupsForm');
+Route::post('/mailinglist/update/user/{id}','PostController@updateMailingListUser')->name('postUpdateMailingListUser');
+Route::post('/mailinglist/update/group/{id}','PostController@updateMailingListGroup')->name('postUpdateMailingListDepartment');
+Route::get('/mailinglist/users','GetController@displayMailingListUsers')->name('mailingListUser');
+Route::get('/mailinglist/groups','GetController@displayMailingListGroups')->name('mailingListGroup');
 
 //Users
-Route::get('/user/update','GUIController@accountManagementForm')->name('accountManagement');
-Route::post('/user/update','GUIController@updateUserAccountManagement')->name('updateUser');
-Route::get('/user/update/{Id}','GUIController@displayUser');
-Route::post('/user/update/{Id}','GUIController@updateUser')->name('adminUpdateUser');
-Route::get('/users','GUIController@displayUsers')->name('users');
+Route::get('/user/update','GetController@accountManagementForm');
+Route::post('/user/update','PostController@updateUserAccountManagement')->name('updateUser');
+Route::get('/user/update/{id}','GetController@displayUser');
+Route::post('/user/update/{id}','PostController@updateUser')->name('adminUpdateUser');
+Route::get('/users','GetController@displayUsers')->name('users');
 
 //Json
 Route::get('/json/campaigns','JsonController@postCampaignsJson');
 Route::get('/json/templates','JsonController@postTemplatesJson');
 Route::get('/json/mlu','JsonController@postMLUJson');
-Route::get('/json/mlud','JsonController@postMLUDJson');
+Route::get('/json/groups','JsonController@postGroupsJson');
 Route::get('/json/users','JsonController@postUsersJson');
 
 //Webbug
