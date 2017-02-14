@@ -1,14 +1,14 @@
-var app = angular.module('mludApp', [], function($interpolateProvider) {
+var app = angular.module('groupsApp', [], function($interpolateProvider) {
     $interpolateProvider.startSymbol('[[');
     $interpolateProvider.endSymbol(']]');
 });
 
-app.controller('mludController',function($scope,$http) {
-    $http.get("http://localhost:8000/json/mlud")
+app.controller('groupsController',function($scope,$http) {
+    $http.get("http://localhost:8000/json/groups")
         .then(function(response) {
-            $scope.mlud = response.data.mlud;
+            $scope.groups = response.data.groups;
         });
-    $scope.column = 'Department';
+    $scope.column = 'Name';
     $scope.reverse = false;
     $scope.search = '';
 
