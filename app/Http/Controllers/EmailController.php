@@ -6,8 +6,8 @@ use App\Libraries\Cryptor;
 use App\Libraries\ErrorLogging;
 use App\Mail as MailTemplates;
 use App\Models\Campaign_Email_Addresses;
-use App\Models\Mailing_List_User_Department_Bridge;
-use App\Models\MLU_Departments;
+use App\Models\Mailing_List_Groups;
+use App\Models\Mailing_List_Users_Groups_Bridge;
 use App\Models\Template;
 use App\Models\User;
 use Carbon\Carbon;
@@ -34,22 +34,22 @@ class EmailController extends Controller
                 return redirect()->route('login');
             }
 
-            $fromEmail = Campaign_Email_Addresses::where('EmailAddress',$request->input('fromEmailText'))->first();
-            $template = Template::where('FileName',$request->input('templateText'))->first();
-            $campaign = Campaign::where('Id',$request->input('campaignText'))->first();
+            $fromEmail = Campaign_Email_Addresses::where('email_address',$request->input('fromEmailText'))->first();
+            $template = Template::where('file_name',$request->input('templateText'))->first();
+            $campaign = Campaign::where('id',$request->input('campaignText'))->first();
 
             if(empty($fromEmail) || empty($template) || empty($campaign)) {
                 return redirect()->route('generatePhish');
             }
 
             $cryptor = new Cryptor();
-            $password = $cryptor->decrypt($fromEmail->Password);
+            $password = $cryptor->decrypt($fromEmail->password);
 
-            putenv("MAIL_USERNAME=$fromEmail->EmailAddress");
-            putenv("MAIL_NAME=$fromEmail->Name");
+            putenv("MAIL_USERNAME=$fromEmail->email_address");
+            putenv("MAIL_NAME=$fromEmail->name");
             putenv("MAIL_PASSWORD=$password");
 
-            $templateClass = 'MailTemplates\\' . $template->Mailable;
+            $templateClass = 'MailTemplates\\' . $template->mailable;
             $sendingChoice = $request->input('sendingChoiceRadio');
 
             if($sendingChoice === 'user') {
@@ -78,14 +78,14 @@ class EmailController extends Controller
      */
     private static function sendToUser($userId,$templateClass,$campaign,$company) {
         try {
-            $user = Mailing_List_User::where('Id',$userId)->first();
+            $user = Mailing_List_User::where('id',$userId)->first();
             if(empty($user)) {
                 ErrorLogging::logError(new Exception("MLU not found."));
                 return abort('500');
             }
 
-            $name = $user->FirstName . ' ' . $user->LastName;
-            Mail::to($user->Email,$name)
+            $name = $user->first_name . ' ' . $user->last_name;
+            Mail::to($user->email,$name)
                 ->send(new $templateClass($user,$campaign,$company));
             return self::logSentEmail($user,$campaign);
 
@@ -107,16 +107,16 @@ class EmailController extends Controller
      */
     private static function sendToGroup($groupId,$templateClass,$campaign,$company) {
         try {
-            $group = MLU_Departments::where('Id',$groupId)->first();
+            $group = Mailing_List_Groups::where('id',$groupId)->first();
             if(empty($group)) {
-                ErrorLogging::logError(new Exception("MLUD not found."));
+                ErrorLogging::logError(new Exception("Mailing List Group not found."));
                 return abort('500');
             }
 
-            $bridge = Mailing_List_User_Department_Bridge::where('DepartmentId',$group->Id)->get();
+            $bridge = Mailing_List_Users_Groups_Bridge::where('group_id',$group->id)->get();
 
             foreach($bridge as $pair) {
-                $sent = self::sendToUser($pair->UserId,$templateClass,$campaign,$company);
+                $sent = self::sendToUser($pair->user_id,$templateClass,$campaign,$company);
                 if(!($sent instanceof Sent_Mail)) {
                     return abort('500');
                 }
@@ -141,8 +141,9 @@ class EmailController extends Controller
     public static function sendNewAccountEmail(User $user, $password) {
         try {
             if(Auth::adminCheck()) {
-                $name = $user->FirstName . ' ' . $user->LastName;
-                Mail::to($user->Email,$name)
+
+                $name = $user->first_name . ' ' . $user->last_name;
+                Mail::to($user->email,$name)
                     ->send(new MailTemplates\NewUser($user,$password));
                 return true;
             }
@@ -164,8 +165,8 @@ class EmailController extends Controller
      */
     public static function sendTwoFactorEmail(User $user, $code) {
         try {
-            $name = $user->FirstName . ' ' . $user->LastName;
-            Mail::to($user->Email,$name)
+            $name = $user->first_name . ' ' . $user->last_name;
+            Mail::to($user->email,$name)
                 ->send(new MailTemplates\TwoFactorCode($user,$code));
             return true;
 
@@ -186,9 +187,9 @@ class EmailController extends Controller
     private static function logSentEmail(Mailing_List_User $user, Campaign $campaign) {
         try {
             return Sent_Mail::create(
-                ['UserId'=>$user->Id,
-                    'CampaignId'=>$campaign->Id,
-                    'Timestamp'=>Carbon::now()]
+                ['user_id'=>$user->id,
+                    'campaign_id'=>$campaign->id,
+                    'timestamp'=>Carbon::now()]
             );
         } catch(Exception $e) {
             ErrorLogging::logError($e);

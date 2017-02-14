@@ -33,13 +33,13 @@ class AuthController extends Controller
             $password = RandomObjectGeneration::random_str(intval(getenv('DEFAULT_LENGTH_PASSWORDS')),true);
 
             $user = User::create([
-                'Username' => $username,
-                'Email' => $email,
-                'FirstName' => $request->input('firstNameText'),
-                'LastName' => $request->input('lastNameText'),
-                'MiddleInitial' => $request->input('middleInitialText'),
-                'Password' => password_hash($password,PASSWORD_DEFAULT),
-                '2FA' => 0,
+                'username' => $username,
+                'email' => $email,
+                'first_name' => $request->input('firstNameText'),
+                'last_name' => $request->input('lastNameText'),
+                'middle_initial' => $request->input('middleInitialText'),
+                'password' => password_hash($password,PASSWORD_DEFAULT),
+                'two_factor_enabled' => 0,
             ]);
 
             EmailController::sendNewAccountEmail($user,$password);
@@ -67,15 +67,15 @@ class AuthController extends Controller
      */
     public static function authenticate(Request $request) {
         try {
-            $user = User::where('Username',$request->input('usernameText'))->first();
+            $user = User::where('username',$request->input('usernameText'))->first();
             $password = $request->input('passwordText');
-            if(empty($user) || !password_verify($password,$user->Password)) {
+            if(empty($user) || !password_verify($password,$user->password)) {
                 return redirect()->route('login');
             }
 
-            User::updateUser($user,$user->Email,password_hash($password,PASSWORD_DEFAULT),$user->getAttribute('2FA'));
+            User::updateUser($user,$user->email,password_hash($password,PASSWORD_DEFAULT),$user->two_factor_enabled);
 
-            $session = Sessions::where('UserId',$user->Id)->first();
+            $session = Sessions::where('user_id',$user->id)->first();
             if(!empty($session)) {
                 $session->delete();
             }
@@ -83,9 +83,9 @@ class AuthController extends Controller
             $ip = $_SERVER['REMOTE_ADDR'];
             $cryptor = new Cryptor();
 
-            if($user->getAttribute('2FA') === 1) {
+            if($user->two_factor_enabled === 1) {
                 $twoFactor = Two_Factor::where([
-                    'UserId' => $user->Id, 'Ip' => $ip
+                    'user_id' => $user->id, 'ip_address' => $ip
                 ])->first();
                 if(!empty($twoFactor)) {
                     $twoFactor->delete();
@@ -93,33 +93,33 @@ class AuthController extends Controller
 
                 $code = RandomObjectGeneration::random_str(6,false,'1234567890');
                 $twoFactor = Two_Factor::create([
-                    'UserId' => $user->Id,
-                    'Ip' => $_SERVER['REMOTE_ADDR'],
-                    'Code' => password_hash($code,PASSWORD_DEFAULT)
+                    'user_id' => $user->id,
+                    'ip_address' => $_SERVER['REMOTE_ADDR'],
+                    'code' => password_hash($code,PASSWORD_DEFAULT)
                 ]);
 
                 EmailController::sendTwoFactorEmail($user,$code);
 
                 $newSession = Sessions::create([
-                    'UserId' => $user->Id,
-                    'Ip' => $ip,
-                    'TwoFactorId' => $twoFactor->Id,
-                    'Authenticated' => 0
+                    'user_id' => $user->id,
+                    'ip_address' => $ip,
+                    'two_factor_id' => $twoFactor->id,
+                    'authenticated' => 0
                 ]);
 
-                $encryptedSession = $cryptor->encrypt($newSession->Id);
+                $encryptedSession = $cryptor->encrypt($newSession->id);
                 \Session::put('sessionId',$encryptedSession);
 
                 return redirect()->route('2fa');
             }
 
             $newSession = Sessions::create([
-                'UserId' => $user->Id,
-                'Ip' => $ip,
-                'Authenticated' => 1
+                'user_id' => $user->id,
+                'ip_address' => $ip,
+                'authenticated' => 1
             ]);
 
-            $encryptedSession = $cryptor->encrypt($newSession->Id);
+            $encryptedSession = $cryptor->encrypt($newSession->id);
             \Session::put('sessionId',$encryptedSession);
 
             $intended = \Session::pull('intended');
@@ -146,14 +146,14 @@ class AuthController extends Controller
                 $cryptor = new Cryptor();
 
                 $sessionId = $cryptor->decrypt(\Session::get('sessionId'));
-                $session = Sessions::where('Id',$sessionId)->first();
+                $session = Sessions::where('id',$sessionId)->first();
 
                 $sessionCheck = self::activeSessionCheck($session);
                 if(!is_null($sessionCheck)) {
                     return $sessionCheck;
                 }
 
-                if(!is_null($session->TwoFactorId)) {
+                if(!is_null($session->two_factor_id)) {
                     return view('auth.2fa');
                 }
             }
@@ -180,7 +180,7 @@ class AuthController extends Controller
             $cryptor = new Cryptor();
 
             $sessionId = $cryptor->decrypt(\Session::get('sessionId'));
-            $session = Sessions::where('Id',$sessionId)->first();
+            $session = Sessions::where('id',$sessionId)->first();
 
             $sessionCheck = self::activeSessionCheck($session);
             if(!is_null($sessionCheck)) {
@@ -188,21 +188,21 @@ class AuthController extends Controller
             }
 
             $twoFactor = Two_Factor::where([
-                'UserId' => $session->UserId, 'Ip' => $_SERVER['REMOTE_ADDR']
+                'user_id' => $session->user_id, 'ip_address' => $_SERVER['REMOTE_ADDR']
             ])->first();
 
-            if(!password_verify($request->input('codeText'),$twoFactor->Code)) {
+            if(!password_verify($request->input('codeText'),$twoFactor->code)) {
                 return redirect()->route('2fa');
             }
 
             $session->update([
-                'TwoFactorId' => null,
-                'Authenticated' => 1
+                'two_factor_id' => null,
+                'authenticated' => 1
             ]);
 
             $twoFactor->delete();
 
-            $intended = \Session::get('intended');
+            $intended = \Session::pull('intended');
             if($intended) {
                 return redirect()->to($intended);
             }
@@ -228,20 +228,20 @@ class AuthController extends Controller
             $cryptor = new Cryptor();
 
             $sessionId = $cryptor->decrypt(\Session::get('sessionId'));
-            $session = Sessions::where('Id',$sessionId)->first();
+            $session = Sessions::where('id',$sessionId)->first();
 
             $sessionCheck = self::activeSessionCheck($session);
             if(!is_null($sessionCheck)) {
                 return $sessionCheck;
             }
 
-            $user = User::where('Id',$session->UserId)->first();
+            $user = User::where('id',$session->user_id)->first();
             if(empty($user)) {
-                return redirect()->route('login');
+                return self::logout();
             }
 
             $twoFactor = Two_Factor::where([
-                'UserId' => $session->UserId, 'Ip' => $_SERVER['REMOTE_ADDR']
+                'user_id' => $session->user_id, 'ip_address' => $_SERVER['REMOTE_ADDR']
             ])->first();
             if(!empty($twoFactor)) {
                 $twoFactor->delete();
@@ -249,9 +249,9 @@ class AuthController extends Controller
 
             $code = RandomObjectGeneration::random_str(6, '1234567890');
             Two_Factor::create([
-                'UserID' => $session->UserId,
-                'Ip' => $_SERVER['REMOTE_ADDR'],
-                'Code' => password_hash($code,PASSWORD_DEFAULT)
+                'user_id' => $session->user_id,
+                'ip_address' => $_SERVER['REMOTE_ADDR'],
+                'code' => password_hash($code,PASSWORD_DEFAULT)
             ]);
 
             EmailController::sendTwoFactorEmail($user,$code);
@@ -267,17 +267,17 @@ class AuthController extends Controller
      * activeSessionCheck
      * Helper function to check session objects.
      *
-     * @param   $session            The session to check.
+     * @param   Sessions    $session            The session to check.
      * @return  \Illuminate\Http\RedirectResponse | null
      */
-    private static function activeSessionCheck($session) {
-        if($session->Ip !== $_SERVER['REMOTE_ADDR']) {
+    private static function activeSessionCheck(Sessions $session) {
+        if($session->ip_address !== $_SERVER['REMOTE_ADDR']) {
             $session->delete();
             \Session::forget('sessionId');
             return redirect()->route('login');
         }
 
-        if($session->Authenticated === 1) {
+        if($session->authenticated === 1) {
             return redirect()->route('authHome');
         }
         return null;
@@ -296,9 +296,9 @@ class AuthController extends Controller
         $cryptor = new Cryptor();
 
         $sessionId = $cryptor->decrypt(\Session::get('sessionId'));
-        $session = Sessions::where('Id', $sessionId)->first();
+        $session = Sessions::where('id', $sessionId)->first();
 
-        if($session->Ip !== $_SERVER['REMOTE_ADDR']) {
+        if($session->ip_address !== $_SERVER['REMOTE_ADDR']) {
             $session->delete();
             \Session::forget('sessionId');
             return false;
@@ -321,16 +321,16 @@ class AuthController extends Controller
         $cryptor = new Cryptor();
 
         $sessionId = $cryptor->decrypt(\Session::get('sessionId'));
-        $session = Sessions::where('Id', $sessionId)->first();
+        $session = Sessions::where('id', $sessionId)->first();
 
-        $user = User::where('Id',$session->UserId)->first();
+        $user = User::where('id',$session->user_id)->first();
         if(empty($user)) {
             $session->delete();
             \Session::forget('sessionId');
             return false;
         }
 
-        if($user->UserType !== 1) {
+        if($user->user_type !== 1) {
             return false;
         }
         return true;
@@ -346,7 +346,7 @@ class AuthController extends Controller
         $cryptor = new Cryptor();
 
         $sessionId = $cryptor->decrypt(\Session::get('sessionId'));
-        Sessions::where('Id', $sessionId)->first()->delete();
+        Sessions::where('id', $sessionId)->first()->delete();
         \Session::forget('sessionId');
 
         return redirect()->route('login');
@@ -378,5 +378,16 @@ class AuthController extends Controller
             return view('auth.register')->with($variables);
         }
         return abort('401');
+    }
+
+    /**
+     * authRequired
+     * Adds session variable for return redirect and then redirects to login page.
+     *
+     * @return  \Illuminate\Http\RedirectResponse
+     */
+    public static function authRequired() {
+        \Session::put('intended',$_SERVER['REQUEST_URI']);
+        return redirect()->route('login');
     }
 }
