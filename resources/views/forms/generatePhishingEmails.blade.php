@@ -13,31 +13,31 @@
     <datalist id="usersDatalist">
         @for ($i = 0; $i < count($users); $i++)
             <option value="{{ $users[$i]->Id }}">
-                {{ $users[$i]->FirstName }} {{ $users[$i]->LastName }}</option>
+                {{ $users[$i]->first_name }} {{ $users[$i]->last_name }}</option>
         @endfor
     </datalist>
     <datalist id="groupsDatalist">
         @for ($i = 0; $i < count($groups); $i++)
             <option value="{{ $groups[$i]->Id }}">
-                {{ $groups[$i]->Department }}</option>
+                {{ $groups[$i]->name }}</option>
         @endfor
     </datalist>
     <datalist id="campaignsDatalist">
         @for ($i = 0; $i < count($campaigns); $i++)
             <option value="{{ $campaigns[$i]->Id }}">
-                {{ $campaigns[$i]->Name }}</option>
+                {{ $campaigns[$i]->name }}</option>
         @endfor
     </datalist>
     <datalist id="templatesDatalist">
         @for ($i = 0; $i < count($templates); $i++)
             <option value="{{ $templates[$i]->FileName }}">
-                {{ $templates[$i]->PublicName }}</option>
+                {{ $templates[$i]->public_name }}</option>
         @endfor
     </datalist>
     <datalist id="emailsDatalist">
         @for ($i = 0; $i < count($emails); $i++)
-            <option value="{{ $emails[$i]->EmailAddress }}">
-                {{ $emails[$i]->Name }} - {{ $emails[$i]->EmailAddress }}</option>
+            <option value="{{ $emails[$i]->email_address }}">
+                {{ $emails[$i]->name }} - {{ $emails[$i]->email_address }}</option>
         @endfor
     </datalist>
     <p>

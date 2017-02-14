@@ -10,11 +10,11 @@
 @stop
 @section('bodyContent')
     <h3 style="font-weight: 300">Create New Campaign</h3>
-    {!! Form::open(array('action'=>'GUIController@createCampaign')) !!}
+    {!! Form::open(array('route'=>'createCampaign')) !!}
     <datalist id="usersDatalist">
         @for ($i = 0; $i < count($users); $i++)
-            <option value="{{ $users[$i]->Id }}">
-                {{ $users[$i]->FirstName }} {{ $users[$i]->LastName }}</option>
+            <option value="{{ $users[$i]->id }}">
+                {{ $users[$i]->first_name }} {{ $users[$i]->last_name }}</option>
         @endfor
     </datalist>
     <p>{!! Form::label('nameText','Name: ') !!}

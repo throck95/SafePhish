@@ -17,14 +17,14 @@
         <select id='campaignIdSelect' name='campaignIdSelect'>
             <option disabled selected value>-- Select an ID --</option>
             @for ($i = 0; $i < count($campaigns); $i++)
-                <option value="{{ $campaigns[$i]->Id }}">
-                    {{ $campaigns[$i]->Name }}</option>
+                <option value="{{ $campaigns[$i]->id }}">
+                    {{ $campaigns[$i]->name }}</option>
             @endfor
         </select></p>
     <datalist id="usersDatalist">
         @for ($i = 0; $i < count($users); $i++)
-            <option value="{{ $users[$i]->Id }}">
-                {{ $users[$i]->FirstName }} {{ $users[$i]->LastName }}</option>
+            <option value="{{ $users[$i]->id }}">
+                {{ $users[$i]->first_name }} {{ $users[$i]->last_name }}</option>
         @endfor
     </datalist>
     <p>{!! Form::label('userIdText','Mailing User ID: ') !!}

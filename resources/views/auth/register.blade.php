@@ -27,8 +27,8 @@
         {!! Form::text('middleInitialText',null,array('name'=>'middleInitialText','maxlength'=>1)) !!}</p>
     <datalist id="permissionsDatalist">
         @for ($i = 0; $i < count($permissions); $i++)
-            <option value="{{ $permissions[$i]->Id }}">
-                {{ $permissions[$i]->PermissionType }}</option>
+            <option value="{{ $permissions[$i]->id }}">
+                {{ $permissions[$i]->permission_type }}</option>
         @endfor
     </datalist>
     <p>{!! Form::label('permissionsText','Permissions: ') !!}

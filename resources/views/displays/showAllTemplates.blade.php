@@ -31,8 +31,8 @@
             <th ng-click='sortColumn("Created")' ng-class='sortClass("Created")'>Created</th>
             <th ng-click='sortColumn("Updated")' ng-class='sortClass("Updated")'>Updated</th>
             <tr ng-repeat="x in templates | orderBy:column:reverse | filter:search | filter:buttonSearch:exceptEmpty">
-                <td>[[ x.PublicName ]]</td>
-                <td>[[ x.EmailType ]]</td>
+                <td>[[ x.public_name ]]</td>
+                <td>[[ x.email_type ]]</td>
                 <td>[[ x.created_at ]]</td>
                 <td>[[ x.updated_at ]]</td>
                 <td><a ng-href='/templates/[[ x.FileName ]]'>View</a></td>

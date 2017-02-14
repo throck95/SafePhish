@@ -13,13 +13,13 @@
     {!! Form::open(array('route'=>'updateUser')) !!}
     <p>
     <p>{!! Form::label('firstNameLbl','First Name: ') !!}
-        {!! Form::label(null,"$user->FirstName $user->MiddleInitial",array('id'=>'firstNameLbl')) !!}</p>
+        {!! Form::label(null,"$user->first_name $user->middle_initial",array('id'=>'firstNameLbl')) !!}</p>
     <p>{!! Form::label('lastNameLbl','Last Name: ') !!}
-        {!! Form::label(null,$user->LastName,array('id'=>'lastNameLbl')) !!}</p>
+        {!! Form::label(null,$user->last_name,array('id'=>'lastNameLbl')) !!}</p>
     <p>{!! Form::label('usernameLbl','Username: ') !!}
-        {!! Form::label(null,$user->Username,array('id'=>'usernameLbl')) !!}</p>
+        {!! Form::label(null,$user->username,array('id'=>'usernameLbl')) !!}</p>
     <p>{!! Form::label('emailText','Email: ') !!}
-        {!! Form::text('emailText',$user->Email,array('name'=>'emailText')) !!}</p>
+        {!! Form::text('emailText',$user->email,array('name'=>'emailText')) !!}</p>
     <p>{!! Form::label('passwordText','Password: ') !!}
         {!! Form::password('passwordText',array('id'=>'passwordText','name'=>'passwordText','size'=>30)) !!}</p>
     <p>{!! Form::label('passwordVerifyText','Password Verify: ') !!}

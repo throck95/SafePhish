@@ -1,4 +1,4 @@
-<p>Dear {{ $user->FirstName }} {{ $user->LastName }},</p>
+<p>Dear {{ $user->first_name }} {{ $user->last_name }},</p>
 <p>Your supervisor has reset your password for you. Please login using the password below. Don't forget to change
     your password after you log in. If your supervisor did not initiate this password change, please <a href="mailto:support@safephish.com">contact us</a>.</p>
 <p>{{ $password }}</p>

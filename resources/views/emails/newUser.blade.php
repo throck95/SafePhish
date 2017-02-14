@@ -1,4 +1,4 @@
-<p>Dear {{ $user->FirstName }} {{ $user->LastName }},</p>
+<p>Dear {{ $user->first_name }} {{ $user->last_name }},</p>
 <p>Your company has created you an account at <a href="http://www.SafePhish.com">SafePhish.com</a>. Here at SafePhish,
     our goal is to help you help yourself. Phishing is becoming a larger problem every day. Now you can help change that.</p>
 <p>Log in to your SafePhish account using the password below. Don't forget to change your password after you log in!</p>
