@@ -21,7 +21,7 @@ class WebbugController extends Controller
     private function webbugParse($id) {
         $urlId = substr($id,0,12);
         $campaignId = substr($id,13);
-        $user = Mailing_List_User::where('UniqueURLId',$urlId)->first();
+        $user = Mailing_List_User::where('unique_url_id',$urlId)->first();
         if(strpos($_SERVER['REQUEST_URI'],'email') !== false) {
             return $this->webbugExecutionEmail($user, $campaignId);
         }
@@ -37,11 +37,11 @@ class WebbugController extends Controller
      */
     private function webbugExecutionEmail($user, $campaignId) {
         Email_Tracking::create(
-            ['Ip'=>$_SERVER['REMOTE_ADDR'],
-                'Host'=>gethostbyaddr($_SERVER['REMOTE_ADDR']),
-                'UserId'=>$user->Id,
-                'CampaignId'=>$campaignId,
-                'Timestamp'=>Carbon::now()]
+            ['ip_address'=>$_SERVER['REMOTE_ADDR'],
+                'host'=>gethostbyaddr($_SERVER['REMOTE_ADDR']),
+                'user_id'=>$user->id,
+                'campaign_id'=>$campaignId,
+                'timestamp'=>Carbon::now()]
         );
     }
 
@@ -54,13 +54,13 @@ class WebbugController extends Controller
      */
     private function webbugExecutionWebsite($user,$campaignId) {
         Website_Tracking::create(
-            ['Ip'=>$_SERVER['REMOTE_ADDR'],
-                'Host'=>gethostbyaddr($_SERVER['REMOTE_ADDR']),
-                'BrowserAgent'=>$_SERVER['HTTP_USER_AGENT'],
-                'ReqPath'=>$_SERVER['REQUEST_URI'],
-                'UserId'=>$user->Id,
-                'CampaignId'=>$campaignId,
-                'Timestamp'=>Carbon::now()]
+            ['ip_address'=>$_SERVER['REMOTE_ADDR'],
+                'host'=>gethostbyaddr($_SERVER['REMOTE_ADDR']),
+                'browser_agent'=>$_SERVER['HTTP_USER_AGENT'],
+                'req_path'=>$_SERVER['REQUEST_URI'],
+                'user_id'=>$user->id,
+                'campaign_id'=>$campaignId,
+                'timestamp'=>Carbon::now()]
         );
     }
 
