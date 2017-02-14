@@ -19,7 +19,7 @@ class Mailing_List_User extends Model
 
     public static function updateMailingListUser($mlu, $email, $fname, $lname, $uniqueURLId = '') {
         $query = Mailing_List_User::query();
-        $query->where('id',$mlu->Id);
+        $query->where('id',$mlu->id);
         $update = array();
 
         if(!empty($email)) {

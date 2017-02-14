@@ -17,7 +17,7 @@ class Campaign extends Model
 
     public static function updateCampaign($campaign,$description,$assignee,$status) {
         $query = Campaign::query();
-        $query->where('id',$campaign->Id);
+        $query->where('id',$campaign->id);
         $update = array();
         if(!empty($description)) {
             $update['description'] = $description;

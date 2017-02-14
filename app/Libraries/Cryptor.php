@@ -1,13 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: tyler
- * Date: 2/7/2017
- * Time: 2:04 PM
- */
 
 namespace App\Libraries;
-
 
 use Illuminate\Contracts\Encryption\EncryptException;
 

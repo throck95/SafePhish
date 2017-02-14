@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Libraries\Cryptor;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Auth\Passwords\CanResetPassword;
@@ -37,7 +38,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
     public static function updateUser(User $user, $email, $password, $twoFactor, $userType = '') {
         $query = User::query();
-        $query->where('id',$user->Id);
+        $query->where('id',$user->id);
         $update = array();
 
         if(!empty($email)) {
@@ -62,19 +63,18 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     }
 
     public static function queryUsers() {
+        $cryptor = new Cryptor();
+
+        $sessionId = $cryptor->decrypt(\Session::get('sessionId'));
+        $session = Sessions::where('id', $sessionId)->first();
+
         $users = DB::table('users')
              ->leftJoin('user_permissions','users.user_type','user_permissions.id')
             ->select('users.id','users.username','users.email','users.first_name',
                 'users.last_name','users.middle_initial','user_permissions.permission_type')
+            ->where('users.id','!=',$session->user_id)
             ->orderBy('users.id', 'asc')
             ->get();
-        /*$user = \Session::get('authUser');
-        for($i = 0; $i < count($users); $i++) {
-            if($users[$i]->id == $user->id) {
-                unset($users[$i]);
-                break;
-            }
-        }*/
         return $users;
     }
 }

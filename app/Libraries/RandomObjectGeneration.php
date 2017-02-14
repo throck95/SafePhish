@@ -4,7 +4,6 @@ namespace App\Libraries;
 
 use Doctrine\Instantiator\Exception\InvalidArgumentException;
 
-
 class RandomObjectGeneration
 {
     const KEYSPACE = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';

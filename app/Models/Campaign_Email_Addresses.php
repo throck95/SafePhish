@@ -45,7 +45,7 @@ class Campaign_Email_Addresses extends Model
 
     public static function decryptPassword($email) {
         $cryptor = new Cryptor();
-        $password = self::where('email_address',$email)->first()->Password;
+        $password = self::where('email_address',$email)->first()->password;
         return $cryptor->decrypt($password);
     }
 }
