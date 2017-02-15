@@ -68,12 +68,35 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         $sessionId = $cryptor->decrypt(\Session::get('sessionId'));
         $session = Sessions::where('id', $sessionId)->first();
 
+        if(empty($session)) {
+
+        }
+
+        $user = User::where('id',$session->user_id)->first();
+
+        if(empty($user)) {
+
+        }
+
+        if($user->company_id === 1) {
+            $users = DB::table('users')
+                ->leftJoin('user_permissions','users.user_type','user_permissions.id')
+                ->leftJoin('companies','users.company_id','companies.id')
+                ->select('users.id','users.email','users.first_name',
+                    'users.last_name','users.middle_initial','user_permissions.permission_type','companies.name')
+                ->where('users.id','!=',$user->id)
+                ->orderBy('users.id', 'asc')
+                ->get();
+            return $users;
+        }
+
         $users = DB::table('users')
              ->leftJoin('user_permissions','users.user_type','user_permissions.id')
             ->leftJoin('companies','users.company_id','companies.id')
             ->select('users.id','users.email','users.first_name',
                 'users.last_name','users.middle_initial','user_permissions.permission_type','companies.name')
-            ->where('users.id','!=',$session->user_id)
+            ->where('users.id','!=',$user->id)
+            ->where('users.company_id','=',$user->company_id)
             ->orderBy('users.id', 'asc')
             ->get();
         return $users;
