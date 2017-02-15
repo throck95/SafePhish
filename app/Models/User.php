@@ -94,7 +94,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
              ->leftJoin('user_permissions','users.user_type','user_permissions.id')
             ->leftJoin('companies','users.company_id','companies.id')
             ->select('users.id','users.email','users.first_name',
-                'users.last_name','users.middle_initial','user_permissions.permission_type','companies.name')
+                'users.last_name','users.middle_initial','user_permissions.permission_type')
             ->where('users.id','!=',$user->id)
             ->where('users.company_id','=',$user->company_id)
             ->orderBy('users.id', 'asc')
