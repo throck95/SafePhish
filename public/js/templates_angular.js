@@ -4,7 +4,7 @@ var app = angular.module('templateApp', [], function($interpolateProvider) {
 });
 
 app.controller('templateController',function($scope,$http) {
-    $http.get("http://localhost:8000/json/templates")
+    $http.get("/json/templates")
         .then(function(response) {
             $scope.templates = response.data.templates;
         });

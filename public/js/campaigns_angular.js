@@ -4,7 +4,7 @@ var app = angular.module('campaignApp', [], function($interpolateProvider) {
 });
 
 app.controller('campaignController',function($scope,$http) {
-    $http.get("http://localhost:8000/json/campaigns")
+    $http.get("/json/campaigns")
         .then(function(response) {
             $scope.campaigns = response.data.campaigns;
         });

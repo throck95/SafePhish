@@ -4,7 +4,7 @@ var app = angular.module('mluApp', [], function($interpolateProvider) {
 });
 
 app.controller('mluController',function($scope,$http) {
-    $http.get("http://localhost:8000/json/mlu")
+    $http.get("/json/mlu")
         .then(function(response) {
             $scope.mlu = response.data.mlu;
         });

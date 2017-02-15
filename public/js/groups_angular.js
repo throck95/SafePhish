@@ -4,7 +4,7 @@ var app = angular.module('groupsApp', [], function($interpolateProvider) {
 });
 
 app.controller('groupsController',function($scope,$http) {
-    $http.get("http://localhost:8000/json/groups")
+    $http.get("/json/groups")
         .then(function(response) {
             $scope.groups = response.data.groups;
         });

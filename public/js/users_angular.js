@@ -4,7 +4,7 @@ var app = angular.module('usersApp', [], function($interpolateProvider) {
 });
 
 app.controller('usersController',function($scope,$http) {
-    $http.get("http://localhost:8000/json/users")
+    $http.get("/json/users")
         .then(function(response) {
             $scope.users = response.data.users;
         });
