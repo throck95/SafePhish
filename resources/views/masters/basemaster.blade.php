@@ -7,9 +7,9 @@
         @yield('scripts')
         <script type="text/javascript" src="/js/navBar.js"></script>
         <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+        <link rel="stylesheet" type="text/css" href="/css/navBar.css" />
         <link rel="stylesheet" type="text/css" href="/css/basicstyles.css" />
         @yield('formcss')
-        <link rel="stylesheet" type="text/css" href="/css/navBar.css" />
         <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
         @yield('stylesheets')
     </head>
