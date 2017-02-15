@@ -73,3 +73,7 @@ Route::get('/account={Id}/irs.gov','LinksController@disclosePhishingEmail');
 //Images
 Route::get('/images/black_friday.png','ImagesController@displayBlackFridayImage');
 Route::get('/images/irs_logo.jpg','ImagesController@displayIRSLogo');
+
+//CampaignEmailAddresses
+Route::get('/campaign/emails','GetController@createCampaignEmailAddress')->name('createCampaignEmails');
+Route::post('/campaign/emails','PostController@createCampaignEmailAddress');

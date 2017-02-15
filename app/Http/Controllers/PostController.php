@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Libraries\Cryptor;
 use App\Libraries\ErrorLogging;
 use App\Libraries\RandomObjectGeneration;
+use App\Models\Campaign_Email_Addresses;
 use App\Models\Mailing_List_User;
 use App\Models\Mailing_List_Users_Groups_Bridge;
 use App\Models\Mailing_List_Groups;
@@ -270,5 +271,40 @@ class PostController extends Controller
         EmailController::sendNewAccountEmail($user,$password);
 
         return redirect()->route('users');
+    }
+
+
+    public static function createCampaignEmailAddress(Request $request) {
+        if(!Auth::adminCheck()) {
+            $message = "Unauthorized Access to createCampaignEmailAddress (POST)" . PHP_EOL;
+            $message .= "UserId either doesn't have permission, doesn't exist, or their session expired." . PHP_EOL . PHP_EOL;
+            ErrorLogging::logError(new UnauthorizedException($message));
+            return abort('401');
+        }
+
+        $cryptor = new Cryptor();
+
+        $sessionId = $cryptor->decrypt(\Session::get('sessionId'));
+        $session = Sessions::where('id', $sessionId)->first();
+
+        $user = User::where('id',$session->user_id)->first();
+        if(empty($user)) {
+            return Auth::logout();
+        }
+
+        if($user->id !== 1) {
+            $message = "Unauthorized Access to createCampaignEmailAddress (POST)" . PHP_EOL;
+            $message .= "$user->id attempted to access." . PHP_EOL . PHP_EOL;
+            ErrorLogging::logError(new UnauthorizedException($message));
+            return abort('401');
+        }
+
+        Campaign_Email_Addresses::create([
+            'email_address'=>$request->input('emailText'),
+            'name'=>$request->input('nameText'),
+            'password'=>$cryptor->encrypt($request->input('passwordText'))
+        ]);
+
+        return redirect()->route('createCampaignEmails');
     }
 }

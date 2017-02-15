@@ -346,4 +346,33 @@ class GetController
         $variables = array('user'=>$user,'twoFactor'=>$twoFactor,'permissions'=>$permissions);
         return view('forms.editUser')->with($variables);
     }
+
+
+    public static function createCampaignEmailAddress() {
+        if(!Auth::adminCheck()) {
+            $message = "Unauthorized Access to createCampaignEmailAddress (GET)" . PHP_EOL;
+            $message .= "UserId either doesn't have permission, doesn't exist, or their session expired." . PHP_EOL . PHP_EOL;
+            ErrorLogging::logError(new UnauthorizedException($message));
+            return abort('401');
+        }
+
+        $cryptor = new Cryptor();
+
+        $sessionId = $cryptor->decrypt(\Session::get('sessionId'));
+        $session = Sessions::where('id', $sessionId)->first();
+
+        $user = User::where('id',$session->user_id)->first();
+        if(empty($user)) {
+            return Auth::logout();
+        }
+
+        if($user->id !== 1) {
+            $message = "Unauthorized Access to createCampaignEmailAddress (GET)" . PHP_EOL;
+            $message .= "$user->id attempted to access." . PHP_EOL . PHP_EOL;
+            ErrorLogging::logError(new UnauthorizedException($message));
+            return abort('401');
+        }
+
+        return view('forms.createCampaignEmailAddress');
+    }
 }
