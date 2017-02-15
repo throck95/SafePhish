@@ -27,14 +27,14 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      * @var array
      */
     protected $fillable =
-        ['username',
-        'email',
+        ['email',
         'first_name',
         'last_name',
         'middle_initial',
         'password',
         'two_factor_enabled',
-        'user_type'];
+        'user_type',
+        'company_id'];
 
     public static function updateUser(User $user, $email, $password, $twoFactor, $userType = '') {
         $query = User::query();
@@ -70,8 +70,9 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
         $users = DB::table('users')
              ->leftJoin('user_permissions','users.user_type','user_permissions.id')
-            ->select('users.id','users.username','users.email','users.first_name',
-                'users.last_name','users.middle_initial','user_permissions.permission_type')
+            ->leftJoin('companies','users.company_id','companies.id')
+            ->select('users.id','users.email','users.first_name',
+                'users.last_name','users.middle_initial','user_permissions.permission_type','companies.name')
             ->where('users.id','!=',$session->user_id)
             ->orderBy('users.id', 'asc')
             ->get();

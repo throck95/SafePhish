@@ -29,11 +29,9 @@ class AuthController extends Controller
             }
 
             $email = $request->input('emailText');
-            $username = $request->input('usernameText');
             $password = RandomObjectGeneration::random_str(intval(getenv('DEFAULT_LENGTH_PASSWORDS')),true);
 
             $user = User::create([
-                'username' => $username,
                 'email' => $email,
                 'first_name' => $request->input('firstNameText'),
                 'last_name' => $request->input('lastNameText'),
@@ -67,7 +65,7 @@ class AuthController extends Controller
      */
     public static function authenticate(Request $request) {
         try {
-            $user = User::where('username',$request->input('usernameText'))->first();
+            $user = User::where('email',$request->input('emailText'))->first();
             $password = $request->input('passwordText');
             if(empty($user) || !password_verify($password,$user->password)) {
                 return redirect()->route('login');

@@ -17,8 +17,6 @@
         {!! Form::text('emailText',null,array('name'=>'emailText')) !!}</p>
     <p>{!! Form::label('confirmEmailText','Confirm Email: ') !!}
         {!! Form::text('confirmEmailText',null,array('name'=>'confirmEmailText')) !!}</p>
-    <p>{!! Form::label('usernameText','Username: ') !!}
-        {!! Form::text('usernameText',null,array('name'=>'usernameText')) !!}</p>
     <p>{!! Form::label('firstNameText','First Name: ') !!}
         {!! Form::text('firstNameText',null,array('name'=>'firstNameText')) !!}</p>
     <p>{!! Form::label('lastNameText','Last Name: ') !!}

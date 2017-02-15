@@ -8,7 +8,7 @@ app.controller('usersController',function($scope,$http) {
         .then(function(response) {
             $scope.users = response.data.users;
         });
-    $scope.column = 'Username';
+    $scope.column = 'FirstName';
     $scope.reverse = false;
     $scope.search = '';
     $scope.buttonSearch = '';
