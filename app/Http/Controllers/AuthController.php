@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Libraries\Cryptor;
 use App\Libraries\ErrorLogging;
 use App\Libraries\RandomObjectGeneration;
+use App\Models\Company;
 use App\Models\Sessions;
 use App\Models\Two_Factor;
 use App\Models\User;
@@ -24,11 +25,11 @@ class AuthController extends Controller
      */
     public static function create(Request $request) {
         try {
-            if($request->input('emailText') != $request->input('confirmEmailText')) {
+            $email = $request->input('emailText');
+            if($email != $request->input('confirmEmailText')) {
                 return redirect()->route('register');
             }
 
-            $email = $request->input('emailText');
             $password = RandomObjectGeneration::random_str(intval(getenv('DEFAULT_LENGTH_PASSWORDS')),true);
 
             $user = User::create([
@@ -38,6 +39,8 @@ class AuthController extends Controller
                 'middle_initial' => $request->input('middleInitialText'),
                 'password' => password_hash($password,PASSWORD_DEFAULT),
                 'two_factor_enabled' => 0,
+                'user_type' => $request->input('permissionsText'),
+                'company_id' => $request->input('companyText')
             ]);
 
             EmailController::sendNewAccountEmail($user,$password);
@@ -397,7 +400,13 @@ class AuthController extends Controller
         try {
             if(self::adminCheck()) {
                 $permissions = User_Permissions::all();
-                $variables = array('permissions'=>$permissions);
+
+                $companies = null;
+                if(self::safephishAdminCheck()) {
+                    $companies = Company::all();
+                }
+
+                $variables = array('permissions'=>$permissions,'companies'=>$companies);
                 return view('auth.register')->with($variables);
             }
             return abort('401');

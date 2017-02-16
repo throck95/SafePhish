@@ -29,6 +29,16 @@
                 {{ $permissions[$i]->permission_type }}</option>
         @endfor
     </datalist>
+    @if(\App\Http\Controllers\AuthController::safephishAdminCheck())
+        <datalist id="companiesDatalist">
+            @for ($i = 0; $i < count($companies); $i++)
+                <option value="{{ $companies[$i]->id }}">
+                    {{ $companies[$i]->name }}</option>
+            @endfor
+        </datalist>
+        <p>{!! Form::label('companyText','Company: ') !!}
+            {!! Form::text('companyText',null,array('name'=>'companyText','list'=>'companiesDatalist')) !!}</p>
+    @endif
     <p>{!! Form::label('permissionsText','Permissions: ') !!}
         {!! Form::text('permissionsText',null,array('name'=>'permissionsText','datalist'=>'permissionsDatalist')) !!}</p>
     {!! Form::submit('Register',array('id'=>'submitButton')) !!}
