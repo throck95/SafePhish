@@ -62,7 +62,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         return $query->get();
     }
 
-    public static function queryUsers() {
+    public static function queryUsers($useSelfFlag = false) {
         $cryptor = new Cryptor();
 
         $sessionId = $cryptor->decrypt(\Session::get('sessionId'));
@@ -76,6 +76,29 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
         if(empty($user)) {
 
+        }
+
+        if($useSelfFlag) {
+            if($user->company_id === 1) {
+                $users = DB::table('users')
+                    ->leftJoin('user_permissions','users.user_type','user_permissions.id')
+                    ->leftJoin('companies','users.company_id','companies.id')
+                    ->select('users.id','users.email','users.first_name',
+                        'users.last_name','users.middle_initial','user_permissions.permission_type','companies.name')
+                    ->orderBy('users.id', 'asc')
+                    ->get();
+                return $users;
+            }
+
+            $users = DB::table('users')
+                ->leftJoin('user_permissions','users.user_type','user_permissions.id')
+                ->leftJoin('companies','users.company_id','companies.id')
+                ->select('users.id','users.email','users.first_name',
+                    'users.last_name','users.middle_initial','user_permissions.permission_type','companies.name')
+                ->where('users.company_id','=',$user->company_id)
+                ->orderBy('users.id', 'asc')
+                ->get();
+            return $users;
         }
 
         if($user->company_id === 1) {

@@ -71,14 +71,14 @@ class GetController
      * createCampaignForm
      * Create new campaigns.
      *
-     * @return \Illuminate\Http\RedirectResponse | \Illuminate\View\View
+     * @return \Illuminate\Http\RedirectResponse | \Illuminate\View\View | string
      */
     public static function createCampaignForm() {
         if(!Auth::check()) {
             return Auth::authRequired();
         }
 
-        $users = User::queryUsers();
+        $users = User::queryUsers(true);
 
         $variables = array('users'=>$users);
         return view('forms.createCampaign')->with($variables);
