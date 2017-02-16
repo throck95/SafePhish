@@ -185,15 +185,10 @@ class EmailController extends Controller
      * @return  Sent_Mail
      */
     private static function logSentEmail(Mailing_List_User $user, Campaign $campaign) {
-        try {
-            return Sent_Mail::create(
-                ['user_id'=>$user->id,
-                    'campaign_id'=>$campaign->id,
-                    'timestamp'=>Carbon::now()]
-            );
-        } catch(Exception $e) {
-            ErrorLogging::logError($e);
-            return abort('500');
-        }
+        return Sent_Mail::create(
+            ['user_id'=>$user->id,
+                'campaign_id'=>$campaign->id,
+                'timestamp'=>Carbon::now()]
+        );
     }
 }
