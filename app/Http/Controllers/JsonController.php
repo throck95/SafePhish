@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\AuthController as Auth;
+use App\Libraries\ErrorLogging;
 use App\Models\Mailing_List_Groups;
 use App\Models\Mailing_List_User;
 use App\Models\Template;
@@ -18,11 +19,17 @@ class JsonController extends Controller
      * @return  string
      */
     public static function postCampaignsJson() {
-        if(Auth::check()) {
-            $json = Campaign::queryCampaigns();
-            return "{\"campaigns\":$json}";
+        try {
+            if(Auth::check()) {
+                $json = Campaign::queryCampaigns();
+                return "{\"campaigns\":$json}";
+            }
+            return abort('401');
+
+        } catch(\Exception $e) {
+            ErrorLogging::logError($e);
+            return abort('500');
         }
-        return abort('401');
     }
 
     /**
@@ -32,11 +39,17 @@ class JsonController extends Controller
      * @return  string
      */
     public static function postTemplatesJson() {
-        if(Auth::check()) {
-            $json = Template::all();
-            return "{\"templates\":$json}";
+        try {
+            if(Auth::check()) {
+                $json = Template::all();
+                return "{\"templates\":$json}";
+            }
+            return abort('401');
+
+        } catch(\Exception $e) {
+            ErrorLogging::logError($e);
+            return abort('500');
         }
-        return abort('401');
     }
 
     /**
@@ -46,11 +59,17 @@ class JsonController extends Controller
      * @return  string
      */
     public static function postMLUJson() {
-        if(Auth::check()) {
-            $json = Mailing_List_User::queryMLU();
-            return "{\"mlu\":$json}";
+        try {
+            if(Auth::check()) {
+                $json = Mailing_List_User::queryMLU();
+                return "{\"mlu\":$json}";
+            }
+            return abort('401');
+
+        } catch(\Exception $e) {
+            ErrorLogging::logError($e);
+            return abort('500');
         }
-        return abort('401');
     }
 
     /**
@@ -60,11 +79,17 @@ class JsonController extends Controller
      * @return  string
      */
     public static function postGroupsJson() {
-        if(Auth::check()) {
-            $json = Mailing_List_Groups::all();
-            return "{\"groups\":$json}";
+        try {
+            if(Auth::check()) {
+                $json = Mailing_List_Groups::all();
+                return "{\"groups\":$json}";
+            }
+            return abort('401');
+
+        } catch(\Exception $e) {
+            ErrorLogging::logError($e);
+            return abort('500');
         }
-        return abort('401');
     }
 
     /**
@@ -74,10 +99,16 @@ class JsonController extends Controller
      * @return  string
      */
     public static function postUsersJson() {
-        if(Auth::adminCheck()) {
-            $json = User::queryUsers();
-            return "{\"users\":$json}";
+        try {
+            if(Auth::adminCheck()) {
+                $json = User::queryUsers();
+                return "{\"users\":$json}";
+            }
+            return abort('401');
+
+        } catch(\Exception $e) {
+            ErrorLogging::logError($e);
+            return abort('500');
         }
-        return abort('401');
     }
 }

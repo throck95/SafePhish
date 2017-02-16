@@ -30,18 +30,24 @@ class PostController extends Controller
      * @return  \Illuminate\Http\RedirectResponse
      */
     public static function updateCampaign(Request $request,$id) {
-        if(!Auth::check()) {
-            return redirect()->route('login');
+        try {
+            if(!Auth::check()) {
+                return redirect()->route('login');
+            }
+
+            $campaign = Campaign::where('id',$id)->first();
+            $description = $request->input('descriptionText');
+            $userId = $request->input('userIdText');
+            $status = $request->input('statusSelect');
+
+            Campaign::updateCampaign($campaign, $description, $userId, $status);
+
+            return redirect()->route('campaigns');
+
+        } catch(\Exception $e) {
+            ErrorLogging::logError($e);
+            return abort('500');
         }
-
-        $campaign = Campaign::where('id',$id)->first();
-        $description = $request->input('descriptionText');
-        $userId = $request->input('userIdText');
-        $status = $request->input('statusSelect');
-
-        Campaign::updateCampaign($campaign, $description, $userId, $status);
-
-        return redirect()->route('campaigns');
     }
 
     /**
@@ -52,22 +58,28 @@ class PostController extends Controller
      * @return  \Illuminate\Http\RedirectResponse
      */
     public static function createCampaign(Request $request) {
-        if(!Auth::check()) {
-            return redirect()->route('login');
+        try {
+            if(!Auth::check()) {
+                return redirect()->route('login');
+            }
+
+            $name = $request->input('nameText');
+            $description = $request->input('descriptionText');
+            $assignee = $request->input('assigneeText');
+
+            Campaign::create([
+                'name'=>$name,
+                'description'=>$description,
+                'assignee'=>$assignee,
+                'status'=>'active'
+            ]);
+
+            return redirect()->route('campaigns');
+
+        } catch(\Exception $e) {
+            ErrorLogging::logError($e);
+            return abort('500');
         }
-
-        $name = $request->input('nameText');
-        $description = $request->input('descriptionText');
-        $assignee = $request->input('assigneeText');
-
-        Campaign::create([
-            'name'=>$name,
-            'description'=>$description,
-            'assignee'=>$assignee,
-            'status'=>'active'
-        ]);
-
-        return redirect()->route('campaigns');
     }
 
     /**
@@ -78,58 +90,64 @@ class PostController extends Controller
      * @return  \Illuminate\Http\RedirectResponse
      */
     public static function createMailingListUser(Request $request) {
-        if(!Auth::check()) {
-            return redirect()->route('login');
-        }
+        try {
+            if(!Auth::check()) {
+                return redirect()->route('login');
+            }
 
-        $cryptor = new Cryptor();
+            $cryptor = new Cryptor();
 
-        $sessionId = $cryptor->decrypt(\Session::get('sessionId'));
-        $session = Sessions::where('id', $sessionId)->first();
+            $sessionId = $cryptor->decrypt(\Session::get('sessionId'));
+            $session = Sessions::where('id', $sessionId)->first();
 
-        $user = User::where('id',$session->user_id)->first();
-        if(empty($user)) {
-            return Auth::logout();
-        }
-
-        if($user->company_id !== 1) {
-            $company = Company::where('id',$user->company_id)->first();
-            if(empty($company)) {
+            $user = User::where('id',$session->user_id)->first();
+            if(empty($user)) {
                 return Auth::logout();
             }
 
-            $mailingListUser = Mailing_List_User::create(
-                [
-                    'company_id'=>$company->id,
-                    'email'=>$request->input('emailText'),
-                    'first_name'=>$request->input('firstNameText'),
-                    'last_name'=>$request->input('lastNameText'),
-                    'unique_url_id'=>RandomObjectGeneration::random_str(intval(getenv('DEFAULT_LENGTH_IDS')))
-                ]);
+            if($user->company_id !== 1) {
+                $company = Company::where('id',$user->company_id)->first();
+                if(empty($company)) {
+                    return Auth::logout();
+                }
 
-        } else {
+                $mailingListUser = Mailing_List_User::create(
+                    [
+                        'company_id'=>$company->id,
+                        'email'=>$request->input('emailText'),
+                        'first_name'=>$request->input('firstNameText'),
+                        'last_name'=>$request->input('lastNameText'),
+                        'unique_url_id'=>RandomObjectGeneration::random_str((getenv('DEFAULT_LENGTH_IDS')))
+                    ]);
 
-            $mailingListUser = Mailing_List_User::create(
-                [
-                    'company_id'=>$request->input('companyText'),
-                    'email'=>$request->input('emailText'),
-                    'first_name'=>$request->input('firstNameText'),
-                    'last_name'=>$request->input('lastNameText'),
-                    'unique_url_id'=>RandomObjectGeneration::random_str(intval(getenv('DEFAULT_LENGTH_IDS')))
-                ]);
-        }
+            } else {
 
-        $groups = $request->input('groupSelect');
-        if(!empty($groups)) {
-            foreach($groups as $group) {
-                Mailing_List_Users_Groups_Bridge::create(
-                    ['mailing_list_user_id'=>$mailingListUser->id,
-                        'group_id'=>$group]
-                );
+                $mailingListUser = Mailing_List_User::create(
+                    [
+                        'company_id'=>$request->input('companyText'),
+                        'email'=>$request->input('emailText'),
+                        'first_name'=>$request->input('firstNameText'),
+                        'last_name'=>$request->input('lastNameText'),
+                        'unique_url_id'=>RandomObjectGeneration::random_str((getenv('DEFAULT_LENGTH_IDS')))
+                    ]);
             }
-        }
 
-        return redirect()->route('mailingListUser');
+            $groups = $request->input('groupSelect');
+            if(!empty($groups)) {
+                foreach($groups as $group) {
+                    Mailing_List_Users_Groups_Bridge::create(
+                        ['mailing_list_user_id'=>$mailingListUser->id,
+                            'group_id'=>$group]
+                    );
+                }
+            }
+
+            return redirect()->route('mailingListUser');
+
+        } catch(\Exception $e) {
+            ErrorLogging::logError($e);
+            return abort('500');
+        }
     }
 
     /**
@@ -140,6 +158,12 @@ class PostController extends Controller
      * @return  \Illuminate\Http\RedirectResponse
      */
     public static function createMailingListGroup(Request $request) {
+        try {
+
+        } catch(\Exception $e) {
+            ErrorLogging::logError($e);
+            return abort('500');
+        }
         if(!Auth::check()) {
             return redirect()->route('login');
         }

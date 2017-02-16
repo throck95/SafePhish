@@ -52,7 +52,7 @@ class AuthController extends Controller
             }
             return redirect()->route('register'); //return with unknown error
 
-        } catch(Exception $e) {
+        } catch(\Exception $e) {
             ErrorLogging::logError($e);
             return abort('500');
         }
@@ -129,7 +129,7 @@ class AuthController extends Controller
             }
             return redirect()->route('authHome');
 
-        } catch(Exception $e) {
+        } catch(\Exception $e) {
             ErrorLogging::logError($e);
             return abort('500');
         }
@@ -160,7 +160,7 @@ class AuthController extends Controller
             }
             return redirect()->route('login');
 
-        } catch(Exception $e) {
+        } catch(\Exception $e) {
             ErrorLogging::logError($e);
             return abort('500');
         }
@@ -209,7 +209,7 @@ class AuthController extends Controller
             }
             return redirect()->route('authHome');
 
-        } catch(Exception $e) {
+        } catch(\Exception $e) {
             ErrorLogging::logError($e);
             return abort('500');
         }
@@ -258,7 +258,7 @@ class AuthController extends Controller
             EmailController::sendTwoFactorEmail($user,$code);
             return redirect()->route('2fa');
 
-        } catch(Exception $e) {
+        } catch(\Exception $e) {
             ErrorLogging::logError($e);
             return abort('500');
         }
@@ -307,7 +307,7 @@ class AuthController extends Controller
             }
             return true;
 
-        } catch(Exception $e) {
+        } catch(\Exception $e) {
             ErrorLogging::logError($e);
             return abort('500');
         }
@@ -343,7 +343,7 @@ class AuthController extends Controller
             }
             return true;
 
-        } catch(Exception $e) {
+        } catch(\Exception $e) {
             ErrorLogging::logError($e);
             return abort('500');
         }
@@ -365,7 +365,7 @@ class AuthController extends Controller
 
             return redirect()->route('login');
 
-        } catch(Exception $e) {
+        } catch(\Exception $e) {
             ErrorLogging::logError($e);
             return abort('500');
         }
@@ -384,7 +384,7 @@ class AuthController extends Controller
             }
             return view('auth.login');
 
-        } catch(Exception $e) {
+        } catch(\Exception $e) {
             ErrorLogging::logError($e);
             return abort('500');
         }
@@ -411,7 +411,7 @@ class AuthController extends Controller
             }
             return abort('401');
 
-        } catch(Exception $e) {
+        } catch(\Exception $e) {
             ErrorLogging::logError($e);
             return abort('500');
         }
@@ -428,7 +428,7 @@ class AuthController extends Controller
             \Session::put('intended',$_SERVER['REQUEST_URI']);
             return redirect()->route('login');
 
-        } catch(Exception $e) {
+        } catch(\Exception $e) {
             ErrorLogging::logError($e);
             return abort('500');
         }
@@ -459,7 +459,7 @@ class AuthController extends Controller
 
             return true;
 
-        } catch(Exception $e) {
+        } catch(\Exception $e) {
             ErrorLogging::logError($e);
             return abort('500');
         }

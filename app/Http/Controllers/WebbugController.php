@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Libraries\ErrorLogging;
 use App\Models\Email_Tracking;
 use App\Models\User;
 use App\Models\Website_Tracking;
@@ -19,13 +20,19 @@ class WebbugController extends Controller
      * @param 	string		$id		Contains UniqueURLId that references specific user and specific campaign ID
      */
     private function webbugParse($id) {
-        $urlId = substr($id,0,12);
-        $campaignId = substr($id,13);
-        $user = Mailing_List_User::where('unique_url_id',$urlId)->first();
-        if(strpos($_SERVER['REQUEST_URI'],'email') !== false) {
-            return $this->webbugExecutionEmail($user, $campaignId);
+        try {
+            $urlId = substr($id,0,12);
+            $campaignId = substr($id,13);
+            $user = Mailing_List_User::where('unique_url_id',$urlId)->first();
+            if(strpos($_SERVER['REQUEST_URI'],'email') !== false) {
+                $this->webbugExecutionEmail($user, $campaignId);
+            } else {
+                $this->webbugExecutionWebsite($user,$campaignId);
+            }
+
+        } catch(\Exception $e) {
+            ErrorLogging::logError($e);
         }
-        return $this->webbugExecutionWebsite($user,$campaignId);
     }
 
     /**
