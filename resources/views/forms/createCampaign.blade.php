@@ -14,7 +14,10 @@
     <datalist id="usersDatalist">
         @for ($i = 0; $i < count($users); $i++)
             <option value="{{ $users[$i]->id }}">
-                {{ $users[$i]->first_name }} {{ $users[$i]->last_name }}</option>
+                {{ $users[$i]->first_name }} {{ $users[$i]->last_name }}
+            @if(\App\Http\Controllers\AuthController::safephishAdminCheck())
+                 - {{ $users[$i]->name }}
+            @endif</option>
         @endfor
     </datalist>
     <p>{!! Form::label('nameText','Name: ') !!}

@@ -78,7 +78,7 @@ class GetController
             return Auth::authRequired();
         }
 
-        $users = User::all();
+        $users = User::queryUsers();
 
         $variables = array('users'=>$users);
         return view('forms.createCampaign')->with($variables);
