@@ -35,7 +35,7 @@
                 @if(\App\Http\Controllers\AuthController::safephishAdminCheck())
                     <td>[[ x.name ]]</td>
                 @endif
-                <td><a ng-href='/mailinglist/update/user/[[ x.Id ]]'>Edit</a></td>
+                <td><a ng-href='/mailinglist/update/user/[[ x.id ]]'>Edit</a></td>
                 <!--<td><a ng-href="#delete">Delete</a></td>-->
             </tr>
         </table>
