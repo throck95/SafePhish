@@ -36,7 +36,7 @@ class Mailing_List_Groups extends Model
         if($user->company_id !== 1) {
             $users = DB::table('mailing_list_groups')
                 ->leftJoin('companies','mailing_list_groups.company_id','companies.id')
-                ->select('mailing_list_groups.id','mailing_list_groups.id','mailing_list_groups.name')
+                ->select('mailing_list_groups.id','mailing_list_groups.id','mailing_list_groups.name','companies.name as company_name')
                 ->where('mailing_list_groups.company_id','=',$user->company_id)
                 ->orderBy('mailing_list_groups.id', 'asc')
                 ->get();
