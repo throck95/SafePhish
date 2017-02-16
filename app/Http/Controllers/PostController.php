@@ -249,7 +249,7 @@ class PostController extends Controller
         Mailing_List_Users_Groups_Bridge::where('group_id',$id)->delete();
         foreach($users as $user) {
             Mailing_List_Users_Groups_Bridge::create(
-                ['user_id'=>$user,
+                ['mailing_list_user_id'=>$user,
                     'group_id'=>$group->id]
             );
         }
