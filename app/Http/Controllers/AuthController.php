@@ -269,22 +269,16 @@ class AuthController extends Controller
      * @return  \Illuminate\Http\RedirectResponse | null
      */
     private static function activeSessionCheck(Sessions $session) {
-        try {
-            if($session->ip_address !== $_SERVER['REMOTE_ADDR']) {
-                $session->delete();
-                \Session::forget('sessionId');
-                return redirect()->route('login');
-            }
-
-            if($session->authenticated === 1) {
-                return redirect()->route('authHome');
-            }
-            return null;
-
-        } catch(Exception $e) {
-            ErrorLogging::logError($e);
-            return abort('500');
+        if($session->ip_address !== $_SERVER['REMOTE_ADDR']) {
+            $session->delete();
+            \Session::forget('sessionId');
+            return redirect()->route('login');
         }
+
+        if($session->authenticated === 1) {
+            return redirect()->route('authHome');
+        }
+        return null;
     }
 
     /**
