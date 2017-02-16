@@ -19,7 +19,7 @@ class JsonController extends Controller
      */
     public static function postCampaignsJson() {
         if(Auth::check()) {
-            $json = Campaign::all();
+            $json = Campaign::queryCampaigns();
             return "{\"campaigns\":$json}";
         }
         return abort('401');
@@ -47,7 +47,7 @@ class JsonController extends Controller
      */
     public static function postMLUJson() {
         if(Auth::check()) {
-            $json = Mailing_List_User::all();
+            $json = Mailing_List_User::queryMLU();
             return "{\"mlu\":$json}";
         }
         return abort('401');

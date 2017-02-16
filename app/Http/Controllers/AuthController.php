@@ -388,4 +388,29 @@ class AuthController extends Controller
         \Session::put('intended',$_SERVER['REQUEST_URI']);
         return redirect()->route('login');
     }
+
+    public static function safephishAdminCheck() {
+        $check = self::adminCheck();
+        if(!$check) {
+            return $check;
+        }
+
+        $cryptor = new Cryptor();
+
+        $sessionId = $cryptor->decrypt(\Session::get('sessionId'));
+        $session = Sessions::where('id', $sessionId)->first();
+
+        $user = User::where('id',$session->user_id)->first();
+        if(empty($user)) {
+            $session->delete();
+            \Session::forget('sessionId');
+            return false;
+        }
+
+        if($user->user_type !== 1 || $user->company_id !== 1) {
+            return false;
+        }
+
+        return true;
+    }
 }

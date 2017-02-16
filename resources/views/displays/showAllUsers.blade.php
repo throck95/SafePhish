@@ -29,12 +29,18 @@
             <th ng-click='sortColumn("LastName")' ng-class='sortClass("LastName")'>Last Name</th>
             <th ng-click='sortColumn("Email")' ng-class='sortClass("Email")'>Email</th>
             <th ng-click='sortColumn("PermissionType")' ng-class='sortClass("PermissionType")'>User Type</th>
+            @if(\App\Http\Controllers\AuthController::safephishAdminCheck())
+                <th ng-click='sortColumn("CompanyName")' ng-class='sortClass("CompanyName")'>Company Name</th>
+            @endif
             <tr ng-repeat="x in users | orderBy:column:reverse | filter:search | filter:buttonSearch:exceptEmpty">
                 <td>[[ x.first_name ]] [[ x.middle_initial ]]</td>
                 <td>[[ x.last_name ]]</td>
                 <td>[[ x.email ]]</td>
                 <td>[[ x.permission_type ]]</td>
-                <td><a ng-href='/user/update/[[ x.Id ]]'>Edit</a></td>
+                @if(\App\Http\Controllers\AuthController::safephishAdminCheck())
+                    <td>[[ x.name ]]</td>
+                @endif
+                <td><a ng-href='/user/update/[[ x.id ]]'>Edit</a></td>
                 <!--<td><a ng-href="#delete">Delete</a></td>-->
             </tr>
         </table>

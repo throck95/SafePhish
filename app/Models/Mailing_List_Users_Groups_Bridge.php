@@ -9,7 +9,7 @@ class Mailing_List_Users_Groups_Bridge extends Model
 {
     protected $table = 'mailing_list_users_groups_bridge';
 
-    protected $primaryKey = ['mailing_list_user_id','department_id'];
+    protected $primaryKey = ['mailing_list_user_id','group_id'];
     public $incrementing = false;
 
     public $timestamps = false;
@@ -18,6 +18,6 @@ class Mailing_List_Users_Groups_Bridge extends Model
 
     protected $fillable =
         ['mailing_list_user_id',
-            'department_id'
+            'group_id'
         ];
 }

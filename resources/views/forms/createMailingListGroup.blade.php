@@ -9,6 +9,16 @@
     {!! Form::open(array('route'=>'postMailingListGroup')) !!}
     <p>{!! Form::label('nameText','Name: ') !!}
         {!! Form::text('nameText',null,array('name'=>'nameText')) !!}</p>
+    @if(\App\Http\Controllers\AuthController::safephishAdminCheck())
+        <datalist id="companiesDatalist">
+            @for ($i = 0; $i < count($companies); $i++)
+                <option value="{{ $companies[$i]->id }}">
+                    {{ $companies[$i]->name }}</option>
+            @endfor
+        </datalist>
+        <p>{!! Form::label('companyText','Company: ') !!}
+            {!! Form::text('companyText',null,array('name'=>'companyText','list'=>'companiesDatalist')) !!}</p>
+    @endif
     <p>{!! Form::label('userSelect','Users: ') !!}
         <select id='userSelect' name='userSelect[]' multiple>
             @for ($i = 0; $i < count($users); $i++)

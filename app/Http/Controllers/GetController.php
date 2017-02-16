@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\AuthController as Auth;
 use App\Libraries\Cryptor;
 use App\Models\Campaign;
+use App\Models\Company;
 use App\Models\Sessions;
 use App\Models\User;
 use App\Models\Template;
@@ -148,9 +149,14 @@ class GetController
             return Auth::authRequired();
         }
 
-        $groups = Mailing_List_Groups::all();
+        $groups = Mailing_List_Groups::queryGroups();
 
-        $variables = array('groups'=>$groups);
+        $companies = null;
+        if(Auth::safephishAdminCheck()) {
+            $companies = Company::all();
+        }
+
+        $variables = array('groups'=>$groups,'companies'=>$companies);
         return view('forms.addNewMailingListUser')->with($variables);
     }
 
@@ -167,7 +173,7 @@ class GetController
         }
 
         $mlu = Mailing_List_User::where('id',$id)->first();
-        $groups = Mailing_List_Groups::all();
+        $groups = Mailing_List_Groups::queryGroups();
 
         $variables = array('mlu'=>$mlu,'groups'=>$groups);
         return view('forms.editMailingListUser')->with($variables);
@@ -193,9 +199,14 @@ class GetController
             return Auth::authRequired();
         }
 
-        $mlu = Mailing_List_User::all();
+        $mlu = Mailing_List_User::queryMLU();
 
-        $variables = array('users'=>$mlu);
+        $companies = null;
+        if(Auth::safephishAdminCheck()) {
+            $companies = Company::all();
+        }
+
+        $variables = array('users'=>$mlu,'companies'=>$companies);
         return view('forms.createMailingListGroup')->with($variables);
     }
 
@@ -212,7 +223,7 @@ class GetController
         }
 
         $group = Mailing_List_Groups::where('id',$id)->first();
-        $users = Mailing_List_User::all();
+        $users = Mailing_List_User::queryMLU();
 
         $variables = array('group'=>$group,'users'=>$users);
         return view('forms.editMailingListGroup')->with($variables);
@@ -340,7 +351,7 @@ class GetController
 
         $user = User::where('id',$id)->first();
         $twoFactor = $user->two_factor_enabled;
-        $twoFactor = $twoFactor == 0 ? 'Enabled' : 'Disabled';
+        $twoFactor = $twoFactor == 0 ? 'Disabled' : 'Enabled';
         $permissions = User_Permissions::all();
 
         $variables = array('user'=>$user,'twoFactor'=>$twoFactor,'permissions'=>$permissions);
