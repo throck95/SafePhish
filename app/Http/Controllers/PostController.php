@@ -120,11 +120,13 @@ class PostController extends Controller
         }
 
         $groups = $request->input('groupSelect');
-        foreach($groups as $group) {
-            Mailing_List_Users_Groups_Bridge::create(
-                ['mailing_list_user_id'=>$mailingListUser->id,
-                    'group_id'=>$group]
-            );
+        if(!empty($groups)) {
+            foreach($groups as $group) {
+                Mailing_List_Users_Groups_Bridge::create(
+                    ['mailing_list_user_id'=>$mailingListUser->id,
+                        'group_id'=>$group]
+                );
+            }
         }
 
         return redirect()->route('mailingListUser');
