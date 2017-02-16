@@ -247,11 +247,13 @@ class PostController extends Controller
         $users = $request->input('userSelect');
         $group = Mailing_List_Groups::where('id',$id)->first();
         Mailing_List_Users_Groups_Bridge::where('group_id',$id)->delete();
-        foreach($users as $user) {
-            Mailing_List_Users_Groups_Bridge::create(
-                ['mailing_list_user_id'=>$user,
-                    'group_id'=>$group->id]
-            );
+        if(!empty($group)) {
+            foreach($users as $user) {
+                Mailing_List_Users_Groups_Bridge::create(
+                    ['mailing_list_user_id'=>$user,
+                        'group_id'=>$group->id]
+                );
+            }
         }
 
         return redirect()->route('mailingListGroup');
