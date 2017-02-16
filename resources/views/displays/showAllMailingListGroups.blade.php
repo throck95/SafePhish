@@ -25,7 +25,7 @@
             <th ng-click='sortColumn("Name")' ng-class='sortClass("Name")'>Name</th>
             <tr ng-repeat="x in groups | orderBy:column:reverse | filter:search">
                 <td>[[ x.name ]]</td>
-                <td><a ng-href='/mailinglist/update/group/[[ x.Id ]]'>Edit</a></td>
+                <td><a ng-href='/mailinglist/update/group/[[ x.id ]]'>Edit</a></td>
                 <!--<td><a ng-href="#delete">Delete</a></td>-->
             </tr>
         </table>
