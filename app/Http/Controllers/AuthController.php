@@ -269,16 +269,22 @@ class AuthController extends Controller
      * @return  \Illuminate\Http\RedirectResponse | null
      */
     private static function activeSessionCheck(Sessions $session) {
-        if($session->ip_address !== $_SERVER['REMOTE_ADDR']) {
-            $session->delete();
-            \Session::forget('sessionId');
-            return redirect()->route('login');
-        }
+        try {
+            if($session->ip_address !== $_SERVER['REMOTE_ADDR']) {
+                $session->delete();
+                \Session::forget('sessionId');
+                return redirect()->route('login');
+            }
 
-        if($session->authenticated === 1) {
-            return redirect()->route('authHome');
+            if($session->authenticated === 1) {
+                return redirect()->route('authHome');
+            }
+            return null;
+
+        } catch(Exception $e) {
+            ErrorLogging::logError($e);
+            return abort('500');
         }
-        return null;
     }
 
     /**
@@ -288,20 +294,26 @@ class AuthController extends Controller
      * @return  bool
      */
     public static function check() {
-        if(!\Session::has('sessionId')) {
-            return false;
-        }
-        $cryptor = new Cryptor();
+        try {
+            if(!\Session::has('sessionId')) {
+                return false;
+            }
+            $cryptor = new Cryptor();
 
-        $sessionId = $cryptor->decrypt(\Session::get('sessionId'));
-        $session = Sessions::where('id', $sessionId)->first();
+            $sessionId = $cryptor->decrypt(\Session::get('sessionId'));
+            $session = Sessions::where('id', $sessionId)->first();
 
-        if($session->ip_address !== $_SERVER['REMOTE_ADDR']) {
-            $session->delete();
-            \Session::forget('sessionId');
-            return false;
+            if($session->ip_address !== $_SERVER['REMOTE_ADDR']) {
+                $session->delete();
+                \Session::forget('sessionId');
+                return false;
+            }
+            return true;
+
+        } catch(Exception $e) {
+            ErrorLogging::logError($e);
+            return abort('500');
         }
-        return true;
     }
 
     /**
@@ -311,27 +323,33 @@ class AuthController extends Controller
      * @return bool
      */
     public static function adminCheck() {
-        $check = self::check();
-        if(!$check) {
-            return $check;
+        try {
+            $check = self::check();
+            if(!$check) {
+                return $check;
+            }
+
+            $cryptor = new Cryptor();
+
+            $sessionId = $cryptor->decrypt(\Session::get('sessionId'));
+            $session = Sessions::where('id', $sessionId)->first();
+
+            $user = User::where('id',$session->user_id)->first();
+            if(empty($user)) {
+                $session->delete();
+                \Session::forget('sessionId');
+                return false;
+            }
+
+            if($user->user_type !== 1) {
+                return false;
+            }
+            return true;
+
+        } catch(Exception $e) {
+            ErrorLogging::logError($e);
+            return abort('500');
         }
-
-        $cryptor = new Cryptor();
-
-        $sessionId = $cryptor->decrypt(\Session::get('sessionId'));
-        $session = Sessions::where('id', $sessionId)->first();
-
-        $user = User::where('id',$session->user_id)->first();
-        if(empty($user)) {
-            $session->delete();
-            \Session::forget('sessionId');
-            return false;
-        }
-
-        if($user->user_type !== 1) {
-            return false;
-        }
-        return true;
     }
 
     /**
@@ -341,13 +359,19 @@ class AuthController extends Controller
      * @return  \Illuminate\Http\RedirectResponse
      */
     public static function logout() {
-        $cryptor = new Cryptor();
+        try {
+            $cryptor = new Cryptor();
 
-        $sessionId = $cryptor->decrypt(\Session::get('sessionId'));
-        Sessions::where('id', $sessionId)->first()->delete();
-        \Session::forget('sessionId');
+            $sessionId = $cryptor->decrypt(\Session::get('sessionId'));
+            Sessions::where('id', $sessionId)->first()->delete();
+            \Session::forget('sessionId');
 
-        return redirect()->route('login');
+            return redirect()->route('login');
+
+        } catch(Exception $e) {
+            ErrorLogging::logError($e);
+            return abort('500');
+        }
     }
 
     /**
@@ -357,10 +381,16 @@ class AuthController extends Controller
      * @return \Illuminate\Http\RedirectResponse | \Illuminate\View\View
      */
     public static function generateLogin() {
-        if(self::check()) {
-            return redirect()->route('authHome');
+        try {
+            if(self::check()) {
+                return redirect()->route('authHome');
+            }
+            return view('auth.login');
+
+        } catch(Exception $e) {
+            ErrorLogging::logError($e);
+            return abort('500');
         }
-        return view('auth.login');
     }
 
     /**
@@ -370,12 +400,18 @@ class AuthController extends Controller
      * @return \Illuminate\Http\RedirectResponse | \Illuminate\View\View
      */
     public static function generateRegister() {
-        if(self::adminCheck()) {
-            $permissions = User_Permissions::all();
-            $variables = array('permissions'=>$permissions);
-            return view('auth.register')->with($variables);
+        try {
+            if(self::adminCheck()) {
+                $permissions = User_Permissions::all();
+                $variables = array('permissions'=>$permissions);
+                return view('auth.register')->with($variables);
+            }
+            return abort('401');
+
+        } catch(Exception $e) {
+            ErrorLogging::logError($e);
+            return abort('500');
         }
-        return abort('401');
     }
 
     /**
@@ -385,32 +421,44 @@ class AuthController extends Controller
      * @return  \Illuminate\Http\RedirectResponse
      */
     public static function authRequired() {
-        \Session::put('intended',$_SERVER['REQUEST_URI']);
-        return redirect()->route('login');
+        try {
+            \Session::put('intended',$_SERVER['REQUEST_URI']);
+            return redirect()->route('login');
+
+        } catch(Exception $e) {
+            ErrorLogging::logError($e);
+            return abort('500');
+        }
     }
 
     public static function safephishAdminCheck() {
-        $check = self::adminCheck();
-        if(!$check) {
-            return $check;
+        try {
+            $check = self::adminCheck();
+            if(!$check) {
+                return $check;
+            }
+
+            $cryptor = new Cryptor();
+
+            $sessionId = $cryptor->decrypt(\Session::get('sessionId'));
+            $session = Sessions::where('id', $sessionId)->first();
+
+            $user = User::where('id',$session->user_id)->first();
+            if(empty($user)) {
+                $session->delete();
+                \Session::forget('sessionId');
+                return false;
+            }
+
+            if($user->user_type !== 1 || $user->company_id !== 1) {
+                return false;
+            }
+
+            return true;
+
+        } catch(Exception $e) {
+            ErrorLogging::logError($e);
+            return abort('500');
         }
-
-        $cryptor = new Cryptor();
-
-        $sessionId = $cryptor->decrypt(\Session::get('sessionId'));
-        $session = Sessions::where('id', $sessionId)->first();
-
-        $user = User::where('id',$session->user_id)->first();
-        if(empty($user)) {
-            $session->delete();
-            \Session::forget('sessionId');
-            return false;
-        }
-
-        if($user->user_type !== 1 || $user->company_id !== 1) {
-            return false;
-        }
-
-        return true;
     }
 }
