@@ -254,7 +254,7 @@ class PostController extends Controller
             );
         }
 
-        return redirect()->route('groups');
+        return redirect()->route('mailingListGroup');
     }
 
     /**
