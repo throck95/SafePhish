@@ -174,11 +174,13 @@ class PostController extends Controller
         }
 
         $users = $request->input('userSelect');
-        foreach($users as $mlu) {
-            Mailing_List_Users_Groups_Bridge::create(
-                ['mailing_list_user_id'=>$mlu,
-                    'group_id'=>$group->id]
-            );
+        if(!empty($users)) {
+            foreach($users as $mlu) {
+                Mailing_List_Users_Groups_Bridge::create(
+                    ['mailing_list_user_id'=>$mlu,
+                        'group_id'=>$group->id]
+                );
+            }
         }
 
         return redirect()->route('mailingListGroup');
@@ -206,11 +208,13 @@ class PostController extends Controller
         Mailing_List_Users_Groups_Bridge::where('mailing_list_user_id',$id)->delete();
 
         $groups = $request->input('groupSelect');
-        foreach($groups as $group) {
-            Mailing_List_Users_Groups_Bridge::create(
-                ['mailing_list_user_id'=>$mailing_list_user->id,
-                    'group_id'=>$group]
-            );
+        if(!empty($groups)) {
+            foreach($groups as $group) {
+                Mailing_List_Users_Groups_Bridge::create(
+                    ['mailing_list_user_id'=>$mailing_list_user->id,
+                        'group_id'=>$group]
+                );
+            }
         }
 
         if(!empty($urlToggle) && $urlToggle === 'on') {
