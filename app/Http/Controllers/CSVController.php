@@ -100,7 +100,7 @@ class CSVController extends Controller
                 array_push($where,['email_tracking.timestamp','<=',$array[5]]);
             }
             $json = DB::table('email_tracking')
-                ->leftJoin('mailing_list','website_tracking.user_id','mailing_list.id')
+                ->leftJoin('mailing_list','email_tracking.user_id','mailing_list.id')
                 ->leftJoin('companies','mailing_list.company_id','companies.id')
                 ->select('email_tracking.ip_address','email_tracking.host','email_tracking.timestamp',
                     'mailing_list.first_name','mailing_list.last_name','companies.name')
