@@ -11,6 +11,7 @@
 @stop
 @section('bodyContent')
     <h3 style="font-weight: 300">Register User</h3>
+    @include('includes.errors_include')
     {!! Form::open(array('route'=>'register')) !!}
     <p>
     <p>{!! Form::label('emailText','Email: ') !!}
