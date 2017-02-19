@@ -287,7 +287,7 @@ class AuthController extends Controller
     private static function activeSessionCheck(Sessions $session) {
         if($session->ip_address !== $_SERVER['REMOTE_ADDR']) {
             $session->delete();
-            \Session::forget('sessionId');
+            session()->forget('sessionId');
             return redirect()->route('login');
         }
 
@@ -316,7 +316,7 @@ class AuthController extends Controller
 
             if($session->ip_address !== $_SERVER['REMOTE_ADDR']) {
                 $session->delete();
-                \Session::forget('sessionId');
+                session()->forget('sessionId');
                 return false;
             }
             return true;
@@ -352,7 +352,7 @@ class AuthController extends Controller
             $user = User::where('id',$session->user_id)->first();
             if(empty($user)) {
                 $session->delete();
-                \Session::forget('sessionId');
+                session()->forget('sessionId');
                 return false;
             }
 
@@ -383,7 +383,7 @@ class AuthController extends Controller
 
             $sessionId = $cryptor->decrypt($sessionId);
             Sessions::where('id', $sessionId)->first()->delete();
-            \Session::forget('sessionId');
+            session()->forget('sessionId');
 
             return redirect()->route('login');
 
@@ -475,7 +475,7 @@ class AuthController extends Controller
             $user = User::where('id',$session->user_id)->first();
             if(empty($user)) {
                 $session->delete();
-                \Session::forget('sessionId');
+                session()->forget('sessionId');
                 return false;
             }
 
