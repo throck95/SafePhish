@@ -10,7 +10,7 @@
         <link rel="stylesheet" type="text/css" href="/css/navBar.css" />
         <link rel="stylesheet" type="text/css" href="/css/basicstyles.css" />
         @yield('formcss')
-        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
         @yield('stylesheets')
     </head>
     <body>
