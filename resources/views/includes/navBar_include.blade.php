@@ -29,6 +29,7 @@
                 <div class="navbar-dropdown">
                     <a href="/campaigns">Display</a>
                     <a href="/campaign/create">New</a>
+                    <a href="/campaign/start">Start</a>
                 </div>
             </li>
             <li class="dropdown">
