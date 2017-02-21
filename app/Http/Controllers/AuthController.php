@@ -2,9 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CreateUserRequest;
-use App\Http\Requests\LoginRequest;
-use App\Http\Requests\TwoFactorRequest;
 use App\Libraries\Cryptor;
 use App\Libraries\ErrorLogging;
 use App\Libraries\RandomObjectGeneration;
@@ -13,6 +10,8 @@ use App\Models\Sessions;
 use App\Models\Two_Factor;
 use App\Models\User;
 use App\Models\User_Permissions;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
@@ -20,11 +19,23 @@ class AuthController extends Controller
      * create
      * Create a new user instance after a valid registration.
      *
-     * @param   CreateUserRequest       $request
+     * @param   Request       $request
      * @return  User
      */
-    public static function create(CreateUserRequest $request) {
+    public static function create(Request $request) {
         try {
+            $validator = Validator::make($request->all(),[
+                'emailText' => 'bail|required|email|unique:users,email',
+                'confirmEmailText' => 'bail|same:emailText',
+                'firstNameText' => 'bail|required',
+                'lastNameText' => 'bail|required',
+                'middleInitialText' => 'bail|max:1',
+                'permissionsSelect' => 'bail|required'
+            ]);
+            if($validator->fails()) {
+                return redirect()->route('users');
+            }
+
             $cryptor = new Cryptor();
 
             $sessionId = $cryptor->decrypt(\Session::get('sessionId'));
@@ -73,13 +84,22 @@ class AuthController extends Controller
      * Authenticates the user against the user's database object. Submits to 2FA if they have
      * the option enabled, otherwise logs the user in.
      *
-     * @param   LoginRequest         $request
+     * @param   Request         $request
      * @return  \Illuminate\Http\RedirectResponse
      */
-    public static function authenticate(LoginRequest $request) {
+    public static function authenticate(Request $request) {
         try {
+            $validator = Validator::make($request->all(),[
+                'emailText' => 'bail|required|email',
+                'passwordText' => 'bail|required'
+            ]);
+            if($validator->fails()) {
+                return redirect()->route('login');
+            }
+
             $user = User::where('email',$request->input('emailText'))->first();
             $password = $request->input('passwordText');
+
             if(empty($user) || !password_verify($password,$user->password)) {
                 return redirect()->route('login');
             }
@@ -119,7 +139,7 @@ class AuthController extends Controller
                 ]);
 
                 $encryptedSession = $cryptor->encrypt($newSession->id);
-                session(['sessionId' => $encryptedSession]);
+                \Session::put('sessionId',$encryptedSession);
 
                 return redirect()->route('2fa');
             }
@@ -131,9 +151,9 @@ class AuthController extends Controller
             ]);
 
             $encryptedSession = $cryptor->encrypt($newSession->id);
-            session(['sessionId' => $encryptedSession]);
+            \Session::put('sessionId',$encryptedSession);
 
-            $intended = $request->session()->pull('intended');
+            $intended = \Session::pull('intended');
             if($intended) {
                 return redirect()->to($intended);
             }
@@ -153,8 +173,8 @@ class AuthController extends Controller
      */
     public static function generateTwoFactorPage() {
         try {
-            $sessionId = session('sessionId', null);
-            if(!is_null($sessionId)) {
+            $sessionId = \Session::get('sessionId');
+            if($sessionId) {
                 $cryptor = new Cryptor();
 
                 $sessionId = $cryptor->decrypt($sessionId);
@@ -181,13 +201,20 @@ class AuthController extends Controller
      * twoFactorVerify
      * Validates the 2FA code to authenticate the user.
      *
-     * @param   TwoFactorRequest         $request
+     * @param   Request         $request
      * @return  \Illuminate\Http\RedirectResponse
      */
-    public static function twoFactorVerify(TwoFactorRequest $request) {
+    public static function twoFactorVerify(Request $request) {
         try {
-            $sessionId = session('sessionId', null);
-            if(is_null($sessionId)) {
+            $validator = Validator::make($request->all(),[
+                'codeText' => 'bail|required|digits:6'
+            ]);
+            if($validator->fails()) {
+                return redirect()->route('login');
+            }
+
+            $sessionId = \Session::get('sessionId');
+            if(!$sessionId) {
                 return redirect()->route('login');
             }
             $cryptor = new Cryptor();
@@ -215,7 +242,7 @@ class AuthController extends Controller
 
             $twoFactor->delete();
 
-            $intended = $request->session()->pull('intended');
+            $intended = \Session::pull('intended');
             if($intended) {
                 return redirect()->to($intended);
             }
@@ -235,8 +262,8 @@ class AuthController extends Controller
      */
     public static function resend2FA() {
         try {
-            $sessionId = session('sessionId', null);
-            if(is_null($sessionId)) {
+            $sessionId = \Session::get('sessionId');
+            if(!$sessionId) {
                 return redirect()->route('login');
             }
             $cryptor = new Cryptor();
@@ -287,7 +314,7 @@ class AuthController extends Controller
     private static function activeSessionCheck(Sessions $session) {
         if($session->ip_address !== $_SERVER['REMOTE_ADDR']) {
             $session->delete();
-            session()->forget('sessionId');
+            \Session::forget('sessionId');
             return redirect()->route('login');
         }
 
@@ -305,9 +332,9 @@ class AuthController extends Controller
      */
     public static function check() {
         try {
-            $sessionId = session('sessionId', null);
-            if(is_null($sessionId)) {
-                return redirect()->route('login');
+            $sessionId = \Session::get('sessionId');
+            if(!$sessionId) {
+                return false;
             }
             $cryptor = new Cryptor();
 
@@ -316,7 +343,7 @@ class AuthController extends Controller
 
             if($session->ip_address !== $_SERVER['REMOTE_ADDR']) {
                 $session->delete();
-                session()->forget('sessionId');
+                \Session::forget('sessionId');
                 return false;
             }
             return true;
@@ -340,9 +367,9 @@ class AuthController extends Controller
                 return $check;
             }
 
-            $sessionId = session('sessionId', null);
-            if(is_null($sessionId)) {
-                return redirect()->route('login');
+            $sessionId = \Session::get('sessionId');
+            if(!$sessionId) {
+                return false;
             }
             $cryptor = new Cryptor();
 
@@ -352,7 +379,7 @@ class AuthController extends Controller
             $user = User::where('id',$session->user_id)->first();
             if(empty($user)) {
                 $session->delete();
-                session()->forget('sessionId');
+                \Session::forget('sessionId');
                 return false;
             }
 
@@ -375,15 +402,15 @@ class AuthController extends Controller
      */
     public static function logout() {
         try {
-            $sessionId = session('sessionId', null);
-            if(is_null($sessionId)) {
+            $sessionId = \Session::get('sessionId');
+            if(!$sessionId) {
                 return redirect()->route('login');
             }
             $cryptor = new Cryptor();
 
             $sessionId = $cryptor->decrypt($sessionId);
             Sessions::where('id', $sessionId)->first()->delete();
-            session()->forget('sessionId');
+            \Session::forget('sessionId');
 
             return redirect()->route('login');
 
@@ -463,8 +490,8 @@ class AuthController extends Controller
                 return $check;
             }
 
-            $sessionId = session('sessionId', null);
-            if(is_null($sessionId)) {
+            $sessionId = \Session::get('sessionId');
+            if(!$sessionId) {
                 return redirect()->route('login');
             }
             $cryptor = new Cryptor();
@@ -475,7 +502,7 @@ class AuthController extends Controller
             $user = User::where('id',$session->user_id)->first();
             if(empty($user)) {
                 $session->delete();
-                session()->forget('sessionId');
+                \Session::forget('sessionId');
                 return false;
             }
 
