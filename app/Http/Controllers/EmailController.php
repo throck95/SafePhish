@@ -60,7 +60,7 @@ class EmailController extends Controller
             }
             return redirect()->route('generatePhish');
 
-        } catch(Exception $e) {
+        } catch(\Exception $e) {
             ErrorLogging::logError($e);
             return abort('500');
         }
@@ -89,7 +89,7 @@ class EmailController extends Controller
                 ->send(new $templateClass($user,$campaign,$company));
             return self::logSentEmail($user,$campaign);
 
-        } catch(Exception $e) {
+        } catch(\Exception $e) {
             ErrorLogging::logError($e);
             return abort('500');
         }
@@ -124,7 +124,7 @@ class EmailController extends Controller
 
             return true;
 
-        } catch(Exception $e) {
+        } catch(\Exception $e) {
             ErrorLogging::logError($e);
             return abort('500');
         }
@@ -141,7 +141,6 @@ class EmailController extends Controller
     public static function sendNewAccountEmail(User $user, $password) {
         try {
             if(Auth::adminCheck()) {
-
                 $name = $user->first_name . ' ' . $user->last_name;
                 Mail::to($user->email,$name)
                     ->send(new MailTemplates\NewUser($user,$password));
@@ -149,7 +148,55 @@ class EmailController extends Controller
             }
             return false;
 
-        } catch(Exception $e) {
+        } catch(\Exception $e) {
+            ErrorLogging::logError($e);
+            return abort('500');
+        }
+    }
+
+    /**
+     * adminUpdatedAccountEmail
+     * Sends email to user when they're account gets updated by an admin.
+     *
+     * @param   User            $user
+     * @param   string          $password
+     * @return  bool
+     */
+    public static function adminUpdatedAccountEmail(User $user, $password) {
+        try {
+            if(Auth::adminCheck()) {
+                $name = $user->first_name . ' ' . $user->last_name;
+                Mail::to($user->email,$name)
+                    ->send(new MailTemplates\AdminForcedPasswordReset($user,$password));
+                return true;
+            }
+            return false;
+
+        } catch(\Exception $e) {
+            ErrorLogging::logError($e);
+            return abort('500');
+        }
+    }
+
+    /**
+     * sendUpdatedAccountEmail
+     * Sends email to user when they there is account activity.
+     *
+     * @param   User        $user
+     * @param   array       $changes
+     * @return  bool
+     */
+    public static function sendUpdatedAccountEmail(User $user, array $changes) {
+        try {
+            if(Auth::check()) {
+                $name = $user->first_name . ' ' . $user->last_name;
+                Mail::to($user->email,$name)
+                    ->send(new MailTemplates\UpdateUser($user,$changes));
+                return true;
+            }
+            return false;
+
+        } catch(\Exception $e) {
             ErrorLogging::logError($e);
             return abort('500');
         }
@@ -170,7 +217,7 @@ class EmailController extends Controller
                 ->send(new MailTemplates\TwoFactorCode($user,$code));
             return true;
 
-        } catch(Exception $e) {
+        } catch(\Exception $e) {
             ErrorLogging::logError($e);
             return abort('500');
         }
