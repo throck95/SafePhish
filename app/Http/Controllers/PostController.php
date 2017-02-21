@@ -106,31 +106,24 @@ class PostController extends Controller
             }
 
             if($user->company_id !== 1) {
-                $company = Company::where('id',$user->company_id)->first();
-                if(empty($company)) {
+                $company = Company::where('id', $user->company_id)->first();
+                if (empty($company)) {
                     return Auth::logout();
                 }
-
-                $mailingListUser = Mailing_List_User::create(
-                    [
-                        'company_id'=>$company->id,
-                        'email'=>$request->input('emailText'),
-                        'first_name'=>$request->input('firstNameText'),
-                        'last_name'=>$request->input('lastNameText'),
-                        'unique_url_id'=>RandomObjectGeneration::random_str((getenv('DEFAULT_LENGTH_IDS')))
-                    ]);
+                $company = $company->id;
 
             } else {
-
-                $mailingListUser = Mailing_List_User::create(
-                    [
-                        'company_id'=>$request->input('companyText'),
-                        'email'=>$request->input('emailText'),
-                        'first_name'=>$request->input('firstNameText'),
-                        'last_name'=>$request->input('lastNameText'),
-                        'unique_url_id'=>RandomObjectGeneration::random_str((getenv('DEFAULT_LENGTH_IDS')))
-                    ]);
+                $company = $request->input('companyText');
             }
+
+            $mailingListUser = Mailing_List_User::create(
+                [
+                    'company_id'=>$company,
+                    'email'=>$request->input('emailText'),
+                    'first_name'=>$request->input('firstNameText'),
+                    'last_name'=>$request->input('lastNameText'),
+                    'unique_url_id'=>RandomObjectGeneration::random_str((getenv('DEFAULT_LENGTH_IDS')))
+                ]);
 
             $groups = $request->input('groupSelect');
             if(!empty($groups)) {
@@ -307,6 +300,7 @@ class PostController extends Controller
         if(empty($user)) {
             return Auth::logout();
         }
+        $changes = array();
 
         $email = $request->input('emailText');
         $password = $request->input('passwordText');
@@ -315,6 +309,10 @@ class PostController extends Controller
         $twoFactor = $request->input('twoFactorToggle');
         if(!empty($twoFactor)) {
             $twoFactor = $twoFactor === 'on' ? true : false;
+            if($twoFactor)
+                array_push($changes,"Two Factor Authentication enabled.");
+            else
+                array_push($changes,"Two Factor Authentication disabled.");
         }
 
         if($password != $passwordVerify) {
@@ -322,6 +320,12 @@ class PostController extends Controller
         }
 
         User::updateUser($user, $email, password_hash($password, PASSWORD_DEFAULT), $twoFactor);
+
+        if(!empty($email))
+            array_push($changes,"Email updated.");
+        if(!empty($password))
+            array_push($changes,"Password changed.");
+        EmailController::sendUpdatedAccountEmail($user,$changes);
 
         return redirect()->route('accountManagement');
     }
@@ -356,7 +360,7 @@ class PostController extends Controller
         $email = $request->input('emailText');
         User::updateUser($user,$email,password_hash($password,PASSWORD_DEFAULT),'',$userType);
 
-        EmailController::sendNewAccountEmail($user,$password);
+        EmailController::adminUpdatedAccountEmail($user,$password);
 
         return redirect()->route('users');
     }
