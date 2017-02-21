@@ -18,7 +18,7 @@
     <h2 style="margin-left: 10px; font-weight: 300">Log In</h2>
     {!! Form::open(array('url'=>'/login')) !!}
     <p>{!! Form::label('emailText','Username: ') !!}
-        {!! Form::text('emailText',null,array('id'=>'emailText','name'=>'emailText','size'=>30)) !!}</p>
+        {!! Form::text('emailText',null,array('id'=>'emailText','name'=>'emailText','size'=>30, 'autofocus')) !!}</p>
     <p>{!! Form::label('passwordText','Password: ') !!}
         {!! Form::password('passwordText',array('id'=>'passwordText','name'=>'passwordText','size'=>30)) !!}</p>
     {!! Form::submit('Login',array('id'=>'submitButton','style'=>'margin-left:10px')) !!}
