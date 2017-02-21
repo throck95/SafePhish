@@ -24,7 +24,7 @@ class JsonController extends Controller
                 $json = Campaign::queryCampaigns();
                 return "{\"campaigns\":$json}";
             }
-            return abort('401');
+            return abort('403');
 
         } catch(\Exception $e) {
             ErrorLogging::logError($e);
@@ -44,7 +44,7 @@ class JsonController extends Controller
                 $json = Template::all();
                 return "{\"templates\":$json}";
             }
-            return abort('401');
+            return abort('403');
 
         } catch(\Exception $e) {
             ErrorLogging::logError($e);
@@ -64,7 +64,7 @@ class JsonController extends Controller
                 $json = Mailing_List_User::queryMLU();
                 return "{\"mlu\":$json}";
             }
-            return abort('401');
+            return abort('403');
 
         } catch(\Exception $e) {
             ErrorLogging::logError($e);
@@ -81,10 +81,10 @@ class JsonController extends Controller
     public static function postGroupsJson() {
         try {
             if(Auth::check()) {
-                $json = Mailing_List_Groups::all();
+                $json = Mailing_List_Groups::queryGroups();
                 return "{\"groups\":$json}";
             }
-            return abort('401');
+            return abort('403');
 
         } catch(\Exception $e) {
             ErrorLogging::logError($e);
@@ -104,7 +104,7 @@ class JsonController extends Controller
                 $json = User::queryUsers();
                 return "{\"users\":$json}";
             }
-            return abort('401');
+            return abort('403');
 
         } catch(\Exception $e) {
             ErrorLogging::logError($e);
