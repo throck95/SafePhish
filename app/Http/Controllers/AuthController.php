@@ -10,6 +10,7 @@ use App\Models\Sessions;
 use App\Models\Two_Factor;
 use App\Models\User;
 use App\Models\User_Permissions;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -20,7 +21,7 @@ class AuthController extends Controller
      * Create a new user instance after a valid registration.
      *
      * @param   Request       $request
-     * @return  User
+     * @return  User | RedirectResponse
      */
     public static function create(Request $request) {
         try {
@@ -43,13 +44,13 @@ class AuthController extends Controller
 
             $user = User::where('id',$session->user_id)->first();
             if(empty($user)) {
-                return Auth::logout();
+                return self::logout();
             }
 
             if($user->company_id !== 1) {
                 $company = Company::where('id', $user->company_id)->first();
                 if (empty($company)) {
-                    return Auth::logout();
+                    return self::logout();
                 }
                 $company = $company->id;
 
