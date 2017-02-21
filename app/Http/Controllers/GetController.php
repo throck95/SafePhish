@@ -315,8 +315,8 @@ class GetController
                 return Auth::authRequired();
             }
 
-            $users = Mailing_List_User::all();
-            $groups = Mailing_List_Groups::all();
+            $users = Mailing_List_User::queryMLU();
+            $groups = Mailing_List_Groups::queryGroups();
             $campaigns = Campaign::getAllActiveCampaigns();
             $templates = Template::all();
             $emails = Campaign_Email_Addresses::all();
