@@ -3,7 +3,7 @@
     You will have 30 minutes to complete this action before the code expires.</p>
 <p>{{ $securityCode }}</p>
 <p>SafePhish will never send an email requesting information that will uniquely identify you. If you feel you have
-    received a suspicious email, please forward it to our <a href="mailto:phishing@safephish.com">Phishing Response Team</a>.</p>
+    received a suspicious email, please forward it to our <a href="mailto:phishing@safephish.org">Phishing Response Team</a>.</p>
 
 <br /><br />
 <p>This message, including any attachments, may contain information

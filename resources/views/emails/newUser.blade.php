@@ -1,12 +1,12 @@
 <p>Dear {{ $user->first_name }} {{ $user->last_name }},</p>
-<p>Your company has created you an account at <a href="http://www.SafePhish.com">SafePhish.com</a>. Here at SafePhish,
+<p>Your company has created you an account at <a href="http://www.SafePhish.org">SafePhish.org</a>. Here at SafePhish,
     our goal is to help you help yourself. Phishing is becoming a larger problem every day. Now you can help change that.</p>
 <p>Log in to your SafePhish account using the password below. Don't forget to change your password after you log in!</p>
 <p>{{ $password }}</p>
 <p>Once you've logged in, start by looking around, then start some campaigns. See if you can help your coworkers understand
     what's so dangerous about phishing.</p>
 <p>SafePhish will never send an email requesting information that will uniquely identify you. If you feel you have
-    received a suspicious email, please forward it to our <a href="mailto:phishing@safephish.com">Phishing Response Team</a>.</p>
+    received a suspicious email, please forward it to our <a href="mailto:phishing@safephish.org">Phishing Response Team</a>.</p>
 
 <br /><br />
 <p>This message, including any attachments, may contain information
