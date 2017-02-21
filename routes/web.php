@@ -31,8 +31,8 @@ Route::get('/campaign/create','GetController@createCampaignForm');
 Route::post('/campaign/create','PostController@createCampaign')->name('createCampaign');
 
 //Emails
-Route::get('/email/generate','GetController@displayPhishingEmailForm')->name('generatePhish');
-Route::post('email/send','EmailController@sendPhishingEmail')->name('sendPhish');
+Route::get('/campaign/start','GetController@displayPhishingEmailForm')->name('generatePhish');
+Route::post('/campaign/send','EmailController@sendPhishingEmail')->name('sendPhish');
 
 //MLU
 Route::get('/mailinglist/create/user','GetController@createMailingListUserForm');
