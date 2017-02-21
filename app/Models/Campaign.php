@@ -37,7 +37,41 @@ class Campaign extends Model
     }
 
     public static function getAllActiveCampaigns() {
-        return Campaign::where('status','active')->get();
+        $cryptor = new Cryptor();
+
+        $sessionId = $cryptor->decrypt(\Session::get('sessionId'));
+        $session = Sessions::where('id', $sessionId)->first();
+
+        if(empty($session)) {
+            return Auth::logout();
+        }
+
+        $user = User::where('id',$session->user_id)->first();
+
+        if(empty($user)) {
+            return Auth::logout();
+        }
+
+        if($user->company_id !== 1) {
+            $campaigns = DB::table('campaigns')
+                ->leftJoin('users','campaigns.assignee','users.id')
+                ->leftJoin('companies','users.company_id','companies.id')
+                ->select('campaigns.id','campaigns.name')
+                ->where('users.company_id','=',$user->company_id)
+                ->where('campaigns.status','=','active')
+                ->orderBy('campaigns.id', 'asc')
+                ->get();
+            return $campaigns;
+        }
+
+        $campaigns = DB::table('campaigns')
+            ->leftJoin('users','campaigns.assignee','users.id')
+            ->leftJoin('companies','users.company_id','companies.id')
+            ->select('campaigns.id','campaigns.name')
+            ->where('campaigns.status','=','active')
+            ->orderBy('campaigns.id', 'asc')
+            ->get();
+        return $campaigns;
     }
 
     public static function queryCampaigns() {
@@ -47,17 +81,17 @@ class Campaign extends Model
         $session = Sessions::where('id', $sessionId)->first();
 
         if(empty($session)) {
-            Auth::logout();
+            return Auth::logout();
         }
 
         $user = User::where('id',$session->user_id)->first();
 
         if(empty($user)) {
-            Auth::logout();
+            return Auth::logout();
         }
 
         if($user->company_id !== 1) {
-            $users = DB::table('campaigns')
+            $campaigns = DB::table('campaigns')
                 ->leftJoin('users','campaigns.assignee','users.id')
                 ->leftJoin('companies','users.company_id','companies.id')
                 ->select('campaigns.id','campaigns.name','campaigns.description','campaigns.status','campaigns.created_at',
@@ -65,16 +99,16 @@ class Campaign extends Model
                 ->where('users.company_id','=',$user->company_id)
                 ->orderBy('campaigns.id', 'asc')
                 ->get();
-            return $users;
+            return $campaigns;
         }
 
-        $users = DB::table('campaigns')
+        $campaigns = DB::table('campaigns')
             ->leftJoin('users','campaigns.assignee','users.id')
             ->leftJoin('companies','users.company_id','companies.id')
             ->select('campaigns.id','campaigns.name','campaigns.description','campaigns.status','campaigns.created_at',
                 'campaigns.updated_at','users.first_name','users.last_name','users.id as user_id','companies.name as company_name')
             ->orderBy('campaigns.id', 'asc')
             ->get();
-        return $users;
+        return $campaigns;
     }
 }
