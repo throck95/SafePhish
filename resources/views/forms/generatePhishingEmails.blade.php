@@ -12,25 +12,25 @@
     {!! Form::open(array('route'=>'sendPhish')) !!}
     <datalist id="usersDatalist">
         @for ($i = 0; $i < count($users); $i++)
-            <option value="{{ $users[$i]->Id }}">
+            <option value="{{ $users[$i]->id }}">
                 {{ $users[$i]->first_name }} {{ $users[$i]->last_name }}</option>
         @endfor
     </datalist>
     <datalist id="groupsDatalist">
         @for ($i = 0; $i < count($groups); $i++)
-            <option value="{{ $groups[$i]->Id }}">
+            <option value="{{ $groups[$i]->id }}">
                 {{ $groups[$i]->name }}</option>
         @endfor
     </datalist>
     <datalist id="campaignsDatalist">
         @for ($i = 0; $i < count($campaigns); $i++)
-            <option value="{{ $campaigns[$i]->Id }}">
+            <option value="{{ $campaigns[$i]->id }}">
                 {{ $campaigns[$i]->name }}</option>
         @endfor
     </datalist>
     <datalist id="templatesDatalist">
         @for ($i = 0; $i < count($templates); $i++)
-            <option value="{{ $templates[$i]->FileName }}">
+            <option value="{{ $templates[$i]->file_name }}">
                 {{ $templates[$i]->public_name }}</option>
         @endfor
     </datalist>
@@ -55,10 +55,6 @@
     <p>
         {!! Form::label('fromEmailText','From: ') !!}
         {!! Form::text('fromEmailText',null,array('name'=>'fromEmailText','list'=>'emailsDatalist')) !!}
-    </p>
-    <p>
-        {!! Form::label('companyText','Company Name: ') !!}
-        {!! Form::text('companyText',null,array('name'=>'companyText')) !!}
     </p>
     <p>
         {!! Form::label('campaignText','Campaign: ') !!}
