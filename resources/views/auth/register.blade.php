@@ -36,7 +36,7 @@
     @endif
     <p>
         {!! Form::label('permissionsSelect','Permissions: ') !!}
-        <select id='permissionsSelect' name='permissionsSelect[]' multiple>
+        <select id='permissionsSelect' name='permissionsSelect'>
             @for ($i = 0; $i < count($permissions); $i++)
                 <option value="{{ $permissions[$i]->id }}">{{ $permissions[$i]->permission_type }}</option>
             @endfor
