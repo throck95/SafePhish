@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Models\Sessions;
 use App\Models\Two_Factor;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
@@ -28,6 +29,10 @@ class Kernel extends ConsoleKernel
         $schedule->call(function() {
             Two_Factor::where('created_at','<=',date("Y-m-d H:i:s",strtotime('-30 minutes')))->delete();
         })->everyTenMinutes();
+
+        $schedule->call(function() {
+            Sessions::where('authenticated','like','%')->delete();
+        })->monthly();
     }
 
     /**
