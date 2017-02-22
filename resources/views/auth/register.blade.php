@@ -24,12 +24,6 @@
         {!! Form::text('lastNameText',null,array('name'=>'lastNameText')) !!}</p>
     <p>{!! Form::label('middleInitialText','Middle Initial: ') !!}
         {!! Form::text('middleInitialText',null,array('name'=>'middleInitialText','maxlength'=>1)) !!}</p>
-    <datalist id="permissionsDatalist">
-        @for ($i = 0; $i < count($permissions); $i++)
-            <option value="{{ $permissions[$i]->id }}">
-                {{ $permissions[$i]->permission_type }}</option>
-        @endfor
-    </datalist>
     @if(\App\Http\Controllers\AuthController::safephishAdminCheck())
         <datalist id="companiesDatalist">
             @for ($i = 0; $i < count($companies); $i++)
@@ -40,8 +34,14 @@
         <p>{!! Form::label('companyText','Company: ') !!}
             {!! Form::text('companyText',null,array('name'=>'companyText','list'=>'companiesDatalist')) !!}</p>
     @endif
-    <p>{!! Form::label('permissionsText','Permissions: ') !!}
-        {!! Form::text('permissionsText',null,array('name'=>'permissionsText','datalist'=>'permissionsDatalist')) !!}</p>
+    <p>
+        {!! Form::label('permissionsSelect','Permissions: ') !!}
+        <select id='permissionsSelect' name='permissionsSelect[]' multiple>
+            @for ($i = 0; $i < count($permissions); $i++)
+                <option value="{{ $permissions[$i]->id }}">{{ $permissions[$i]->permission_type }}</option>
+            @endfor
+        </select>
+    </p>
     {!! Form::submit('Register',array('id'=>'submitButton')) !!}
     {!! Form::close() !!}
 @stop

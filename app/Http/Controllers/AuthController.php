@@ -67,7 +67,7 @@ class AuthController extends Controller
                 'middle_initial' => $request->input('middleInitialText'),
                 'password' => password_hash($password,PASSWORD_DEFAULT),
                 'two_factor_enabled' => 0,
-                'user_type' => $request->input('permissionsText'),
+                'user_type' => $request->input('permissionsSelect'),
                 'company_id' => $company
             ]);
 
