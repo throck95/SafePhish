@@ -319,7 +319,11 @@ class PostController extends Controller
             return redirect()->route('accountManagement');
         }
 
-        User::updateUser($user, $email, password_hash($password, PASSWORD_DEFAULT), $twoFactor);
+        if(empty($password)) {
+            User::updateUser($user, $email, $password, $twoFactor);
+        } else {
+            User::updateUser($user, $email, password_hash($password, PASSWORD_DEFAULT), $twoFactor);
+        }
 
         if(!empty($email))
             array_push($changes,"Email updated.");
@@ -327,7 +331,7 @@ class PostController extends Controller
             array_push($changes,"Password changed.");
         EmailController::sendUpdatedAccountEmail($user,$changes);
 
-        return redirect()->route('accountManagement');
+        return redirect()->route('authHome');
     }
 
     /**

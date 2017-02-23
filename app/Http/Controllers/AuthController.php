@@ -95,7 +95,7 @@ class AuthController extends Controller
                 'passwordText' => 'bail|required'
             ]);
             if($validator->fails()) {
-                return redirect()->route('login');
+                return redirect()->route('login')->withErrors($validator)->withInput();
             }
 
             $user = User::where('email',$request->input('emailText'))->first();
