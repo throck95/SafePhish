@@ -122,7 +122,7 @@ class PostController extends Controller
                     'email'=>$request->input('emailText'),
                     'first_name'=>$request->input('firstNameText'),
                     'last_name'=>$request->input('lastNameText'),
-                    'unique_url_id'=>RandomObjectGeneration::random_str((getenv('DEFAULT_LENGTH_IDS')))
+                    'unique_url_id'=>RandomObjectGeneration::random_str(intval(getenv('DEFAULT_LENGTH_IDS')))
                 ]);
 
             $groups = $request->input('groupSelect');
