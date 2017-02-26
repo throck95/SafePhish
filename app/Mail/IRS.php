@@ -35,7 +35,7 @@ class IRS extends Mailable
     {
         $variables = array('user'=>$this->user,'campaign'=>$this->campaign);
         return $this->from(getenv('MAIL_USERNAME'),getenv('MAIL_NAME'))
-            ->subject('Check out these Black Friday Deals!')
+            ->subject('Important Tax Information Enclosed')
             ->view('emails.phishing.irs')->with($variables);
     }
 }
