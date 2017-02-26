@@ -116,7 +116,7 @@ class EmailController extends Controller
             $bridge = Mailing_List_Users_Groups_Bridge::where('group_id',$group->id)->get();
 
             foreach($bridge as $pair) {
-                $sent = self::sendToUser($pair->user_id,$templateClass,$campaign,$company);
+                $sent = self::sendToUser($pair->mailing_list_user_id,$templateClass,$campaign,$company);
                 if(!($sent instanceof Sent_Mail)) {
                     return abort('500');
                 }
