@@ -1,4 +1,4 @@
-<p>Mr. or Mrs. {{ $user->LastName }}: </p>
+<p>Mr. or Mrs. {{ $user->last_name }}: </p>
 <p>There have been numerous login attempts to your corporate account.</p>
 
 <p>{{ \Carbon\Carbon::now()->toDateTimeString() }} -- Logon Event 529: **Logon failure. Bad Password.**<br />

@@ -49,7 +49,7 @@ class EmailController extends Controller
             putenv("MAIL_NAME=$fromEmail->name");
             putenv("MAIL_PASSWORD=$password");
 
-            $templateClass = 'MailTemplates\\' . $template->mailable;
+            $templateClass = 'App\\Mail\\' . $template->mailable;
             $sendingChoice = $request->input('sendingChoiceRadio');
 
             if($sendingChoice === 'user') {
@@ -233,7 +233,7 @@ class EmailController extends Controller
      */
     private static function logSentEmail(Mailing_List_User $user, Campaign $campaign) {
         return Sent_Mail::create(
-            ['user_id'=>$user->id,
+            ['mailing_list_user_id'=>$user->id,
                 'campaign_id'=>$campaign->id,
                 'timestamp'=>Carbon::now()]
         );
