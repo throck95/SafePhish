@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "f6f4396367e4b9dacd157a82fdb570da",
+    "content-hash": "a784135607f15b8530ab11d07e942c40",
     "packages": [
         {
             "name": "classpreloader/classpreloader",
@@ -59,52 +59,6 @@
                 "preload"
             ],
             "time": "2016-09-16T12:50:15+00:00"
-        },
-        {
-            "name": "cohensive/embed",
-            "version": "v5.3.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/KaneCohen/embed.git",
-                "reference": "dcad047db6a7c0c53b18b8184a0074e94f9ce274"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/KaneCohen/embed/zipball/dcad047db6a7c0c53b18b8184a0074e94f9ce274",
-                "reference": "dcad047db6a7c0c53b18b8184a0074e94f9ce274",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "~4.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Cohensive\\Embed": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Kane Cohen",
-                    "email": "kanecohen@gmail.com"
-                }
-            ],
-            "description": "Media Embed (for Laravel or as a standalone).",
-            "keywords": [
-                "embed",
-                "laravel",
-                "media",
-                "vimeo",
-                "youtube"
-            ],
-            "time": "2016-11-17T07:57:49+00:00"
         },
         {
             "name": "dnoegel/php-xdg-base-dir",
