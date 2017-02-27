@@ -61,14 +61,14 @@ Route::get('/json/groups','JsonController@postGroupsJson');
 Route::get('/json/users','JsonController@postUsersJson');
 
 //Webbug
-Route::get('/account={Id}/emaillogo.png','WebbugController@createAndReturnWebbug');
+Route::get('/account={id}/emaillogo.png','WebbugController@createAndReturnWebbug');
 
 //Email Links
-Route::get('/account={Id}/breach/password_reset','LinksController@disclosePhishingEmail');
-Route::get('/account={Id}/breach/contact_us','LinksController@disclosePhishingEmail');
-Route::get('/account={Id}/policy_changes','LinksController@disclosePhishingEmail');
-Route::get('/deals/{Id}','LinksController@disclosePhishingEmail');
-Route::get('/account={Id}/irs.gov','LinksController@disclosePhishingEmail');
+Route::get('/account={id}/breach/password_reset','LinksController@disclosePhishingEmail');
+Route::get('/account={id}/breach/contact_us','LinksController@disclosePhishingEmail');
+Route::get('/account={id}/policy_changes','LinksController@disclosePhishingEmail');
+Route::get('/deals/{id}','LinksController@disclosePhishingEmail');
+Route::get('/account={id}/irs.gov','LinksController@disclosePhishingEmail');
 
 //Images
 Route::get('/images/black_friday.png','ImagesController@displayBlackFridayImage');
