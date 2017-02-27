@@ -13,6 +13,7 @@ use App\Models\User_Permissions;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use ReCaptcha\ReCaptcha;
 
 class AuthController extends Controller
 {
@@ -95,7 +96,21 @@ class AuthController extends Controller
                 'passwordText' => 'bail|required'
             ]);
             if($validator->fails()) {
-                return redirect()->route('login')->withErrors($validator)->withInput();
+                return redirect()->route('login');
+            }
+
+            $reCaptcha = new ReCaptcha(getenv('RECAPTCHA_SECRET_KEY'));
+            $reCaptchaResponse = $request->input('g-recaptcha-response');
+            $response = null;
+            if($reCaptchaResponse) {
+                $response = $reCaptcha->verify(
+                    $reCaptchaResponse,
+                    $_SERVER['REMOTE_ADDR']
+                );
+            }
+
+            if(is_null($response) || !$response->isSuccess()) {
+                return redirect()->route('login');
             }
 
             $user = User::where('email',$request->input('emailText'))->first();
