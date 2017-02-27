@@ -347,6 +347,11 @@ class AuthController extends Controller
                 \Session::forget('sessionId');
                 return false;
             }
+
+            if($session->authenticated === 0) {
+                return false;
+            }
+
             return true;
 
         } catch(\Exception $e) {
