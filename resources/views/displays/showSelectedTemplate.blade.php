@@ -18,8 +18,4 @@
         @endforeach
     </div>
     <br />
-    <div style="text-align: center">
-        <button onclick='window.location.href = "/templates/edit/{{ $fileName }}"' style="margin: auto">Edit Template</button>
-    </div>
-    <br />
 @stop
