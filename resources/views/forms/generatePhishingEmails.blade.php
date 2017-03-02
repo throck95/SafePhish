@@ -37,7 +37,7 @@
     <datalist id="emailsDatalist">
         @for ($i = 0; $i < count($emails); $i++)
             <option value="{{ $emails[$i]->email_address }}">
-                {{ $emails[$i]->name }} - {{ $emails[$i]->email_address }}</option>
+                {{ $emails[$i]->name }}</option>
         @endfor
     </datalist>
     <p>
