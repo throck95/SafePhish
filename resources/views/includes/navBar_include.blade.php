@@ -30,6 +30,7 @@
                     <a href="/campaigns">Display</a>
                     <a href="/campaign/create">New</a>
                     <a href="/campaign/start">Start</a>
+                    <a href="/campaign/emails">Email Addresses</a>
                 </div>
             </li>
             <li class="dropdown">
@@ -41,7 +42,7 @@
             <li class="dropdown">
                 <a class="dropbtn">Mailing Lists</a>
                 <div class="navbar-dropdown">
-                    <a href="/mailinglist/users">Manage</a>
+                    <a href="/mailinglist/users">Users</a>
                     <a href="/mailinglist/groups">Groups</a>
                     <a href="/mailinglist/create/user">New User</a>
                     <a href="/mailinglist/create/group">New Group</a>
