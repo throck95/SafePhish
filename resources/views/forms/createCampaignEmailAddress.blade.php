@@ -16,7 +16,17 @@
     <p>{!! Form::label('emailText','Email: ') !!}
         {!! Form::text('emailText',null,array('name'=>'emailText')) !!}</p>
     <p>{!! Form::label('passwordText','Password: ') !!}
-        {!! Form::password('passwordText',null,array('name'=>'assigneeText')) !!}</p>
+        {!! Form::password('passwordText',null,array('name'=>'passwordText')) !!}</p>
+    @if(\App\Http\Controllers\AuthController::safephishAdminCheck())
+        <datalist id="companiesDatalist">
+            @for ($i = 0; $i < count($companies); $i++)
+                <option value="{{ $companies[$i]->id }}">
+                    {{ $companies[$i]->name }}</option>
+            @endfor
+        </datalist>
+        <p>{!! Form::label('companyText','Company: ') !!}
+            {!! Form::text('companyText',null,array('name'=>'companyText','list'=>'companiesDatalist')) !!}</p>
+    @endif
     {!! Form::submit('Submit',array('id'=>'submitButton')) !!}
     {!! Form::close() !!}
 @stop

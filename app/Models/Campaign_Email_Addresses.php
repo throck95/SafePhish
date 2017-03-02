@@ -16,16 +16,19 @@ class Campaign_Email_Addresses extends Model
 
     protected $fillable = ['email_address',
         'name',
+        'company_id',
         'password'];
 
-    public static function insertEmail($email, $name, $password) {
+    public static function insertEmail($email, $name, $password, $companyId) {
         $cryptor = new Cryptor();
         $encrypted = $cryptor->encrypt($password);
         unset($password);
+
         $query = self::where('email_address',$email)->first();
         if(count($query)) {
             throw new DuplicateKeyException("Email Address already exists.");
         }
+
         return self::create([
             'email_address'=>$email,
             'name'=>$name,

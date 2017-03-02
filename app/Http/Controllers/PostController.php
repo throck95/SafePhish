@@ -14,6 +14,8 @@ use App\Models\User_Permissions;
 use App\Models\Campaign;
 use App\Models\User;
 use App\Models\Sessions;
+use Doctrine\Instantiator\Exception\InvalidArgumentException;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AuthController as Auth;
 use Illuminate\Validation\UnauthorizedException;
@@ -388,16 +390,24 @@ class PostController extends Controller
             return Auth::logout();
         }
 
-        if($user->id !== 1) {
-            $message = "Unauthorized Access to createCampaignEmailAddress (POST)" . PHP_EOL;
-            $message .= "$user->id attempted to access." . PHP_EOL . PHP_EOL;
-            ErrorLogging::logError(new UnauthorizedException($message));
-            return abort('401');
+        $companyId = $request->input('companyText');
+        if(!isset($companyId)) {
+            $companyId = $user->company_id;
+        } else if($companyId === '') {
+            $companyId = 0;
+        }  else {
+            $company = Company::where('id',$companyId)->first();
+            if(empty($company)) {
+                $message = "Company does not exist: $companyId." . PHP_EOL;
+                ErrorLogging::logError(new InvalidArgumentException($message));
+                return abort('500');
+            }
         }
 
         Campaign_Email_Addresses::create([
             'email_address'=>$request->input('emailText'),
             'name'=>$request->input('nameText'),
+            'company_id' => $companyId,
             'password'=>$cryptor->encrypt($request->input('passwordText'))
         ]);
 

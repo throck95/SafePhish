@@ -493,7 +493,13 @@ class GetController
                 return abort('401');
             }
 
-            return view('forms.createCampaignEmailAddress');
+            $companies = null;
+            if(Auth::safephishAdminCheck()) {
+                $companies = Company::all();
+            }
+
+            $variables = array('companies'=>$companies);
+            return view('forms.createCampaignEmailAddress')->with($variables);
 
         } catch(\Exception $e) {
             ErrorLogging::logError($e);
