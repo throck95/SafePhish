@@ -89,16 +89,3 @@ select {
     color: #465254;
     margin-bottom: 8px;
 }
-
-#templateContentDiv {
-    float: right;
-    width: 43%;
-    height: 225px;
-    border: 1px solid black;
-    overflow: auto;
-    font-family: Arial,sans-serif;
-    font-size: 12px;
-    color: #465254;
-    margin-bottom: 8px;
-    margin-right: 8px;
-}
