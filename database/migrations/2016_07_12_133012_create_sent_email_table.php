@@ -14,10 +14,10 @@ class CreateSentEmailTable extends Migration {
 	{
 		Schema::create('sent_email', function(Blueprint $table)
 		{
-			$table->increments('SML_Id');
-			$table->integer('SML_UserId');
-			$table->string('SML_ProjectId');
-			$table->dateTime('SML_Timestamp');
+			$table->increments('id');
+			$table->integer('mailing_list_user_id');
+			$table->integer('campaign_id');
+			$table->dateTime('timestamp');
 		});
 	}
 

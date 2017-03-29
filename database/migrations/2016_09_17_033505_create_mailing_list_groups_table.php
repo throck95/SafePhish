@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTwoFactorTable extends Migration
+class CreateMailingListGroupsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,12 +12,11 @@ class CreateTwoFactorTable extends Migration
      */
     public function up()
     {
-        Schema::create('two_factor_codes', function (Blueprint $table) {
+        Schema::create('mailing_list_groups', function(Blueprint $table)
+        {
             $table->increments('id');
-            $table->integer('user_id');
-            $table->string('ip_address');
-            $table->string('code');
-            $table->timestamps();
+            $table->integer('company_id');
+            $table->string('name');
         });
     }
 
@@ -28,6 +27,6 @@ class CreateTwoFactorTable extends Migration
      */
     public function down()
     {
-        Schema::drop('two_factor_codes');
+        Schema::drop('mailing_list_groups');
     }
 }

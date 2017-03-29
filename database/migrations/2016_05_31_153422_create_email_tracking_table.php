@@ -14,12 +14,12 @@ class CreateEmailTrackingTable extends Migration {
 	{
 		Schema::create('email_tracking', function(Blueprint $table)
 		{
-			$table->increments('EML_Id');
-			$table->string('EML_Ip');
-			$table->string('EML_Host');
-			$table->string('EML_UserId');
-			$table->string('EML_ProjectId');
-			$table->dateTime('EML_Timestamp');
+			$table->increments('id');
+			$table->string('ip_address');
+			$table->string('host');
+			$table->integer('user_id');
+			$table->integer('campaign_id');
+			$table->dateTime('timestamp');
 		});
 	}
 

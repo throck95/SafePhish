@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateMailingListTable extends Migration
+class CreateCampaignEmailAddressesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,14 +12,12 @@ class CreateMailingListTable extends Migration
      */
     public function up()
     {
-        Schema::create('mailing_list', function(Blueprint $table)
-        {
-            $table->increments('id');
+        Schema::create('campaign_email_addresses', function (Blueprint $table) {
+            $table->string('email_address');
+            $table->primary('email_address');
+            $table->string('name');
             $table->integer('company_id');
-            $table->string('email');
-            $table->string('first_name');
-            $table->string('last_name');
-            $table->string('unique_url_id',30);
+            $table->string('password');
             $table->timestamps();
         });
     }
@@ -31,6 +29,6 @@ class CreateMailingListTable extends Migration
      */
     public function down()
     {
-        Schema::drop('mailing_list');
+        Schema::drop('campaign_email_addresses');
     }
 }

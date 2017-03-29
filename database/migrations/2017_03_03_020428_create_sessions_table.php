@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTwoFactorTable extends Migration
+class CreateSessionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,11 +12,12 @@ class CreateTwoFactorTable extends Migration
      */
     public function up()
     {
-        Schema::create('two_factor_codes', function (Blueprint $table) {
+        Schema::create('sessions', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id');
             $table->string('ip_address');
-            $table->string('code');
+            $table->integer('two_factor_id')->nullable();
+            $table->tinyInteger('authenticated');
             $table->timestamps();
         });
     }
@@ -28,6 +29,6 @@ class CreateTwoFactorTable extends Migration
      */
     public function down()
     {
-        Schema::drop('two_factor_codes');
+        Schema::drop('sessions');
     }
 }

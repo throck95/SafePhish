@@ -12,12 +12,14 @@ class CreateEmailTemplatesTable extends Migration
      */
     public function up()
     {
-        Schema::create('email_templates', function(Blueprint $table)
+        Schema::create('templates', function(Blueprint $table)
         {
-            $table->increments('ETP_Id');
-            $table->string('ETP_EmailType');
-            $table->string('ETP_FileName');
-            $table->string('ETP_PublicName');
+            $table->string('email_type');
+            $table->string('file_name');
+            $table->primary('file_name');
+            $table->string('public_name');
+            $table->string('mailable');
+            $table->timestamps();
         });
     }
 
@@ -28,6 +30,6 @@ class CreateEmailTemplatesTable extends Migration
      */
     public function down()
     {
-        Schema::drop('email_templates');
+        Schema::drop('templates');
     }
 }

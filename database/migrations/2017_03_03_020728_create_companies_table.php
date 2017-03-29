@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateMailingListDepartmentsTable extends Migration
+class CreateCompaniesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,10 +12,9 @@ class CreateMailingListDepartmentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('mailing_list_departments', function(Blueprint $table)
-        {
-            $table->increments('MLD_Id');
-            $table->string('MLD_Department');
+        Schema::create('companies', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('name',60);
         });
     }
 
@@ -26,6 +25,6 @@ class CreateMailingListDepartmentsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('mailing_list_departments');
+        Schema::drop('companies');
     }
 }

@@ -14,14 +14,14 @@ class CreateWebsiteTrackingTable extends Migration {
 	{
 		Schema::create('website_tracking', function(Blueprint $table)
 		{
-			$table->increments('WBS_Id');
-			$table->string('WBS_Ip');
-			$table->string('WBS_Host');
-			$table->string('WBS_BrowserAgent');
-			$table->string('WBS_ReqPath');
-			$table->string('WBS_UserId');
-			$table->string('WBS_ProjectId');
-			$table->dateTime('WBS_Timestamp');
+			$table->increments('id');
+			$table->string('ip_address');
+			$table->string('host');
+			$table->string('browser_agent');
+			$table->string('req_path');
+			$table->integer('user_id');
+			$table->integer('campaign_id');
+			$table->dateTime('timestamp');
 		});
 	}
 

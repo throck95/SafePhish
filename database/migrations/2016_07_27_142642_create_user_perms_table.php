@@ -14,9 +14,8 @@ class CreateUserPermsTable extends Migration {
 	{
 		Schema::create('user_permissions', function(Blueprint $table)
 		{
-			$table->increments('UPM_Id');
-            $table->integer('UPM_UserId');
-            $table->integer('UPM_PermissionType');
+			$table->increments('id');
+            $table->string('permission_type');
 		});
 	}
 
