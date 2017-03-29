@@ -6,6 +6,7 @@ use App\Libraries\Cryptor;
 use App\Libraries\ErrorLogging;
 use App\Mail as MailTemplates;
 use App\Models\Campaign_Email_Addresses;
+use App\Models\Company;
 use App\Models\Mailing_List_Groups;
 use App\Models\Mailing_List_Users_Groups_Bridge;
 use App\Models\Template;
@@ -53,10 +54,10 @@ class EmailController extends Controller
             $sendingChoice = $request->input('sendingChoiceRadio');
 
             if($sendingChoice === 'user') {
-                self::sendToUser(intval($request->input('userIdText')),$templateClass,$campaign,$request->input('companyText'));
+                self::sendToUser(intval($request->input('userIdText')),$templateClass,$campaign,$fromEmail);
 
             } else {
-                self::sendToGroup(intval($request->input('groupIdText')),$templateClass,$campaign,$request->input('companyText'));
+                self::sendToGroup(intval($request->input('groupIdText')),$templateClass,$campaign,$fromEmail);
             }
             return redirect()->route('generatePhish');
 
@@ -70,23 +71,36 @@ class EmailController extends Controller
      * sendToUser
      * Sends and logs emails sent to a user.
      *
-     * @param   int       $userId
-     * @param   string    $templateClass
-     * @param   Campaign  $campaign
-     * @param   string    $company
+     * @param   int                         $userId
+     * @param   string                      $templateClass
+     * @param   Campaign                    $campaign
+     * @param   Campaign_Email_Addresses    $fromEmail
      * @return  Sent_Mail
      */
-    private static function sendToUser($userId,$templateClass,$campaign,$company) {
+    private static function sendToUser($userId,$templateClass,$campaign,$fromEmail) {
         try {
+            $cryptor = new Cryptor();
+            $password = $cryptor->decrypt($fromEmail->password);
+
+            putenv("MAIL_USERNAME=$fromEmail->email_address");
+            putenv("MAIL_NAME=$fromEmail->name");
+            config(['mail.username'=>$fromEmail->email_address,'mail.password'=>$password]);
+
             $user = Mailing_List_User::where('id',$userId)->first();
             if(empty($user)) {
                 ErrorLogging::logError(new Exception("MLU not found."));
                 return abort('500');
             }
 
+            $company = Company::where('id',$user->company_id)->first();
+            if(empty($company)) {
+                ErrorLogging::logError(new \Exception("Company not found."));
+                return abort('500');
+            }
+
             $name = $user->first_name . ' ' . $user->last_name;
             Mail::to($user->email,$name)
-                ->send(new $templateClass($user,$campaign,$company));
+                ->send(new $templateClass($user,$campaign,$company->name));
             return self::logSentEmail($user,$campaign);
 
         } catch(\Exception $e) {
@@ -105,7 +119,7 @@ class EmailController extends Controller
      * @param   string    $company
      * @return  bool
      */
-    private static function sendToGroup($groupId,$templateClass,$campaign,$company) {
+    private static function sendToGroup($groupId,$templateClass,$campaign,$fromEmail) {
         try {
             $group = Mailing_List_Groups::where('id',$groupId)->first();
             if(empty($group)) {
@@ -116,7 +130,7 @@ class EmailController extends Controller
             $bridge = Mailing_List_Users_Groups_Bridge::where('group_id',$group->id)->get();
 
             foreach($bridge as $pair) {
-                $sent = self::sendToUser($pair->mailing_list_user_id,$templateClass,$campaign,$company);
+                $sent = self::sendToUser($pair->mailing_list_user_id,$templateClass,$campaign,$fromEmail);
                 if(!($sent instanceof Sent_Mail)) {
                     return abort('500');
                 }
