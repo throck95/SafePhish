@@ -76,7 +76,7 @@ class CSVController extends Controller
                     ->leftJoin('mailing_list','email_tracking.user_id','mailing_list.id')
                     ->leftJoin('companies','mailing_list.company_id','companies.id')
                     ->select('email_tracking.ip_address','email_tracking.host','email_tracking.timestamp',
-                        'mailing_list.first_name','mailing_list.last_name')
+                        'mailing_list.first_name','mailing_list.last_name','companies.name as company_name')
                     ->where($where)
                     ->orderBy('mailing_list.id', 'asc')
                     ->orderBy('companies.name','asc')
@@ -106,7 +106,7 @@ class CSVController extends Controller
                     ->leftJoin('mailing_list','email_tracking.user_id','mailing_list.id')
                     ->leftJoin('companies','mailing_list.company_id','companies.id')
                     ->select('email_tracking.ip_address','email_tracking.host','email_tracking.timestamp',
-                        'mailing_list.first_name','mailing_list.last_name','companies.name')
+                        'mailing_list.first_name','mailing_list.last_name','companies.name as company_name')
                     ->where($where)
                     ->orderBy('mailing_list.id', 'asc')
                     ->orderBy('companies.name','asc')
@@ -144,7 +144,7 @@ class CSVController extends Controller
     public static function generateWebsiteReport(Request $request) {
         try {
             if(!Auth::check()) {
-                return redirect()->route('e401');
+                return abort('401');
             }
 
             $cryptor = new Cryptor();
@@ -195,7 +195,7 @@ class CSVController extends Controller
                     ->leftJoin('mailing_list','website_tracking.user_id','mailing_list.id')
                     ->leftJoin('companies','mailing_list.company_id','companies.id')
                     ->select('website_tracking.ip_address','website_tracking.host','website_tracking.timestamp',
-                        'mailing_list.first_name','mailing_list.last_name','website_tracking.req_path')
+                        'mailing_list.first_name','mailing_list.last_name','website_tracking.req_path','companies.name as company_name')
                     ->where($where)
                     ->orderBy('mailing_list.id', 'asc')
                     ->orderBy('companies.name','asc')
@@ -225,7 +225,7 @@ class CSVController extends Controller
                     ->leftJoin('mailing_list','website_tracking.user_id','mailing_list.id')
                     ->leftJoin('companies','mailing_list.company_id','companies.id')
                     ->select('website_tracking.ip_address','website_tracking.host','website_tracking.timestamp',
-                        'mailing_list.first_name','mailing_list.last_name','companies.name','website_tracking.req_path')
+                        'mailing_list.first_name','mailing_list.last_name','companies.name as company_name','website_tracking.req_path')
                     ->where($where)
                     ->orderBy('mailing_list.id', 'asc')
                     ->orderBy('companies.name','asc')
@@ -239,12 +239,7 @@ class CSVController extends Controller
             $arrays = self::generateCSVArray($array, $f);
 
             for($i = 0; $i < sizeof($array); $i++) {
-                $temp = array_slice($arrays[$i],0,2);
-                array_push($temp,$array[$i]['req_path']);
-                for($k = 2; $k < sizeof($arrays[$i]); $k++) {
-                    array_push($temp,$arrays[$i][$k]);
-                }
-                $arrays[$i] = $temp;
+                array_push($arrays[$i],$array[$i]['req_path']);
                 fputcsv($f, $arrays[$i]);
             }
 
@@ -282,7 +277,7 @@ class CSVController extends Controller
             array_push($line_array,$line['timestamp']);
             array_push($line_array,$line['first_name']);
             array_push($line_array,$line['last_name']);
-            array_push($line_array,$line['name']);
+            array_push($line_array,$line['company_name']);
             array_push($arrays, $line_array);
         }
 
