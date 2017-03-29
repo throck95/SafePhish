@@ -26,6 +26,7 @@
             <li>Do you know the sender? If not, it's likely a phish.</li>
             <li>Is the email asking for information? If so, it's likely a phish.</li>
             <li>Does the email contain numerous links? If so, it's likely a phish.</li>
+            <li>Look at the URL. Do you recognize the address? If not, it might be a phish.</li>
         </ol><br />
         <p>In general, trust your instincts. Common sense is your best ally when dealing with phishing scams.</p>
         <iframe width="600" height="338" src="{{ $tipsVideoUrl }}" frameborder="0" allowfullscreen></iframe>
