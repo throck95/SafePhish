@@ -154,55 +154,55 @@ class PostController extends Controller
      */
     public static function createMailingListGroup(Request $request) {
         try {
+            if(!Auth::check()) {
+                return redirect()->route('login');
+            }
+
+            $cryptor = new Cryptor();
+
+            $sessionId = $cryptor->decrypt(\Session::get('sessionId'));
+            $session = Sessions::where('id', $sessionId)->first();
+
+            $user = User::where('id',$session->user_id)->first();
+            if(empty($user)) {
+                return Auth::logout();
+            }
+
+            if($user->company_id !== 1) {
+                $company = Company::where('id', $user->company_id)->first();
+                if (empty($company)) {
+                    return Auth::logout();
+                }
+
+                $group = Mailing_List_Groups::create([
+                    'company_id'=>$company->id,
+                    'name'=>$request->input('nameText')
+                ]);
+
+            } else {
+
+                $group = Mailing_List_Groups::create([
+                    'company_id'=>$request->input('companyText'),
+                    'name'=>$request->input('nameText')
+                ]);
+            }
+
+            $users = $request->input('userSelect');
+            if(!empty($users)) {
+                foreach($users as $mlu) {
+                    Mailing_List_Users_Groups_Bridge::create(
+                        ['mailing_list_user_id'=>$mlu,
+                            'group_id'=>$group->id]
+                    );
+                }
+            }
+
+            return redirect()->route('mailingListGroup');
 
         } catch(\Exception $e) {
             ErrorLogging::logError($e);
             return abort('500');
         }
-        if(!Auth::check()) {
-            return redirect()->route('login');
-        }
-
-        $cryptor = new Cryptor();
-
-        $sessionId = $cryptor->decrypt(\Session::get('sessionId'));
-        $session = Sessions::where('id', $sessionId)->first();
-
-        $user = User::where('id',$session->user_id)->first();
-        if(empty($user)) {
-            return Auth::logout();
-        }
-
-        if($user->company_id !== 1) {
-            $company = Company::where('id', $user->company_id)->first();
-            if (empty($company)) {
-                return Auth::logout();
-            }
-
-            $group = Mailing_List_Groups::create([
-                'company_id'=>$company->id,
-                'name'=>$request->input('nameText')
-            ]);
-
-        } else {
-
-            $group = Mailing_List_Groups::create([
-                'company_id'=>$request->input('companyText'),
-                'name'=>$request->input('nameText')
-            ]);
-        }
-
-        $users = $request->input('userSelect');
-        if(!empty($users)) {
-            foreach($users as $mlu) {
-                Mailing_List_Users_Groups_Bridge::create(
-                    ['mailing_list_user_id'=>$mlu,
-                        'group_id'=>$group->id]
-                );
-            }
-        }
-
-        return redirect()->route('mailingListGroup');
     }
 
     /**
