@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Libraries\ErrorLogging;
+use App\Models\Campaign;
 use App\Models\Email_Tracking;
 use App\Models\User;
 use App\Models\Website_Tracking;
@@ -15,7 +16,7 @@ class WebbugController extends Controller
 {
     /**
      * webbugParse
-     * Handles when webbugs get called. If request URI contains the word 'email', executes email webbug otherwise executes website webbug
+     * Handles when webbugs get called via emails.
      *
      * @param 	string		$id		Contains UniqueURLId that references specific user and specific campaign ID
      */
@@ -24,11 +25,19 @@ class WebbugController extends Controller
             $urlId = substr($id,0,12);
             $campaignId = substr($id,13);
             $user = Mailing_List_User::where('unique_url_id',$urlId)->first();
-            if(strpos($_SERVER['REQUEST_URI'],'email') !== false) {
-                $this->webbugExecutionEmail($user, $campaignId);
-            } else {
-                $this->webbugExecutionWebsite($user,$campaignId);
+            $campaign = Campaign::where('id',$campaignId)->first();
+
+            if(empty($user) || empty($campaign)) {
+                return;
             }
+
+            Email_Tracking::create(
+                ['ip_address'=>$_SERVER['REMOTE_ADDR'],
+                    'host'=>gethostbyaddr($_SERVER['REMOTE_ADDR']),
+                    'user_id'=>$user->id,
+                    'campaign_id'=>$campaign->id,
+                    'timestamp'=>Carbon::now()]
+            );
 
         } catch(\Exception $e) {
             ErrorLogging::logError($e);
@@ -36,43 +45,26 @@ class WebbugController extends Controller
     }
 
     /**
-     * webbugExecutionEmail
-     * Email specific execution of the webbug tracker.
-     *
-     * @param 	User        $user
-     * @param 	string		$campaignId			Campaign ID to create a filter choice in the results
-     */
-    private function webbugExecutionEmail($user, $campaignId) {
-        Email_Tracking::create(
-            ['ip_address'=>$_SERVER['REMOTE_ADDR'],
-                'host'=>gethostbyaddr($_SERVER['REMOTE_ADDR']),
-                'user_id'=>$user->id,
-                'campaign_id'=>$campaignId,
-                'timestamp'=>Carbon::now()]
-        );
-    }
-
-    /**
      * webbugExecutionWebsite
      * Website specific execution of the webbug tracker.
      *
-     * @param 	User        $user
-     * @param 	string		$campaignId			Campaign ID to create a filter choice in the results
+     * @param 	Mailing_List_User       $user
+     * @param 	Campaign		        $campaign
      */
-    private function webbugExecutionWebsite($user,$campaignId) {
+    public static function webbugExecutionWebsite($user,$campaign) {
         Website_Tracking::create(
             ['ip_address'=>$_SERVER['REMOTE_ADDR'],
                 'host'=>gethostbyaddr($_SERVER['REMOTE_ADDR']),
                 'browser_agent'=>$_SERVER['HTTP_USER_AGENT'],
                 'req_path'=>$_SERVER['REQUEST_URI'],
                 'user_id'=>$user->id,
-                'campaign_id'=>$campaignId,
+                'campaign_id'=>$campaign->id,
                 'timestamp'=>Carbon::now()]
         );
     }
 
-    public function createAndReturnWebbug($Id) {
-        $this->webbugParse($Id);
+    public function createAndReturnWebbug($id) {
+        $this->webbugParse($id);
         header('Content-Type: image/png');
         return base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAAA1BMVEUAAACnej3aAAAAAXRSTlMAQObYZgAAAApJREFUCNdjYAAAAAIAAeIhvDMAAAAASUVORK5CYII=');
     }
