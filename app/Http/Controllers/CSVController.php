@@ -195,8 +195,7 @@ class CSVController extends Controller
                     ->leftJoin('mailing_list','website_tracking.user_id','mailing_list.id')
                     ->leftJoin('companies','mailing_list.company_id','companies.id')
                     ->select('website_tracking.ip_address','website_tracking.host','website_tracking.timestamp',
-                        'mailing_list.first_name','mailing_list.last_name',
-                        'website_tracking.browser_agent','website_tracking.req_path')
+                        'mailing_list.first_name','mailing_list.last_name','website_tracking.req_path')
                     ->where($where)
                     ->orderBy('mailing_list.id', 'asc')
                     ->orderBy('companies.name','asc')
@@ -226,8 +225,7 @@ class CSVController extends Controller
                     ->leftJoin('mailing_list','website_tracking.user_id','mailing_list.id')
                     ->leftJoin('companies','mailing_list.company_id','companies.id')
                     ->select('website_tracking.ip_address','website_tracking.host','website_tracking.timestamp',
-                        'mailing_list.first_name','mailing_list.last_name','companies.name',
-                        'website_tracking.browser_agent','website_tracking.req_path')
+                        'mailing_list.first_name','mailing_list.last_name','companies.name','website_tracking.req_path')
                     ->where($where)
                     ->orderBy('mailing_list.id', 'asc')
                     ->orderBy('companies.name','asc')
@@ -241,7 +239,11 @@ class CSVController extends Controller
             $arrays = self::generateCSVArray($array, $f);
 
             for($i = 0; $i < sizeof($array); $i++) {
-                $temp = array_slice($arrays[$i],0,1,true) + array('browser_agent' => $array[$i]['browser_agent']) + array('req_path' => $array[$i]['req_path']) + array_slice($arrays[$i],1,count($arrays) - 1, true);
+                $temp = array_slice($arrays[$i],0,2);
+                array_push($temp,$array[$i]['req_path']);
+                for($k = 2; $k < sizeof($arrays[$i]); $k++) {
+                    array_push($temp,$arrays[$i][$k]);
+                }
                 $arrays[$i] = $temp;
                 fputcsv($f, $arrays[$i]);
             }
