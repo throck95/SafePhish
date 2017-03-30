@@ -113,18 +113,17 @@ class EmailController extends Controller
      * sendToGroup
      * Sends and logs emails sent to a group.
      *
-     * @param   int       $groupId
-     * @param   string    $templateClass
-     * @param   Campaign  $campaign
-     * @param   string    $company
-     * @return  bool
+     * @param   int                         $groupId
+     * @param   string                      $templateClass
+     * @param   Campaign                    $campaign
+     * @param   Campaign_Email_Addresses    $fromEmail
      */
     private static function sendToGroup($groupId,$templateClass,$campaign,$fromEmail) {
         try {
             $group = Mailing_List_Groups::where('id',$groupId)->first();
             if(empty($group)) {
                 ErrorLogging::logError(new Exception("Mailing List Group not found."));
-                return abort('500');
+                abort('500');
             }
 
             $bridge = Mailing_List_Users_Groups_Bridge::where('group_id',$group->id)->get();
@@ -132,15 +131,13 @@ class EmailController extends Controller
             foreach($bridge as $pair) {
                 $sent = self::sendToUser($pair->mailing_list_user_id,$templateClass,$campaign,$fromEmail);
                 if(!($sent instanceof Sent_Mail)) {
-                    return abort('500');
+                    abort('500');
                 }
             }
 
-            return true;
-
         } catch(\Exception $e) {
             ErrorLogging::logError($e);
-            return abort('500');
+            abort('500');
         }
     }
 
