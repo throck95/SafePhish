@@ -413,4 +413,29 @@ class PostController extends Controller
 
         return redirect()->route('createCampaignEmails');
     }
+
+    public static function createCompany(Request $request) {
+        if(!Auth::safephishAdminCheck()) {
+            $message = "Unauthorized Access to createCompany (POST)" . PHP_EOL;
+            $message .= "UserId either doesn't have permission, doesn't exist, or their session expired." . PHP_EOL . PHP_EOL;
+            ErrorLogging::logError(new UnauthorizedException($message));
+            return abort('401');
+        }
+
+        $cryptor = new Cryptor();
+
+        $sessionId = $cryptor->decrypt(\Session::get('sessionId'));
+        $session = Sessions::where('id', $sessionId)->first();
+
+        $user = User::where('id',$session->user_id)->first();
+        if(empty($user)) {
+            return Auth::logout();
+        }
+
+        Company::create([
+            'name'=>$request->input('companyText')
+        ]);
+
+        return redirect()->route('register');
+    }
 }

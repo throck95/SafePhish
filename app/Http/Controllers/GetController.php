@@ -486,7 +486,7 @@ class GetController
                 return Auth::logout();
             }
 
-            if($user->id !== 1) {
+            if($user->company_id !== 1) {
                 $message = "Unauthorized Access to createCampaignEmailAddress (GET)" . PHP_EOL;
                 $message .= "$user->id attempted to access." . PHP_EOL . PHP_EOL;
                 ErrorLogging::logError(new UnauthorizedException($message));
@@ -500,6 +500,54 @@ class GetController
 
             $variables = array('companies'=>$companies);
             return view('forms.createCampaignEmailAddress')->with($variables);
+
+        } catch(\Exception $e) {
+            ErrorLogging::logError($e);
+            return abort('500');
+        }
+    }
+
+    public static function documentation() {
+        try {
+            if(!Auth::check()) {
+                return Auth::authRequired();
+            }
+
+            return view('displays.documentation');
+
+        } catch(\Exception $e) {
+            ErrorLogging::logError($e);
+            return abort('500');
+        }
+    }
+
+    public static function createCompanyForm() {
+        try {
+            if(!Auth::safephishAdminCheck()) {
+                $message = "Unauthorized Access to createCompanyForm (GET)" . PHP_EOL;
+                $message .= "UserId either doesn't have permission, doesn't exist, or their session expired." . PHP_EOL . PHP_EOL;
+                ErrorLogging::logError(new UnauthorizedException($message));
+                return abort('401');
+            }
+
+            $cryptor = new Cryptor();
+
+            $sessionId = $cryptor->decrypt(\Session::get('sessionId'));
+            $session = Sessions::where('id', $sessionId)->first();
+
+            $user = User::where('id',$session->user_id)->first();
+            if(empty($user)) {
+                return Auth::logout();
+            }
+
+            if($user->company_id !== 1) {
+                $message = "Unauthorized Access to createCompanyForm (GET)" . PHP_EOL;
+                $message .= "$user->id attempted to access." . PHP_EOL . PHP_EOL;
+                ErrorLogging::logError(new UnauthorizedException($message));
+                return abort('401');
+            }
+
+            return view('forms.createCompany');
 
         } catch(\Exception $e) {
             ErrorLogging::logError($e);

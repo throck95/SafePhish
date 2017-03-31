@@ -77,3 +77,10 @@ Route::get('/images/irs_logo.jpg','ImagesController@displayIRSLogo');
 //CampaignEmailAddresses
 Route::get('/campaign/emails','GetController@createCampaignEmailAddress')->name('createCampaignEmails');
 Route::post('/campaign/emails','PostController@createCampaignEmailAddress');
+
+//Documentation
+Route::get('/documentation','GetController@documentation');
+
+//Company
+Route::get('/company/create','GetController@createCompanyForm');
+Route::post('/company/create','PostController@createCompany')->name('createCompany');
