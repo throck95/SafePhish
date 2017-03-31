@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\SendEmail;
 use App\Libraries\Cryptor;
 use App\Libraries\ErrorLogging;
 use App\Mail as MailTemplates;
@@ -100,7 +101,7 @@ class EmailController extends Controller
 
             $name = $user->first_name . ' ' . $user->last_name;
             Mail::to($user->email,$name)
-                ->send(new $templateClass($user,$campaign,$company->name));
+                ->queue(new $templateClass($user,$campaign,$company->name));
             return self::logSentEmail($user,$campaign);
 
         } catch(\Exception $e) {
@@ -154,7 +155,7 @@ class EmailController extends Controller
             if(Auth::adminCheck()) {
                 $name = $user->first_name . ' ' . $user->last_name;
                 Mail::to($user->email,$name)
-                    ->send(new MailTemplates\NewUser($user,$password));
+                    ->queue(new MailTemplates\NewUser($user,$password));
                 return true;
             }
             return false;
@@ -178,7 +179,7 @@ class EmailController extends Controller
             if(Auth::adminCheck()) {
                 $name = $user->first_name . ' ' . $user->last_name;
                 Mail::to($user->email,$name)
-                    ->send(new MailTemplates\AdminForcedPasswordReset($user,$password));
+                    ->queue(new MailTemplates\AdminForcedPasswordReset($user,$password));
                 return true;
             }
             return false;
@@ -202,7 +203,7 @@ class EmailController extends Controller
             if(Auth::check()) {
                 $name = $user->first_name . ' ' . $user->last_name;
                 Mail::to($user->email,$name)
-                    ->send(new MailTemplates\UpdateUser($user,$changes));
+                    ->queue(new MailTemplates\UpdateUser($user,$changes));
                 return true;
             }
             return false;
@@ -225,7 +226,7 @@ class EmailController extends Controller
         try {
             $name = $user->first_name . ' ' . $user->last_name;
             Mail::to($user->email,$name)
-                ->send(new MailTemplates\TwoFactorCode($user,$code));
+                ->queue(new MailTemplates\TwoFactorCode($user,$code));
             return true;
 
         } catch(\Exception $e) {
