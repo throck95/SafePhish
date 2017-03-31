@@ -54,6 +54,9 @@
                     <div class="navbar-dropdown">
                         <a href="/users">Manage</a>
                         <a href="/register">Register</a>
+                        @if(\App\Http\Controllers\AuthController::safephishAdminCheck())
+                            <a href="/company/create">Company</a>
+                        @endif
                     </div>
                 </li>
             @endif
