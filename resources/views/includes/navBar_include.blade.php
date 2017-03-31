@@ -60,7 +60,7 @@
                     </div>
                 </li>
             @endif
-            <li><a href="/documentation">Documentation</a></li>
+            <li><a href="/documentation" class="dropbtn">Documentation</a></li>
         </ul>
     @endif
 </div>
