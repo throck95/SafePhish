@@ -21,6 +21,14 @@ li a, .dropbtn {
     text-decoration: none;
 }
 
+.dropbtn:visited {
+    color: #BD0000;
+}
+
+.dropbtn:hover {
+    color: white;
+}
+
 li a:hover, .dropdown:hover .dropbtn {
     background-color: #BD0000;
     color: white;
