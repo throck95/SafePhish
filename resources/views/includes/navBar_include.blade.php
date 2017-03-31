@@ -57,6 +57,7 @@
                     </div>
                 </li>
             @endif
+            <li><a href="/documentation">Documentation</a></li>
         </ul>
     @endif
 </div>
