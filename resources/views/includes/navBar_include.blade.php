@@ -37,6 +37,9 @@
                 <a class="dropbtn">Templates</a>
                 <div class="navbar-dropdown">
                     <a href="/templates">Display</a>
+                    @if(\App\Http\Controllers\AuthController::safephishAdminCheck())
+                        <a href="/template/create">Create</a>
+                    @endif
                 </div>
             </li>
             <li class="dropdown">
