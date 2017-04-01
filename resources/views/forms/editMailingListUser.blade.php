@@ -19,7 +19,7 @@
         {!! Form::text('lastNameText',$mlu->last_name,array('name'=>'lastNameText')) !!}</p>
     <p>{!! Form::label('emailText','Email: ') !!}
         {!! Form::text('emailText',$mlu->email,array('name'=>'emailText')) !!}</p>
-    <p>{!! Form::label('departmentSelect','Department: ') !!}
+    <p>{!! Form::label('groupSelect','Group: ') !!}
         <select id='groupSelect' name='groupSelect[]' multiple>
             @for ($i = 0; $i < count($groups); $i++)
                 <option value="{{ $groups[$i]->id }}">{{ $groups[$i]->name }}</option>
