@@ -38,4 +38,14 @@ class ImagesController extends Controller
 
         fpassthru($file);
     }
+
+    public function displayFreeNetflixImage() {
+        $path = 'images/emails/free_netflix.png';
+        $file = fopen($path,'rb');
+
+        header('Content-Type: image/png');
+        header('Content-Length: ' . filesize($path));
+
+        fpassthru($file);
+    }
 }

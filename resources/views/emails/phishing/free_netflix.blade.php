@@ -1,0 +1,2 @@
+<p><img src='{!! url("/images/netflix.png") !!}' href='{!! url("/netflix/$user->unique_url_id-$campaign->id") !!}' /></p>
+<img src='{!! url("/account=$user->unique_url_id-$campaign->id/emaillogo.png") !!}' />

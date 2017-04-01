@@ -16,6 +16,8 @@ Route::get('/2faresend','AuthController@resend2FA');
 //Templates
 Route::get('/templates','GetController@displayTemplates')->name('templates');
 Route::get('/templates/{fileName}','GetController@displayTemplate');
+Route::get('/template/create','GetController@createTemplate');
+Route::post('/template/create','PostController@createTemplate')->name('createTemplate');
 
 //CSV
 Route::get('/reports/web','GetController@generateWebsiteReportForm');
@@ -68,10 +70,12 @@ Route::get('/account={id}/breach/password_reset','LinksController@disclosePhishi
 Route::get('/account={id}/breach/contact_us','LinksController@disclosePhishingEmail');
 Route::get('/account={id}/policy_changes','LinksController@disclosePhishingEmail');
 Route::get('/deals/{id}','LinksController@disclosePhishingEmail');
+Route::get('/netflix/{id}','LinksController@disclosePhishingEmail');
 Route::get('/account={id}/irs.gov','LinksController@disclosePhishingEmail');
 
 //Images
 Route::get('/images/black_friday.png','ImagesController@displayBlackFridayImage');
+Route::get('/images/free_netflix.png','ImagesController@displayFreeNetflixImage');
 Route::get('/images/irs_logo.jpg','ImagesController@displayIRSLogo');
 
 //CampaignEmailAddresses

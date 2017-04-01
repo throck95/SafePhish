@@ -10,6 +10,7 @@ use App\Models\Company;
 use App\Models\Mailing_List_User;
 use App\Models\Mailing_List_Users_Groups_Bridge;
 use App\Models\Mailing_List_Groups;
+use App\Models\Template;
 use App\Models\User_Permissions;
 use App\Models\Campaign;
 use App\Models\User;
@@ -437,5 +438,33 @@ class PostController extends Controller
         ]);
 
         return redirect()->route('register');
+    }
+
+    public static function createTemplate(Request $request) {
+        if(!Auth::safephishAdminCheck()) {
+            $message = "Unauthorized Access to createTemplate (POST)" . PHP_EOL;
+            $message .= "UserId either doesn't have permission, doesn't exist, or their session expired." . PHP_EOL . PHP_EOL;
+            ErrorLogging::logError(new UnauthorizedException($message));
+            return abort('401');
+        }
+
+        $cryptor = new Cryptor();
+
+        $sessionId = $cryptor->decrypt(\Session::get('sessionId'));
+        $session = Sessions::where('id', $sessionId)->first();
+
+        $user = User::where('id',$session->user_id)->first();
+        if(empty($user)) {
+            return Auth::logout();
+        }
+
+        Template::create([
+            'email_type'=>$request->input('typeSelect'),
+            'file_name'=>$request->input('fileNameText'),
+            'public_name'=>$request->input('publicNameText'),
+            'mailable'=>$request->input('mailableText')
+        ]);
+
+        return redirect()->route('createTemplate');
     }
 }

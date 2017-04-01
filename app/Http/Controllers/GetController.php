@@ -159,6 +159,33 @@ class GetController
         }
     }
 
+    public static function createTemplate() {
+        try {
+            if(!Auth::safephishAdminCheck()) {
+                $message = "Unauthorized Access to createTemplate (GET)" . PHP_EOL;
+                $message .= "UserId either doesn't have permission, doesn't exist, or their session expired." . PHP_EOL . PHP_EOL;
+                ErrorLogging::logError(new UnauthorizedException($message));
+                return abort('401');
+            }
+
+            $cryptor = new Cryptor();
+
+            $sessionId = $cryptor->decrypt(\Session::get('sessionId'));
+            $session = Sessions::where('id', $sessionId)->first();
+
+            $user = User::where('id',$session->user_id)->first();
+            if(empty($user)) {
+                return Auth::logout();
+            }
+
+            return view('forms.createTemplate');
+
+        } catch(\Exception $e) {
+            ErrorLogging::logError($e);
+            return abort('500');
+        }
+    }
+
     //Mailing List Users
 
     /**
