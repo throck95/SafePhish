@@ -1,6 +1,6 @@
 @extends('masters.basemaster')
 @section('title')
-    Show All Campaigns
+    Show All Users
 @stop
 @section('scripts')
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.min.js"></script>
